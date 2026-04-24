@@ -1,0 +1,30 @@
+// src/components/landing/HeroLabels.tsx
+
+const luxLabelStyle =
+  "text-[10px] md:text-[11px] uppercase tracking-[0.4em] font-mono text-black/50 select-none";
+
+export default function HeroLabels() {
+  return (
+    <>
+      <span className={`${luxLabelStyle} absolute top-0 left-0 pt-2`}>
+        © KALT STUDIO / ©26
+      </span>
+
+      <span
+        className={`${luxLabelStyle} absolute top-0 right-0 pt-2 text-right`}
+      >
+        URBAN / <br /> ESSENTIALS '26
+      </span>
+
+      <span className={`${luxLabelStyle} absolute bottom-0 left-0 pb-2`}>
+        HIGH-END / STREETWEAR
+      </span>
+
+      <span
+        className={`${luxLabelStyle} absolute bottom-0 right-0 pb-2 text-right`}
+      >
+        LIVE STYLE / <br /> NOW
+      </span>
+    </>
+  );
+}
