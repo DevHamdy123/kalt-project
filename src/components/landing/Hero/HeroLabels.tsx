@@ -14,6 +14,10 @@ export default function HeroLabels() {
         URBAN / <br /> ESSENTIALS '26
       </span>
 
+      <span className="absolute bottom-1 right-35 pb-2 text-white text-5xl ">
+        ✦
+      </span>
+
       <span className={`${luxLabelStyle} absolute bottom-0 left-0 pb-2`}>
         HIGH-END / STREETWEAR
       </span>

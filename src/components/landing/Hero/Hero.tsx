@@ -1,10 +1,11 @@
 import Navbar from "@/components/layout/Navbar";
-import Slider from "../common/Slider";
+import Slider from "@/components/common/Slider";
 import HeroContent from "./HeroContent";
 
 export default function Hero() {
   return (
     <section className="h-screen flex flex-col relative bg-bg-inner overflow-hidden">
+      <div className="absolute inset-0 z-0 pointer-events-none bg-[url('/images/grain.png')] bg-repeat opacity-[0.04] mix-blend-multiply" />
       <div className="flex-1 flex flex-col pt-6 md:pt-8 px-6 md:px-10 pb-6 relative z-10">
         {/* Navbar */}
         <div className="relative z-20">

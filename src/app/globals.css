@@ -2,7 +2,7 @@
 
 :root {
   --bg-outer: #eaeaea;
-  --bg-inner: #f6f6f6;
+  --bg-inner: #efefef;
   --border-white: #ffffff;
   --foreground: #111111;
   --accent-orange: #ff5c00;
@@ -27,6 +27,30 @@
   background-clip: text;
   -webkit-text-fill-color: transparent;
   opacity: 0.6;
+}
+
+@layer components {
+  .brutalist-mask {
+    clip-path: polygon(12% 0%, 100% 0%, 100% 88%, 88% 100%, 0% 100%, 0% 12%);
+
+    -webkit-clip-path: polygon(
+      12% 0%,
+      100% 0%,
+      100% 88%,
+      88% 100%,
+      0% 100%,
+      0% 12%
+    );
+  }
+}
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
 @media (prefers-color-scheme: dark) {

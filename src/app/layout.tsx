@@ -19,8 +19,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className={geistSans.variable}>
-      <body className="antialiased font-sans flex flex-col min-h-screen relative bg-bg-inner text-foreground">
-        <div className="fixed inset-0 pointer-events-none z-9999 border-2 md:border-4 border-border-white" />
+      <body className="antialiased font-sans flex flex-col min-h-screen relative bg-white text-foreground">
+        <div className="fixed inset-0 pointer-events-none z-9999" />
 
         <main className="flex-1 w-full flex flex-col">{children}</main>
       </body>
