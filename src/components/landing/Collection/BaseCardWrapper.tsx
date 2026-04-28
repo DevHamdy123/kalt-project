@@ -1,11 +1,5 @@
-import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-
-interface BaseCardWrapperProps {
-  children: ReactNode;
-  id?: string;
-  className?: string;
-}
+import { BaseCardWrapperProps } from "./Collection-data";
 
 export const BaseCardWrapper = ({
   children,

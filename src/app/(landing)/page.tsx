@@ -1,7 +1,7 @@
 import Hero from "@/components/landing/Hero/Hero";
 import CollectionSection from "@/components/landing/Collection/CollectionSection";
-import MomentsSection from "@/components/landing/Moments/MomentsSection";
 import CategoryShowcase from "@/components/landing/Category.tsx/CategoryShowcase";
+import AboutSection from "@/components/landing/About/AboutSection";
 
 export default function Home() {
   return (
@@ -9,7 +9,7 @@ export default function Home() {
       <Hero />
       <CategoryShowcase />
       <CollectionSection />
-      {/* <MomentsSection /> */}
+      <AboutSection />
     </div>
   );
 }

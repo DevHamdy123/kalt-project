@@ -23,7 +23,7 @@ export default function Slider({ theme = "dark" }: SliderProps) {
   return (
     <div
       className={`w-full h-14 md:h-16 flex items-center overflow-hidden shrink-0 shadow-2xl z-20 
-      ${isLight ? "bg-bg-inner text-black border-y border-black/5" : "bg-black text-white"}`}
+      ${isLight ? "bg-white text-black border-y border-black/10" : "bg-black text-white"}`}
     >
       {" "}
       <ul className="flex items-center gap-8 md:gap-16 w-full justify-center font-black text-[9px] md:text-[11px] uppercase tracking-[0.3em] whitespace-nowrap px-6 italic opacity-90">

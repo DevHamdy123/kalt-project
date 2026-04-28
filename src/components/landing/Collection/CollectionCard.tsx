@@ -1,34 +1,32 @@
 import Image from "next/image";
+import { BaseCardWrapper } from "./BaseCardWrapper";
+import { CollectionCardProps } from "./Collection-data";
 
-interface MomentCardProps {
-  image: string;
-  title: string;
-  year: string;
-  className?: string;
-  priority?: boolean;
-}
-
-export const MomentCard = ({
-  image,
-  title,
-  year,
-  className,
-  priority = false,
-}: MomentCardProps) => (
-  <div className={`relative overflow-hidden group w-full h-full ${className}`}>
-    <Image
-      src={image}
-      alt={title}
-      fill
-      priority={priority}
-      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-      className="object-cover grayscale hover:grayscale-0 transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] scale-110 group-hover:scale-100"
-    />
-    <div className="absolute bottom-6 left-6 text-white mix-blend-difference z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-      <p className="text-[10px] tracking-[0.3em] uppercase mb-1">{year}</p>
-      <h3 className="text-lg font-bold uppercase tracking-tighter leading-none">
-        {title}
-      </h3>
-    </div>
-  </div>
-);
+export const CollectionCard = ({ item, isHero }: CollectionCardProps) => {
+  return (
+    <BaseCardWrapper
+      id={isHero ? "dropzone" : undefined}
+      className="w-full! h-full! relative block"
+    >
+      <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent group-hover:opacity-100 transition-opacity duration-500">
+        <Image
+          src={item.img}
+          alt="KALT Piece"
+          fill
+          className="object-cover object-center"
+        />
+        <div className="absolute top-4 right-4 z-10 flex flex-col">
+          <span className="text-[9px] text-black/70 bg-white/80 px-2 py-0.5 backdrop-blur-sm font-mono uppercase tracking-widest">
+            [ {item.id} ]
+          </span>
+        </div>
+        <div className="absolute bottom-4 left-4 z-10 w-full pr-8">
+          <p className="text-xs text-white font-bold uppercase tracking-tighter mix-blend-difference">
+            {item.name}
+          </p>
+        </div>
+        {isHero && <div className="absolute inset-0 bg-black/5" />}
+      </div>
+    </BaseCardWrapper>
+  );
+};
