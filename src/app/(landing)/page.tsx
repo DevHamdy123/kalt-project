@@ -3,6 +3,7 @@ import CollectionSection from "@/components/landing/Collection/CollectionSection
 import CategoryShowcase from "@/components/landing/Category.tsx/CategoryShowcase";
 import AboutSection from "@/components/landing/About/AboutSection";
 import AnatomySection from "@/components/landing/Anatomy/AnatomySection";
+import BridgeSection from "@/components/landing/Bridge/BridgeSection";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <CollectionSection />
       <AboutSection />
       <AnatomySection />
+      <BridgeSection />
     </div>
   );
 }
