@@ -2,6 +2,7 @@
 import { motion, useTransform, MotionValue } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { SharedAnimationProps } from "../types";
 
 export default function HoodieFrame({
   progress,
@@ -53,12 +54,27 @@ export default function HoodieFrame({
 
   return (
     <div className="relative flex items-center justify-center w-full h-full pointer-events-none z-10">
+      {/* ===================== الـ Technical Brackets [ ] ===================== */}
       <motion.div
         style={{ opacity: cardOpacity }}
-        className="absolute w-[50vw] sm:w-[40vw] md:w-[28vw] lg:w-75 aspect-3/4 bg-bg-outer brutalist-mask z-30 shadow-2xl"
-      />
+        // زودنا الحجم بسيط (w-[320px]) عشان الـ Brackets تكون "برا" الهودي مش تحته
+        className="absolute w-[55vw] sm:w-[45vw] md:w-[32vw] lg:w-[320px] aspect-3/4 z-30
+                
+                before:content-[''] before:absolute before:top-0 before:left-0 
+                before:border-l before:border-t before:border-black/60 before:w-6 before:h-6
+                
+                after:content-[''] after:absolute after:bottom-0 after:right-0 
+                after:border-r after:border-b after:border-black/60 after:w-6 after:h-6"
+      >
+        {/* ضفنا زوايا إضافية لو حبيت تكمل الـ 4 أركان (اختياري بس بيخليها أفخم) */}
+        <div className="absolute top-0 right-0 border-r border-t border-black/60 w-6 h-6" />
+        <div className="absolute bottom-0 left-0 border-l border-b border-black/60 w-6 h-6" />
+      </motion.div>
+
+      {/* ===================== الهودي ===================== */}
       <motion.div
         style={{ scale }}
+        // هنا الـ lg:w-[300px] أصغر من الـ Brackets بشوية عشان يظهروا حواليه
         className="absolute w-[50vw] sm:w-[40vw] md:w-[28vw] lg:w-75 aspect-3/4 z-40 flex items-center justify-center"
       >
         <Image
