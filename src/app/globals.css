@@ -35,7 +35,6 @@
   opacity: 0.6;
 }
 
-/* 2. تنظيم الـ Base Styles */
 @layer base {
   body {
     @apply bg-bg-inner text-foreground antialiased;
@@ -43,5 +42,25 @@
   }
 }
 
-/* 3. الـ Dark Mode يفضل يتعمل بمتغيرات الـ Theme نفسه */
 @variant dark (&:where(.dark, .dark *));
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
