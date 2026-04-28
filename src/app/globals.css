@@ -1,27 +1,33 @@
 @import "tailwindcss";
 
-:root {
-  --bg-outer: #eaeaea;
-  --bg-inner: #efefef;
-  --border-white: #ffffff;
-  --foreground: #111111;
-  --accent-orange: #ff5c00;
+@theme inline {
+  /* المسميات هنا لازم تكون واضحة لـ Tailwind */
+  --color-bg-outer: #eaeaea;
+  --color-bg-inner: #efefef;
+  --color-border-white: #ffffff;
+  --color-foreground: #111111;
+  --color-accent-orange: #ff5c00;
 
   --radius-frame: 28px;
-}
 
-@theme inline {
-  --color-bg-outer: var(--bg-outer);
-  --color-bg-inner: var(--bg-inner);
-  --color-border-white: var(--border-white);
-  --color-foreground: var(--foreground);
-  --color-accent-orange: var(--accent-orange);
-
-  --radius-frame: var(--radius-frame);
+  /* تأكد إن الفونت ده مستدعى فعلاً في المشروع */
   --font-sans: var(--font-geist-sans);
 }
 
-.text-gradient-gray {
+/* 1. استخدام @utility بدلاً من @layer components في v4 */
+@utility brutalist-mask {
+  clip-path: polygon(12% 0%, 100% 0%, 100% 88%, 88% 100%, 0% 100%, 0% 12%);
+}
+
+@utility no-scrollbar {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@utility text-gradient-gray {
   background: linear-gradient(to bottom, #d1d1d1 0%, #e5e5e5 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -29,39 +35,13 @@
   opacity: 0.6;
 }
 
-@layer components {
-  .brutalist-mask {
-    clip-path: polygon(12% 0%, 100% 0%, 100% 88%, 88% 100%, 0% 100%, 0% 12%);
-
-    -webkit-clip-path: polygon(
-      12% 0%,
-      100% 0%,
-      100% 88%,
-      88% 100%,
-      0% 100%,
-      0% 12%
-    );
-  }
-}
-@layer utilities {
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+/* 2. تنظيم الـ Base Styles */
+@layer base {
+  body {
+    @apply bg-bg-inner text-foreground antialiased;
+    font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+/* 3. الـ Dark Mode يفضل يتعمل بمتغيرات الـ Theme نفسه */
+@variant dark (&:where(.dark, .dark *));
