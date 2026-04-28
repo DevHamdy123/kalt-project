@@ -2,6 +2,7 @@ import Hero from "@/components/landing/Hero/Hero";
 import CollectionSection from "@/components/landing/Collection/CollectionSection";
 import CategoryShowcase from "@/components/landing/Category.tsx/CategoryShowcase";
 import AboutSection from "@/components/landing/About/AboutSection";
+import AnatomySection from "@/components/landing/Anatomy/AnatomySection";
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
       <CategoryShowcase />
       <CollectionSection />
       <AboutSection />
+      <AnatomySection />
     </div>
   );
 }
