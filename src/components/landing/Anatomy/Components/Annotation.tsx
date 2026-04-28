@@ -37,7 +37,7 @@ export default function Annotation({ step, progress }: AnnotationProps) {
   return (
     <motion.div
       style={{ opacity, top: step.position.top }}
-      className={`absolute z-[100] flex flex-col gap-1 w-[110px] sm:w-[160px] lg:w-[200px] xl:w-[280px] -translate-y-1/2 ${
+      className={`absolute z-100 flex flex-col gap-1 w-27.5 sm:w-40 lg:w-50 xl:w-70 -translate-y-1/2 ${
         isRight
           ? "right-[1%] sm:right-[3%] lg:right-[4%] xl:right-[10%]"
           : "left-[1%] sm:left-[3%] lg:left-[4%] xl:left-[10%]"

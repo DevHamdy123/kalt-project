@@ -20,7 +20,6 @@ export default function AboutSection() {
   };
 
   return (
-    // التعديل: شلنا الـ py-24 من تحت عشان ندي مساحة للسلايدر ونضمن الـ h-dvh تكون مرتاحة
     <section className="relative w-full h-dvh bg-bg-inner text-black flex flex-col overflow-hidden px-5 md:px-16 lg:px-24 pt-5 pb-0 lg:pt-24 lg:pb-0">
       {/* ===================== MAIN CONTENT: SPLIT REVEAL ===================== */}
       <div className="flex-1 flex flex-col lg:flex-row gap-2 lg:gap-0 z-10 min-h-0">

@@ -55,11 +55,11 @@ export default function HoodieFrame({
     <div className="relative flex items-center justify-center w-full h-full pointer-events-none z-10">
       <motion.div
         style={{ opacity: cardOpacity }}
-        className="absolute w-[50vw] sm:w-[40vw] md:w-[28vw] lg:w-[300px] aspect-[3/4] bg-bg-outer brutalist-mask z-30 shadow-2xl"
+        className="absolute w-[50vw] sm:w-[40vw] md:w-[28vw] lg:w-75 aspect-3/4 bg-bg-outer brutalist-mask z-30 shadow-2xl"
       />
       <motion.div
         style={{ scale }}
-        className="absolute w-[50vw] sm:w-[40vw] md:w-[28vw] lg:w-[300px] aspect-[3/4] z-40 flex items-center justify-center"
+        className="absolute w-[50vw] sm:w-[40vw] md:w-[28vw] lg:w-75 aspect-3/4 z-40 flex items-center justify-center"
       >
         <Image
           src="/images/img15.webp"
