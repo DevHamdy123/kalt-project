@@ -18,12 +18,14 @@ export default function HeroLabels() {
         ✦
       </span>
 
-      <span className={`${luxLabelStyle} absolute bottom-0 left-0 pb-2`}>
+      <span
+        className={`${luxLabelStyle} absolute bottom-0 md:bottom-8 left-0 pb-2`}
+      >
         HIGH-END / STREETWEAR
       </span>
 
       <span
-        className={`${luxLabelStyle} absolute bottom-0 right-0 pb-2 text-right`}
+        className={`${luxLabelStyle} absolute bottom-0 md:bottom-8 right-0 pb-2 text-right`}
       >
         LIVE STYLE / <br /> NOW
       </span>

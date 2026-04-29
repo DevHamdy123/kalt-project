@@ -1,5 +1,6 @@
 "use client";
 import { CategoryData } from "./category-data";
+import { motion } from "framer-motion";
 
 interface CategoryMenuProps {
   categories: CategoryData[];
@@ -13,7 +14,17 @@ export default function CategoryMenu({
   onSelect,
 }: CategoryMenuProps) {
   return (
-    <div
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
+      variants={{
+        hidden: { opacity: 0 },
+        visible: {
+          opacity: 1,
+          transition: { staggerChildren: 0.1, delayChildren: 0.4 },
+        },
+      }}
       className="w-fit self-end lg:w-75 lg:self-auto shrink-0 flex flex-col items-end gap-2 h-[25vh] lg:h-87.5 overflow-y-auto overscroll-contain no-scrollbar pr-2 lg:pr-5 z-20 mt-2 lg:mt-0"
       style={{
         maskImage:
@@ -23,8 +34,16 @@ export default function CategoryMenu({
       {categories.map((cat) => {
         const isActive = activeCat.id === cat.id;
         return (
-          <button
+          <motion.button
             key={cat.id}
+            variants={{
+              hidden: { opacity: 0, x: 30 },
+              visible: {
+                opacity: 1,
+                x: 0,
+                transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+              },
+            }}
             onClick={() => onSelect(cat)}
             className={`flex items-start justify-end w-full gap-2 transition-all duration-500 group ${
               isActive ? "opacity-100" : "opacity-30 hover:opacity-60"
@@ -53,9 +72,9 @@ export default function CategoryMenu({
                 {cat.count}
               </span>
             </div>
-          </button>
+          </motion.button>
         );
       })}
-    </div>
+    </motion.div>
   );
 }

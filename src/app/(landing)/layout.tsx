@@ -1,7 +1,7 @@
 "use client";
 import { useRef } from "react";
 import { useInView } from "framer-motion";
-import FooterSection from "@/components/landing/Footer/FooterSection";
+import FooterSection from "@/components/layout/Footer/FooterSection";
 
 export default function LandingLayout({
   children,

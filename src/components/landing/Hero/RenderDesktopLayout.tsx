@@ -1,11 +1,17 @@
+"use client";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 const RenderDesktopLayout = () => {
   return (
-    <div className="hidden md:flex flex-1 w-full items-center justify-center relative z-20">
-      <div className="relative z-20 flex items-end h-[70vh] lg:h-[75vh] w-[clamp(28%,40vw,60%)]">
-        {" "}
-        <div className="absolute right-[clamp(82%,10vw,90%)] top-[clamp(15%,20vh,25%)] flex flex-col items-end w-max z-30">
+    <div className="hidden md:flex flex-1 w-full items-end justify-center relative z-20">
+      <div className="relative z-20 flex items-end h-[70vh] lg:h-[80vh] w-[clamp(28%,40vw,60%)]">
+        <motion.div
+          initial={{ opacity: 0, x: -40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute right-[clamp(82%,10vw,90%)] top-[clamp(8%,12vh,18%)] flex flex-col items-end w-max z-30"
+        >
           <h2 className="text-[clamp(3rem,6.5vw,8rem)] font-black tracking-tighter uppercase leading-[0.75] text-right text-black/90 select-none drop-shadow-sm">
             where <br /> - style
           </h2>
@@ -15,18 +21,32 @@ const RenderDesktopLayout = () => {
             with high-end aesthetics, delivering uncompromising quality for
             those who dictate tomorrow's trends.
           </p>
+        </motion.div>
+
+        <div className="relative w-full h-full overflow-hidden">
+          <motion.div
+            initial={{ y: "20%", opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 1.2, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            className="relative w-full h-full"
+          >
+            <Image
+              src="/images/img6.webp"
+              alt="Model"
+              fill
+              priority
+              quality={100}
+              className="object-contain object-bottom scale-[1.2] lg:scale-[1.15] drop-shadow-2xl transition-transform duration-700"
+            />
+          </motion.div>
         </div>
-        <div className="relative w-full h-full">
-          <Image
-            src="/images/img6.webp"
-            alt="Model"
-            fill
-            priority
-            quality={100}
-            className="object-contain object-bottom scale-[clamp(1.1,1.15,1.2)] drop-shadow-2xl"
-          />
-        </div>
-        <div className="absolute left-[clamp(82%,10vw,90%)] top-[clamp(15%,20vh,25%)] flex flex-col items-start w-max z-30">
+
+        <motion.div
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute left-[clamp(82%,10vw,90%)] top-[clamp(8%,12vh,18%)] flex flex-col items-start w-max z-30"
+        >
           <h2 className="text-[clamp(3rem,6.5vw,8rem)] font-black tracking-tighter uppercase leading-[0.75] text-left text-black/90 select-none drop-shadow-sm">
             lives <br /> - now
           </h2>
@@ -38,7 +58,7 @@ const RenderDesktopLayout = () => {
               </span>
             </div>
           </button>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

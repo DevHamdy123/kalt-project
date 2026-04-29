@@ -13,7 +13,7 @@ export const BRIDGE_COLLECTIONS: BridgeCollection[] = [
     year: "2025",
     description:
       "Your go-to wardrobe staples, crafted for comfort and effortless style.",
-    image: "/images/img15.webp", // حط مسار الصورة المناسبة
+    image: "/images/img10.webp",
   },
   {
     id: 2,
@@ -21,20 +21,20 @@ export const BRIDGE_COLLECTIONS: BridgeCollection[] = [
     year: "2026",
     description:
       "Industrial seams that withstand the urban beat and daily grind.",
-    image: "/images/img15.webp",
+    image: "/images/img11.webp",
   },
   {
     id: 3,
     title: "Timeless Classics",
     year: "2026",
     description: "Enduring designs that transcend seasonal trends.",
-    image: "/images/img15.webp",
+    image: "/images/img13.webp",
   },
   {
     id: 4,
     title: "Seasonal Collections",
     year: "2025",
     description: "Limited drops designed for the current climate.",
-    image: "/images/img15.webp",
+    image: "/images/img17.webp",
   },
 ];

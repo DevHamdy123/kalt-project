@@ -8,24 +8,46 @@ export const CollectionCard = ({ item, isHero }: CollectionCardProps) => {
       id={isHero ? "dropzone" : undefined}
       className="w-full! h-full! relative block"
     >
-      <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent group-hover:opacity-100 transition-opacity duration-500">
+      <div className="absolute inset-0 w-full h-full overflow-hidden bg-black/5">
         <Image
           src={item.img}
-          alt="KALT Piece"
+          alt={item.name}
           fill
-          className="object-cover object-center"
+          sizes="(max-width: 768px) 50vw, 25vw"
+          className={`object-cover object-center transition-transform duration-1000 ease-out ${
+            isHero ? "scale-105" : "scale-100 group-hover:scale-105"
+          }`}
         />
-        <div className="absolute top-4 right-4 z-10 flex flex-col">
-          <span className="text-[9px] text-black/70 bg-white/80 px-2 py-0.5 backdrop-blur-sm font-mono uppercase tracking-widest">
+
+        <div
+          className={`absolute inset-0 bg-linear-to-t from-black/70 via-black/10 to-transparent transition-opacity duration-700 ${
+            isHero ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+          }`}
+        />
+
+        <div
+          className={`absolute top-4 right-4 z-10 flex flex-col transition-all duration-700 ${
+            isHero
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0"
+          }`}
+        >
+          <span className="text-[9px] text-black/90 bg-white/90 px-2 py-0.5 backdrop-blur-sm font-mono uppercase tracking-widest">
             [ {item.id} ]
           </span>
         </div>
-        <div className="absolute bottom-4 left-4 z-10 w-full pr-8">
-          <p className="text-xs text-white font-bold uppercase tracking-tighter mix-blend-difference">
+
+        <div
+          className={`absolute bottom-4 left-4 z-10 w-full pr-8 transition-all duration-700 ${
+            isHero
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0"
+          }`}
+        >
+          <p className="text-xs text-white font-bold uppercase tracking-tighter drop-shadow-md">
             {item.name}
           </p>
         </div>
-        {isHero && <div className="absolute inset-0 bg-black/5" />}
       </div>
     </BaseCardWrapper>
   );

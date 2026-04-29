@@ -162,7 +162,6 @@ export default function FooterSection({ isVisible }: { isVisible: boolean }) {
         </div>
       </div>
 
-      {/* التدرج اللوني السفلي */}
       <div className="absolute bottom-0 left-0 w-full h-32 bg-linear-to-t from-black to-transparent pointer-events-none" />
     </footer>
   );

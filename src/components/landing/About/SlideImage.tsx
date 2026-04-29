@@ -8,15 +8,18 @@ interface SlideImageProps {
 }
 
 export default function SlideImage({ currentSlide }: SlideImageProps) {
+  const customEase = [0.22, 1, 0.36, 1] as const;
+
   return (
     <div className="flex-1 min-h-0 relative w-full flex items-center justify-center mt-2 lg:mt-0 z-10">
       <AnimatePresence mode="wait">
         <motion.div
           key={currentSlide.id}
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 1.05 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          //(Motion Blur effect)
+          initial={{ opacity: 0, scale: 0.95, x: 40, filter: "blur(8px)" }}
+          animate={{ opacity: 1, scale: 1, x: 0, filter: "blur(0px)" }}
+          exit={{ opacity: 0, scale: 1.02, x: -40, filter: "blur(8px)" }}
+          transition={{ duration: 0.7, ease: customEase }}
           className="relative h-[95%] lg:h-auto w-auto lg:w-[80%] xl:w-[70%] max-w-md aspect-4/5 flex justify-center items-end"
         >
           <div
@@ -31,6 +34,7 @@ export default function SlideImage({ currentSlide }: SlideImageProps) {
               src={currentSlide.img}
               alt={`KALT ${currentSlide.label}`}
               fill
+              priority
               className="object-contain object-bottom scale-[0.98] origin-bottom drop-shadow-2xl"
             />
           </div>
