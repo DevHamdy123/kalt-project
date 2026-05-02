@@ -77,7 +77,7 @@ export default function HoodieFrame({
         className="absolute w-[50vw] sm:w-[40vw] md:w-[28vw] lg:w-75 aspect-3/4 z-40 flex items-center justify-center"
       >
         <Image
-          src="/images/img15.webp"
+          src="/images/img18.webp"
           alt="Anatomy"
           fill
           className="object-contain drop-shadow-2xl"

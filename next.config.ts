@@ -1,11 +1,5 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  // الحركة دي هي اللي هتحل إيرور التيرمينال
-  allowedDevOrigins: ["192.168.1.5:3000"],
+import type { NextConfig } from "next";
 
-  images: {
-    qualities: [75, 100],
-  },
-};
+const nextConfig: NextConfig = {};
 
 export default nextConfig;

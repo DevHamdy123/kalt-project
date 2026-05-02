@@ -20,11 +20,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className={geistSans.variable}>
-      <body className="antialiased font-sans flex flex-col min-h-screen relative  text-foreground">
+      <body className="antialiased font-sans relative text-foreground selection:bg-black selection:text-white">
         <SmoothScrollProvider>
-          <div className="fixed inset-0 pointer-events-none z-9999" />
+          <div className="fixed inset-0 pointer-events-none z-50" />
 
-          <main className="flex-1 w-full flex flex-col">{children}</main>
+          <main>{children}</main>
         </SmoothScrollProvider>
       </body>
     </html>

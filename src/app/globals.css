@@ -43,6 +43,31 @@
     width: 100%;
     position: relative;
   }
+
+  /* --- التعديل الجديد لبار الاسكرول النحيف --- */
+  ::-webkit-scrollbar {
+    width: 6px; /* عرض نحيف جداً */
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent; /* خلفية شفافة */
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1); /* رمادي خفيف جداً */
+    border-radius: 10px;
+    transition: background 0.3s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3); /* يغمق لما تقرب منه */
+  }
+
+  /* دعم Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+  }
 }
 
 /* Lenis CSS - المربط الأساسي للفخامة والأداء */
