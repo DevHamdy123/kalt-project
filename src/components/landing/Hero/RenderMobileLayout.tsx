@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 
 const RenderMobileLayout = () => {
@@ -36,7 +37,8 @@ const RenderMobileLayout = () => {
           />
         </motion.div>
 
-        <motion.button
+        {/* التعديل هنا: استخدام motion.div بدلاً من button لكي لا يتعارض مع Link */}
+        <motion.div
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{
@@ -47,12 +49,15 @@ const RenderMobileLayout = () => {
           }}
           className="absolute right-3 bottom-[15%] z-30 group"
         >
-          <div className="w-24 h-24 border border-black/50 rounded-full backdrop-blur-sm flex items-center justify-center active:scale-95 transition-transform group-hover:border-black group-hover:bg-black cursor-pointer">
-            <span className="text-[9px] font-bold text-black uppercase tracking-tighter leading-tight text-center group-hover:text-white">
-              Shop '26 <br /> Collection
-            </span>
-          </div>
-        </motion.button>
+          {/* تغليف المحتوى بـ Link لتوجيه المستخدم للمتجر مباشرة */}
+          <Link href="/shop">
+            <div className="w-24 h-24 border border-black/50 rounded-full backdrop-blur-sm flex items-center justify-center active:scale-95 transition-transform group-hover:border-black group-hover:bg-black cursor-pointer">
+              <span className="text-[9px] font-bold text-black uppercase tracking-tighter leading-tight text-center group-hover:text-white">
+                Shop '26 <br /> Collection
+              </span>
+            </div>
+          </Link>
+        </motion.div>
       </div>
 
       <motion.div

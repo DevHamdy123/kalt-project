@@ -1,30 +1,30 @@
 "use client";
-import { ReactLenis } from "@studio-freight/react-lenis";
-import { ReactNode, ComponentProps } from "react";
 
-// هنا بنجيب الـ Props الأصلية بتاعة المكتبة وبنعدل الـ children يدوي
-// عشان نضمن إنها تمشي مع React 18/19
-type LenisProps = ComponentProps<typeof ReactLenis> & {
+import { ReactLenis } from "lenis/react";
+import { ReactNode, useMemo } from "react";
+
+interface SmoothScrollProviderProps {
   children: ReactNode;
-};
+}
 
 export default function SmoothScrollProvider({
   children,
-}: {
-  children: ReactNode;
-}) {
+}: SmoothScrollProviderProps) {
+  // استخدام useMemo يضمن عدم إعادة إنشاء كائن الخصائص مع كل رندر للمشروع
+  // هذا يمنع إعادة تهيئة المستمعين (Event Listeners) وهو السبب الرئيسي للاج
+  const lenisOptions = useMemo(
+    () => ({
+      lerp: 0.05,
+      duration: 1.5,
+      smoothWheel: true,
+      wheelMultiplier: 0.8,
+    }),
+    [],
+  );
+
   return (
-    <ReactLenis
-      root
-      options={{
-        lerp: 0.05,
-        duration: 1.5,
-        smoothWheel: true,
-        wheelMultiplier: 0.8,
-      }}
-      // بنعمل Type Casting للـ Component نفسه مش للـ children
-      // ده حل أنضف بكتير وبيحل المشكلة من جدرها
-      {...({ children } as LenisProps)}
-    />
+    <ReactLenis root options={lenisOptions}>
+      {children}
+    </ReactLenis>
   );
 }

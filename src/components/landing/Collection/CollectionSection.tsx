@@ -1,12 +1,12 @@
 "use client";
 import { useRef, useState } from "react";
+import { useRouter } from "next/navigation"; // 1. استيراد الـ Router
 import {
   motion,
   AnimatePresence,
   useScroll,
   useMotionValueEvent,
 } from "framer-motion";
-
 import Slider from "@/components/common/Slider";
 import { CollectionCard } from "./CollectionCard";
 import { MOCK_COLLECTION, SLOT_CLASSES } from "./Collection-data";
@@ -16,6 +16,7 @@ const TOTAL_STEPS = MOCK_COLLECTION.length;
 const CollectionSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [startIndex, setStartIndex] = useState(0);
+  const router = useRouter(); // 2. تفعيل الـ Router داخل الكومبوننت
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -45,15 +46,15 @@ const CollectionSection = () => {
   return (
     <section ref={containerRef} className="w-full h-[350vh] relative">
       <div className="sticky top-0 w-full h-dvh bg-[#FDFDFD] flex flex-col overflow-hidden">
-        <div className="flex-1 flex flex-col w-full px-5 md:px-[clamp(20px,5vw,80px)] py-4 justify-between min-h-0">
+        <div className=" flex-1 flex flex-col w-full px-5 md:px-[clamp(20px,5vw,80px)] py-4 justify-between min-h-0">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.8, ease: customEase }}
-            className="shrink-0"
+            className="shrink-0 lg:absolute lg:top-10 lg:left-20 z-30"
           >
-            <h2 className="text-[clamp(2rem,4vw,3.5rem)] uppercase tracking-tighter leading-none text-black wrap-break-word mb-3 lg:mb-0 lg:absolute lg:top-20 lg:left-20 z-30 font-light">
+            <h2 className="text-[clamp(2rem,4vw,3.5rem)] uppercase tracking-tighter leading-none text-black wrap-break-word mb-3 lg:mb-0  font-light">
               <span className="font-light opacity-90">New</span>
               <span className="font-bold">_Collection</span>
             </h2>
@@ -94,7 +95,11 @@ const CollectionSection = () => {
             <span className="text-[clamp(1.2rem,4vw,2.5rem)] font-bold uppercase tracking-tighter leading-none">
               FOR_MORE
             </span>
-            <button className="flex shrink-0 items-center justify-center w-[clamp(32px,4vw,48px)] h-[clamp(32px,4vw,48px)] rounded-full border border-black hover:bg-black hover:text-white transition-all duration-500 cursor-pointer group">
+            {/* 3. التعديل هنا: إضافة onClick للتوجيه البرمجي المباشر */}
+            <button
+              onClick={() => router.push("/shop")}
+              className="flex shrink-0 items-center justify-center w-[clamp(32px,4vw,48px)] h-[clamp(32px,4vw,48px)] rounded-full border border-black hover:bg-black hover:text-white transition-all duration-500 cursor-pointer group"
+            >
               <span className="text-xl md:text-2xl font-light leading-none transition-transform duration-500 group-hover:rotate-90">
                 +
               </span>

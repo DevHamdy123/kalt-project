@@ -1,6 +1,7 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
 import { BridgeCollection } from "./Bridge-data";
+import Link from "next/link";
 
 interface Props {
   collection: BridgeCollection;
@@ -10,6 +11,12 @@ interface Props {
 
 export default function BridgeCard({ collection, isOpen, onHover }: Props) {
   const customEase = [0.22, 1, 0.36, 1] as const;
+
+  // تحويل "Statement Pieces" إلى "statement-pieces" بشكل دقيق ومطابق للـ DB والـ CatalogHeader
+  const categorySlug = collection.title
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-");
 
   return (
     <motion.div
@@ -55,12 +62,18 @@ export default function BridgeCard({ collection, isOpen, onHover }: Props) {
                 <p className="max-w-sm text-xs text-neutral-500 mt-2 lg:mt-4 leading-relaxed font-medium">
                   {collection.description}
                 </p>
-                <button className="mt-3 lg:mt-5 border border-black px-4 lg:px-5 py-1.5 lg:py-2 rounded-full text-[10px] lg:text-xs tracking-wider uppercase font-bold flex items-center gap-2 hover:bg-black hover:text-white transition-all w-fit group/btn">
+
+                <Link
+                  /* ضفنا كلمة /shop قبل علامة الاستفهام عشان نجبره يروح للصفحة الصح */
+                  href={`/shop?category=${categorySlug}#shop-catalog`}
+                  /* شيلنا scroll={false} عشان نسمح للمتصفح ينزل للكاتالوج في الصفحة الجديدة */
+                  className="mt-3 lg:mt-5 border border-black px-4 lg:px-5 py-1.5 lg:py-2 rounded-full text-[10px] lg:text-xs tracking-wider uppercase font-bold flex items-center gap-2 hover:bg-black hover:text-white transition-all w-fit group/btn"
+                >
                   GET STARTED{" "}
                   <span className="group-hover/btn:translate-x-1 transition-transform">
                     →
                   </span>
-                </button>
+                </Link>
               </motion.div>
             )}
           </AnimatePresence>

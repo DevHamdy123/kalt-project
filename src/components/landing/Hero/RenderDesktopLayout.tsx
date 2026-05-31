@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 
 const RenderDesktopLayout = () => {
@@ -51,13 +52,17 @@ const RenderDesktopLayout = () => {
             lives <br /> - now
           </h2>
 
-          <button className="mt-8 group relative flex items-center justify-center">
+          {/* التعديل تم هنا: استبدال button بـ Link */}
+          <Link
+            href="/shop"
+            className="mt-8 group relative flex items-center justify-center"
+          >
             <div className="w-[clamp(100px,10vw,140px)] h-[clamp(100px,10vw,140px)] border border-black/70 rounded-full flex items-center justify-center transition-all duration-500 group-hover:border-black group-hover:bg-black cursor-pointer">
               <span className="text-[10px] xl:text-[11px] font-bold text-black group-hover:text-white transition-colors duration-500 uppercase tracking-widest leading-tight text-center">
                 Shop '26 <br /> Collection
               </span>
             </div>
-          </button>
+          </Link>
         </motion.div>
       </div>
     </div>

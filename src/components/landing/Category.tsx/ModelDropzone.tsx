@@ -10,17 +10,17 @@ interface ModelDropzoneProps {
 export default function ModelDropzone({ activeCat }: ModelDropzoneProps) {
   return (
     <div className="relative w-full flex-1 min-h-0 flex justify-center items-center z-10 py-2 lg:py-0">
-      <div className="relative w-[60%] sm:w-[50%] md:w-[45%] lg:w-[85%] xl:w-[70%] max-w-137.5 max-h-full aspect-4/5">
-        {/* ClipPath Background */}
+      <div className="relative w-[60%] sm:w-[50%] md:w-[45%] lg:w-[85%] xl:w-[70%] max-w-137.5 max-h-full aspect-[4/5]">
+        {/* التعديل هنا: رجعنا لدرجات الظل الخفيفة والأنيقة */}
         <div
-          className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent group-hover:opacity-100 transition-opacity z-0 duration-500"
+          className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent z-0"
           style={{
             clipPath:
               "polygon(20% 13%, 100% 12%, 100% 70%, 83% 70%, 100% 88%, 100% 100%, 17% 100%, 7% 84%, 7% 28%)",
           }}
         />
 
-        {/* Animation Container */}
+        {/* Animation Container للصور */}
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] h-[95%] z-10 flex justify-center items-end">
           <AnimatePresence mode="wait">
             <motion.div

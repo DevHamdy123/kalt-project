@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import SmoothScrollProvider from "@/providers/SmoothScroll/SmoothScrollProvider";
+import QueryProvider from "@/providers/QueryProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,11 +22,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={geistSans.variable}>
       <body className="antialiased font-sans relative text-foreground selection:bg-black selection:text-white">
-        <SmoothScrollProvider>
-          <div className="fixed inset-0 pointer-events-none z-50" />
+        <QueryProvider>
+          <SmoothScrollProvider>
+            <div className="fixed inset-0 pointer-events-none z-50" />
 
-          <main>{children}</main>
-        </SmoothScrollProvider>
+            <main>{children}</main>
+          </SmoothScrollProvider>
+        </QueryProvider>
       </body>
     </html>
   );

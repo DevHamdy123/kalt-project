@@ -10,12 +10,27 @@ interface SideMenuProps {
   onClose: () => void;
 }
 
+// التعديل هنا: ربطنا الروابط بالأقسام الحقيقية اللي برمجناها
 const MENU_LINKS = [
-  { name: "Shop All", href: "/shop" },
-  { name: "Collections", href: "/collections" },
-  { name: "Product Anatomy", href: "#anatomy" },
-  { name: "Our Philosophy", href: "#about" },
-  { name: "Contact", href: "/contact" },
+  { name: "Home", href: "/" },
+  { name: "Shop", href: "/shop" }, // التعديل هنا: إضافة الرابط الرئيسي للمتجر
+  { name: "All Archive", href: "/shop#shop-catalog" },
+  {
+    name: "Statement Pieces",
+    href: "/shop?category=statement-pieces#shop-catalog",
+  },
+  {
+    name: "Everyday Essentials",
+    href: "/shop?category=everyday-essentials#shop-catalog",
+  },
+  {
+    name: "Timeless Classics",
+    href: "/shop?category=timeless-classics#shop-catalog",
+  },
+  {
+    name: "Seasonal Drops",
+    href: "/shop?category=seasonal-collections#shop-catalog",
+  },
 ];
 
 export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
@@ -26,13 +41,18 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
   }, []);
 
   useEffect(() => {
+    const scrollBarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
+
     if (isOpen) {
       document.body.style.overflow = "hidden";
+      document.body.style.paddingRight = `${scrollBarWidth}px`;
     } else {
       document.body.style.overflow = "unset";
     }
     return () => {
       document.body.style.overflow = "unset";
+      document.body.style.paddingRight = "0px";
     };
   }, [isOpen]);
 
@@ -43,7 +63,7 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
   const menuContent = (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-9999 pointer-events-none flex">
+        <div className="fixed inset-0 z-[9999] pointer-events-none flex">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -80,6 +100,7 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ delay: 0.2 + i * 0.1 }}
                 >
+                  {/* الـ Link هنا بيعمل onClose أوتوماتيك لما نضغط عليه */}
                   <Link
                     href={link.href}
                     onClick={onClose}

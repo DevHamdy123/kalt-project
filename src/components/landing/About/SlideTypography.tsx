@@ -13,7 +13,7 @@ export default function SlideTypography({
 }: SlideTypographyProps) {
   return (
     <div className="shrink-0 lg:flex-1 flex flex-col justify-center gap-3 lg:gap-8 relative z-20">
-      {/* Tоп Elements */}
+      {/* Important Elements */}
       <div className="flex flex-col gap-1 lg:gap-3">
         <div className="text-[clamp(3rem,8vw,7rem)] uppercase tracking-tighter leading-none font-bold opacity-100 flex items-baseline gap-1">
           <span>{currentSlide.id}</span>

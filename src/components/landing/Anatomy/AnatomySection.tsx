@@ -5,6 +5,8 @@ import { useScroll, motion } from "framer-motion";
 import { ANATOMY_STEPS } from "./constants";
 import HoodieFrame from "./Components/HoodieFrame";
 import Annotation from "./Components/Annotation";
+// 1. استيراد السلايدر (تأكد من مسار الاستيراد حسب هيكل مشروعك)
+import Slider from "@/components/common/Slider";
 
 export default function AnatomySection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -49,6 +51,12 @@ export default function AnatomySection() {
         {ANATOMY_STEPS.map((step) => (
           <Annotation key={step.id} step={step} progress={scrollYProgress} />
         ))}
+
+        {/* 2. إضافة السلايدر بتموضع مطلق في أسفل الشاشة */}
+        <div className="absolute bottom-0 left-0 w-full z-50">
+          {/* استخدمنا الثيم الفاتح ليتماشى مع خلفية السكشن البيضاء fdfdfd */}
+          <Slider theme="light" />
+        </div>
       </div>
     </section>
   );

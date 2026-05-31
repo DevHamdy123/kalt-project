@@ -4,6 +4,7 @@ import CategoryShowcase from "@/components/landing/Category.tsx/CategoryShowcase
 import AboutSection from "@/components/landing/About/AboutSection";
 import AnatomySection from "@/components/landing/Anatomy/AnatomySection";
 import BridgeSection from "@/components/landing/Bridge/BridgeSection";
+import ScrollToTop from "@/components/common/ScrollToTop";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       <AboutSection />
       <AnatomySection />
       <BridgeSection />
+      <ScrollToTop />
     </div>
   );
 }

@@ -1,8 +1,9 @@
 "use client";
+
 import Link from "next/link";
+import { useEffect, useState, useRef } from "react";
 import { Reveal } from "@/components/common/Reveal";
 
-// ================== Types & Data ==================
 interface IFooterLink {
   name: string;
   href: string;
@@ -44,8 +45,6 @@ const FOOTER_LINKS = [
     ],
   },
 ];
-
-// ================== Sub-Components ==================
 
 const Newsletter = ({ active }: { active: boolean }) => (
   <div className="lg:col-span-2 flex flex-col gap-6">
@@ -134,31 +133,52 @@ const BrandSignature = ({ active }: { active: boolean }) => (
   </div>
 );
 
-// ================== Main Footer Component ==================
-export default function FooterSection({ isVisible }: { isVisible: boolean }) {
+// التعديل هنا: الفوتر يعتمد على نفسه لتحديد ظهوره
+export default function FooterSection() {
+  const [holdVisible, setHoldVisible] = useState(false);
+  const footerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setHoldVisible(true);
+          observer.disconnect(); // إيقاف المراقبة بعد أول ظهور لتوفير الموارد
+        }
+      },
+      { threshold: 0.1 }, // يبدأ الأنيميشن عند ظهور 10% من الفوتر
+    );
+
+    if (footerRef.current) {
+      observer.observe(footerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <footer
-      className="sticky bottom-0 left-0 w-full bg-[#080808] text-white overflow-hidden -z-10"
-      style={{ minHeight: "650px" }}
+      ref={footerRef}
+      className="relative lg:sticky bottom-0 left-0 w-full bg-[#080808] text-white overflow-hidden z-10 flex flex-col"
     >
-      <div className="h-full flex flex-col justify-between pt-32 pb-6">
+      <div className="flex-1 flex flex-col justify-between pt-24 pb-6 min-h-[85vh] lg:min-h-[650px]">
         <div className="px-5 md:px-16 lg:px-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-16 lg:gap-10">
-          <Newsletter active={isVisible} />
+          <Newsletter active={holdVisible} />
 
           {FOOTER_LINKS.map((group, idx) => (
             <NavGroup
               key={idx}
               title={group.title}
               links={group.links}
-              active={isVisible}
+              active={holdVisible}
               delay={0.3 + idx * 0.1}
             />
           ))}
         </div>
 
-        <div className="flex flex-col items-center">
-          <LegalLinks active={isVisible} />
-          <BrandSignature active={isVisible} />
+        <div className="flex flex-col items-center mt-16 lg:mt-0">
+          <LegalLinks active={holdVisible} />
+          <BrandSignature active={holdVisible} />
         </div>
       </div>
 

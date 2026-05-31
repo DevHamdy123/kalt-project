@@ -1,6 +1,4 @@
-"use client";
-import { useRef } from "react";
-import { useInView } from "framer-motion";
+// تم حذف "use client" ليصبح التخطيط Server Component سريع جداً
 import FooterSection from "@/components/layout/Footer/FooterSection";
 
 export default function LandingLayout({
@@ -8,21 +6,19 @@ export default function LandingLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const scrollRef = useRef(null);
-
-  const isFooterVisible = useInView(scrollRef, {
-    amount: 0.2,
-  });
-
   return (
     <main className="relative w-full">
+      {/* طبقة المحتوى الأساسي 
+        تحتفظ بالظل العالي وتغطي الفوتر 
+      */}
       <div className="relative z-20 bg-bg-inner shadow-[0_20px_50px_rgba(0,0,0,0.1)]">
         {children}
-
-        <div ref={scrollRef} className="h-10 w-full bg-transparent" />
       </div>
 
-      <FooterSection isVisible={isFooterVisible} />
+      {/* الفوتر هنا يعتمد على نفسه في الأنيميشن 
+        وموجود في طبقة سفلية لينگشف عند التمرير 
+      */}
+      <FooterSection />
     </main>
   );
 }

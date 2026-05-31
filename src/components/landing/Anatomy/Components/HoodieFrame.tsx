@@ -19,10 +19,14 @@ export default function HoodieFrame({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Card Opacity
   const cardOpacity = useTransform(
     progress,
+    // Scroll Value
     [0, 0.05, 0.15, 0.9, 0.98, 1],
+    // Opacity value
     [1, 1, 0, 0, 1, 1],
+
     { clamp: true },
   );
 
@@ -30,6 +34,7 @@ export default function HoodieFrame({
     clamp: true,
   });
 
+  // Responsive scaling across different screen sizes
   const maxScale =
     screenWidth >= 1536
       ? 2.4
@@ -41,6 +46,7 @@ export default function HoodieFrame({
             ? 1.4
             : 1.2;
 
+  // Dynamic scaling based on scroll progression
   const scale = useTransform(
     progress,
     [0, 0.05, 0.2, 0.85, 0.98, 1],
@@ -48,6 +54,7 @@ export default function HoodieFrame({
     { clamp: true },
   );
 
+  // Scroll-linked positioning
   const yOffset = useTransform(progress, [0, 0.2], [0, -20], { clamp: true });
 
   if (!mounted) return null;

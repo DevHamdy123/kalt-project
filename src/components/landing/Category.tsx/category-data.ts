@@ -3,12 +3,60 @@ export interface CategoryData {
   name: string;
   count: string;
   img: string;
+  color: string;
 }
 
 export const CATEGORIES_DATA: CategoryData[] = [
-  { id: "01", name: "Shirt", count: "(174)", img: "/images/img7.webp" },
-  { id: "02", name: "Jacket", count: "(361)", img: "/images/img6.webp" },
-  { id: "03", name: "Jeans", count: "(368)", img: "/images/img1.webp" },
-  { id: "04", name: "Outer", count: "(117)", img: "/images/img2.webp" },
-  { id: "05", name: "Shoes", count: "(78)", img: "/images/img3.webp" },
+  {
+    id: "05",
+    name: "BOXY",
+    count: "(31)",
+    img: "/images/img3.webp",
+    color: "#7292af", // أزرق مائل للرمادي
+  },
+  {
+    id: "03",
+    name: "VAULT",
+    count: "(18)",
+    img: "/images/img1.webp",
+    color: "#d4a39b", // المائل للوردي/السيمون الفاتح
+  },
+
+  {
+    id: "02",
+    name: "RAW",
+    count: "(42)",
+    img: "/images/img10.webp",
+    color: "#18181b", // الأسود الكلاسيكي
+  },
+  {
+    id: "01",
+    name: "CORE",
+    count: "(24)",
+    img: "/images/img6.webp",
+    color: "#FF7A00", // البرتقالي
+  },
+  // --- المنتجات الجديدة تم إضافتها هنا ---
+  {
+    id: "06",
+    name: "EARTH",
+    count: "(18)",
+    img: "/images/img4.webp", // قم بتغيير الاسم ليطابق صورة الهودي البني لديك
+    color: "#5C4033", // البني
+  },
+  {
+    id: "07",
+    name: "SAGE",
+    count: "(21)",
+    img: "/images/img7.webp", // قم بتغيير الاسم ليطابق صورة الهودي الأخضر لديك
+    color: "#8E937F", // الأخضر الفاتح (Sage)
+  },
+  // ----------------------------------------
+  {
+    id: "04",
+    name: "DROP",
+    count: "(12)",
+    img: "/images/img13.webp",
+    color: "#101820", // الأسود الداكن أو الكحلي الغامق
+  },
 ];
