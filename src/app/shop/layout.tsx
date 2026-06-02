@@ -1,7 +1,5 @@
 import ConditionalFooter from "@/components/layout/Footer/ConditionalFooter";
 import StoreNavbar from "@/components/shop/StoreNavbar/StoreNavbar";
-// 1. استدعاء التوستر هنا
-import { Toaster } from "sonner";
 
 export default function ShopLayout({
   children,
@@ -21,21 +19,6 @@ export default function ShopLayout({
       <ConditionalFooter />
 
       {/* 4. حاوية الإشعارات: تضاف هنا لتكون متاحة في كل صفحات المتجر */}
-      <Toaster
-        position="bottom-right"
-        toastOptions={{
-          style: {
-            background: "black",
-            color: "white",
-            border: "1px solid #333",
-            borderRadius: "0px",
-            textTransform: "uppercase",
-            letterSpacing: "0.1em",
-            fontSize: "12px",
-            fontWeight: "bold",
-          },
-        }}
-      />
     </div>
   );
 }

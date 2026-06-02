@@ -38,7 +38,7 @@ export default function RootLayout({
         </AuthProvider>
 
         {/* 3. إضافة التوستر هنا عشان يشتغل على مستوى المشروع كله */}
-        <Toaster position="top-center" richColors />
+        <Toaster position="bottom-right" richColors />
       </body>
     </html>
   );
