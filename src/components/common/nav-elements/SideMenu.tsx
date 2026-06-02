@@ -5,6 +5,7 @@ import { X, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import AuthButton from "./AuthButton";
 
 interface SideMenuProps {
   isOpen: boolean;
@@ -119,12 +120,7 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
             </nav>
 
             <div className="p-8">
-              <button className="w-full bg-[#b91c1c] text-white py-4 rounded-xl flex items-center justify-center gap-3 shadow-lg hover:bg-red-700 transition-colors group active:scale-[0.98]">
-                <LogOut size={20} />
-                <span className="font-bold uppercase tracking-tight">
-                  Log Out
-                </span>
-              </button>
+              <AuthButton />
             </div>
           </motion.div>
         </div>

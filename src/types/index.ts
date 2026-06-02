@@ -1,4 +1,6 @@
-export type Role = "ADMIN" | "USER";
+import { Role as PrismaRole } from "@prisma/client";
+
+export type Role = PrismaRole;
 
 export interface ProductImage {
   id: string;

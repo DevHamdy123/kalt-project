@@ -5,8 +5,8 @@ import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { Menu } from "lucide-react";
 import Link from "next/link";
 
-import SideMenu from "./SideMenu";
 import NavActions from "./NavActions";
+import SideMenu from "@/components/common/nav-elements/SideMenu";
 
 export default function StoreNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

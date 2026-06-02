@@ -3,14 +3,15 @@
 import { useState } from "react";
 import { motion, Variants } from "framer-motion";
 import Link from "next/link";
-import { ArrowLeft, Eye, EyeOff, User } from "lucide-react";
+import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { toast } from "sonner";
+import axios from "axios";
 
 // 1. أيقونات جوجل وجيت هاب المخصصة
 const GoogleIcon = ({ size = 18 }: { size?: number }) => (
@@ -37,13 +38,19 @@ const GithubIcon = ({ size = 18 }: { size?: number }) => (
   </svg>
 );
 
-// 2. إعدادات التحقق من الفورم
-const loginSchema = z.object({
-  email: z.string().email({ message: "INVALID EMAIL FORMAT" }),
-  password: z.string().min(6, { message: "MINIMUM 6 CHARACTERS REQUIRED" }),
-});
+const registerSchema = z
+  .object({
+    name: z.string().min(2, { message: "NAME IS REQUIRED" }),
+    email: z.string().email({ message: "INVALID EMAIL FORMAT" }),
+    password: z.string().min(6, { message: "MINIMUM 6 CHARACTERS" }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "PASSWORDS DO NOT MATCH",
+    path: ["confirmPassword"],
+  });
 
-type LoginValues = z.infer<typeof loginSchema>;
+type RegisterValues = z.infer<typeof registerSchema>;
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -62,43 +69,45 @@ const itemVariants: Variants = {
   },
 };
 
-export default function LoginForm() {
+export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const router = useRouter();
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginValues>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<RegisterValues>({
+    resolver: zodResolver(registerSchema),
   });
 
-  // دالة الدخول اليدوي
-  const onSubmit = async (data: LoginValues) => {
+  // دالة التسجيل اليدوي (حفظ في قاعدة البيانات)
+  const onSubmit = async (data: RegisterValues) => {
     try {
-      const res = await signIn("credentials", {
+      const response = await axios.post("/api/register", {
+        name: data.name,
         email: data.email,
         password: data.password,
-        redirect: false,
       });
 
-      if (res?.error) {
-        toast.error(res.error);
-        return;
+      if (response.status === 201) {
+        toast.success("Identity Created. Proceed to login.");
+        router.push("/login");
       }
-
-      if (res?.ok) {
-        toast.success("Access Granted. Welcome back, Agent.");
-        router.push("/");
-        router.refresh();
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const errorMessage =
+          error.response?.data?.message || "Registration failed. Try again.";
+        toast.error(errorMessage);
+      } else {
+        toast.error("An unexpected error occurred.");
       }
-    } catch {
-      toast.error("System Malfunction. Try again later.");
     }
   };
 
-  // دالة الدخول بحسابات السوشيال
+  // دالة التسجيل/الدخول بحسابات السوشيال
   const handleOAuthSignIn = async (provider: "google" | "github") => {
     try {
       await signIn(provider, { callbackUrl: "/" });
@@ -107,45 +116,11 @@ export default function LoginForm() {
     }
   };
 
-  // دالة الدخول كضيف
-  const handleGuestSignIn = () => {
-    toast.success("Welcome, Guest Agent. Access Limited.");
-    router.push("/");
-  };
-
   return (
     <main className="min-h-screen bg-white flex flex-col md:flex-row font-sans overflow-hidden">
-      {/* 1. الجانب الأيسر (الهوية السوداء) */}
+      {/* 1. الجانب الأيسر (نموذج التسجيل + الزراير) */}
       <motion.div
         initial={{ x: "100%" }}
-        animate={{ x: 0 }}
-        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-        className="hidden md:flex md:w-1/2 bg-[#050505] text-white relative items-center justify-center overflow-hidden p-12 z-20"
-      >
-        <div
-          className="absolute inset-0 opacity-20 pointer-events-none mix-blend-overlay"
-          style={{ backgroundImage: "url('/images/noise.png')" }}
-        />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-white/5 blur-[120px] rounded-full pointer-events-none" />
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, delay: 0.4 }}
-          className="z-10 text-center flex flex-col items-center"
-        >
-          <h2 className="text-7xl lg:text-9xl font-black uppercase tracking-tighter text-white mb-6 select-none">
-            KALT
-          </h2>
-          <div className="w-12 h-[1px] bg-white/20 mb-6" />
-          <p className="text-white/40 font-bold uppercase tracking-[0.4em] text-[10px] lg:text-xs">
-            Restricted Access // Syndicate Members Only
-          </p>
-        </motion.div>
-      </motion.div>
-
-      {/* 2. الجانب الأيمن (الفورم + الزراير) */}
-      <motion.div
-        initial={{ x: "-100%" }}
         animate={{ x: 0 }}
         transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
         className="w-full md:w-1/2 flex flex-col px-6 py-12 md:px-16 lg:px-24 justify-center relative min-h-screen bg-white z-10"
@@ -169,19 +144,15 @@ export default function LoginForm() {
           animate="show"
           className="w-full max-w-md mx-auto mt-12 md:mt-0"
         >
-          <motion.div
-            variants={itemVariants}
-            className="mb-10 text-center md:text-left"
-          >
+          <motion.div variants={itemVariants} className="mb-10">
             <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-4 text-black">
-              Identify
+              Enlist
             </h1>
             <p className="text-black/50 text-xs md:text-sm font-medium uppercase tracking-widest leading-relaxed">
-              Enter credentials or use a secure provider.
+              Create your archive access or use a secure provider.
             </p>
           </motion.div>
 
-          {/* الفورم اليدوية */}
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-6 mb-8"
@@ -191,16 +162,34 @@ export default function LoginForm() {
               className="flex flex-col gap-3 group"
             >
               <label className="text-[10px] font-bold uppercase tracking-widest text-black/50 group-focus-within:text-black transition-colors">
+                Agent Name
+              </label>
+              <input
+                type="text"
+                {...register("name")}
+                className={`w-full border-b bg-transparent py-3 text-base font-medium outline-none transition-all duration-300 placeholder:text-black/20 ${errors.name ? "border-[#b91c1c] text-[#b91c1c]" : "border-black/10 focus:border-black text-black"}`}
+                placeholder="John Doe"
+              />
+              {errors.name && (
+                <span className="text-[#b91c1c] text-[9px] font-bold uppercase tracking-widest mt-1">
+                  {errors.name.message}
+                </span>
+              )}
+            </motion.div>
+
+            <motion.div
+              variants={itemVariants}
+              className="flex flex-col gap-3 group"
+            >
+              <label className="text-[10px] font-bold uppercase tracking-widest text-black/50 group-focus-within:text-black transition-colors">
                 Email Address
               </label>
-              <div className="relative">
-                <input
-                  type="email"
-                  {...register("email")}
-                  className={`w-full border-b bg-transparent py-3 text-base font-medium outline-none transition-all duration-300 placeholder:text-black/20 ${errors.email ? "border-[#b91c1c] text-[#b91c1c]" : "border-black/10 focus:border-black text-black"}`}
-                  placeholder="agent@kalt.com"
-                />
-              </div>
+              <input
+                type="email"
+                {...register("email")}
+                className={`w-full border-b bg-transparent py-3 text-base font-medium outline-none transition-all duration-300 placeholder:text-black/20 ${errors.email ? "border-[#b91c1c] text-[#b91c1c]" : "border-black/10 focus:border-black text-black"}`}
+                placeholder="agent@kalt.com"
+              />
               {errors.email && (
                 <span className="text-[#b91c1c] text-[9px] font-bold uppercase tracking-widest mt-1">
                   {errors.email.message}
@@ -212,22 +201,14 @@ export default function LoginForm() {
               variants={itemVariants}
               className="flex flex-col gap-3 relative group"
             >
-              <div className="flex justify-between items-end">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-black/50 group-focus-within:text-black transition-colors">
-                  Password
-                </label>
-                <Link
-                  href="#"
-                  className="text-[9px] font-bold uppercase tracking-widest text-black/30 hover:text-black underline transition-colors"
-                >
-                  Lost Key?
-                </Link>
-              </div>
+              <label className="text-[10px] font-bold uppercase tracking-widest text-black/50 group-focus-within:text-black transition-colors">
+                Password
+              </label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
                   {...register("password")}
-                  className={`w-full border-b bg-transparent py-3 text-base font-medium outline-none transition-all duration-300 placeholder:text-black/20 pr-10 ${errors.password ? "border-[#b91c1c] text-[#b91c1c]" : "border-black/10 focus:border-black text-black"}`}
+                  className={`w-full border-b bg-transparent py-3 text-base font-medium outline-none transition-all duration-300 pr-10 ${errors.password ? "border-[#b91c1c] text-[#b91c1c]" : "border-black/10 focus:border-black text-black"}`}
                   placeholder="••••••••"
                 />
                 <button
@@ -245,6 +226,39 @@ export default function LoginForm() {
               )}
             </motion.div>
 
+            <motion.div
+              variants={itemVariants}
+              className="flex flex-col gap-3 relative group"
+            >
+              <label className="text-[10px] font-bold uppercase tracking-widest text-black/50 group-focus-within:text-black transition-colors">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  {...register("confirmPassword")}
+                  className={`w-full border-b bg-transparent py-3 text-base font-medium outline-none transition-all duration-300 pr-10 ${errors.confirmPassword ? "border-[#b91c1c] text-[#b91c1c]" : "border-black/10 focus:border-black text-black"}`}
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 text-black/30 hover:text-black transition-colors"
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff size={16} />
+                  ) : (
+                    <Eye size={16} />
+                  )}
+                </button>
+              </div>
+              {errors.confirmPassword && (
+                <span className="text-[#b91c1c] text-[9px] font-bold uppercase tracking-widest mt-1">
+                  {errors.confirmPassword.message}
+                </span>
+              )}
+            </motion.div>
+
             <motion.button
               variants={itemVariants}
               whileHover={{ scale: 1.02 }}
@@ -253,7 +267,7 @@ export default function LoginForm() {
               disabled={isSubmitting}
               className="w-full bg-black text-white py-4 mt-2 text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 shadow-[0_10px_40px_rgba(0,0,0,0.1)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.2)] disabled:opacity-50"
             >
-              {isSubmitting ? "Authenticating..." : "Authenticate"}
+              {isSubmitting ? "Processing..." : "Create Identity"}
             </motion.button>
           </form>
 
@@ -269,7 +283,7 @@ export default function LoginForm() {
             </div>
           </motion.div>
 
-          {/* زراير الدخول السريع (التعديل الجديد) */}
+          {/* زراير الدخول السريع (التعديل الجديد بدون ضيف) */}
           <div className="flex flex-row items-center justify-center gap-6">
             <motion.button
               variants={itemVariants}
@@ -292,17 +306,6 @@ export default function LoginForm() {
             >
               <GithubIcon size={20} />
             </motion.button>
-
-            <motion.button
-              variants={itemVariants}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={handleGuestSignIn}
-              title="Guest"
-              className="w-14 h-14 rounded-full bg-white border border-black/10 text-black flex items-center justify-center transition-all duration-300 hover:border-black hover:bg-black/5 shadow-sm"
-            >
-              <User size={20} />
-            </motion.button>
           </div>
 
           <motion.div
@@ -310,15 +313,43 @@ export default function LoginForm() {
             className="mt-10 pt-8 border-t border-black/5 text-center"
           >
             <p className="text-[10px] font-bold uppercase tracking-widest text-black/40">
-              No access code yet?{" "}
+              Already enlisted?{" "}
               <Link
-                href="/register"
+                href="/login"
                 className="text-black hover:underline ml-2 transition-colors"
               >
-                Enlist Now
+                Identify
               </Link>
             </p>
           </motion.div>
+        </motion.div>
+      </motion.div>
+
+      {/* 2. الجانب الأيمن (الهوية السوداء) */}
+      <motion.div
+        initial={{ x: "-100%" }}
+        animate={{ x: 0 }}
+        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+        className="hidden md:flex md:w-1/2 bg-[#050505] text-white relative items-center justify-center overflow-hidden p-12 z-20"
+      >
+        <div
+          className="absolute inset-0 opacity-20 pointer-events-none mix-blend-overlay"
+          style={{ backgroundImage: "url('/images/noise.png')" }}
+        />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-white/5 blur-[120px] rounded-full pointer-events-none" />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.2, delay: 0.4 }}
+          className="z-10 text-center flex flex-col items-center"
+        >
+          <h2 className="text-7xl lg:text-9xl font-black uppercase tracking-tighter text-white mb-6 select-none">
+            KALT
+          </h2>
+          <div className="w-12 h-[1px] bg-white/20 mb-6" />
+          <p className="text-white/40 font-bold uppercase tracking-[0.4em] text-[10px] lg:text-xs">
+            Initiation // New Blood Protocol
+          </p>
         </motion.div>
       </motion.div>
     </main>

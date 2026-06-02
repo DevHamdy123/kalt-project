@@ -114,7 +114,7 @@ export default function StoreDesktopLayout() {
             </div>
             <button
               onClick={scrollToCatalog} // 4. ربط الدالة بالزرار
-              className="bg-black text-white px-8 py-4 font-bold uppercase tracking-widest hover:bg-neutral-800 transition-all"
+              className="bg-black text-white px-8 py-4 font-bold uppercase tracking-widest rounded-xl cursor-pointer hover:bg-neutral-800 transition-all"
             >
               SHOP NOW →
             </button>

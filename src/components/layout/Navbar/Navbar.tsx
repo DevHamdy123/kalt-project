@@ -1,30 +1,33 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Menu, Search, Store, User } from "lucide-react";
 import { motion } from "framer-motion";
+import { Menu, Search, Store, User } from "lucide-react";
 import Link from "next/link";
-import SideMenu from "./SideMenu";
+import { useSession } from "next-auth/react"; // 1. استيراد الـ session
+import Image from "next/image"; // 2. استيراد Image
+import SideMenu from "@/components/common/nav-elements/SideMenu";
+import ProfileDropdown from "@/components/common/nav-elements/ProfileDropdown"; // 3. استيراد المنيو المشتركة
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false); // حالة المنيو
+
+  const { data: session, status } = useSession(); // جلب بيانات الجلسة
+  const isLoggedIn = status === "authenticated";
 
   const inputRef = useRef<HTMLInputElement>(null);
   const customEase = [0.22, 1, 0.36, 1] as const;
 
-  // التركيز تلقائياً على حقل الإدخال عند تمدده
   useEffect(() => {
     if (isSearchOpen && inputRef.current) {
       inputRef.current.focus();
     }
   }, [isSearchOpen]);
 
-  // الأيقونات التفاعلية مع مساراتها وتأخير الأنيميشن
-  const actionIcons = [
-    { Icon: Store, href: "/shop", delay: 0.3 },
-    { Icon: User, href: "/profile", delay: 0.4 },
-  ];
+  // الأيقونات الأساسية (شيلنا منها الـ User عشان هنعمله لوحده)
+  const actionIcons = [{ Icon: Store, href: "/shop", delay: 0.3 }];
 
   return (
     <>
@@ -60,7 +63,7 @@ export default function Navbar() {
 
         {/* الأيقونات وشريط البحث */}
         <div className="flex-1 flex justify-end gap-2 md:gap-3">
-          {/* 1. شريط البحث التفاعلي المتمدد */}
+          {/* البحث */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -85,7 +88,6 @@ export default function Navbar() {
                 }`}
                 placeholder="Search..."
               />
-
               <button
                 onClick={() => setIsSearchOpen(true)}
                 className={`absolute right-0 w-10 h-10 md:w-11 md:h-11 flex items-center justify-center rounded-full z-10 transition-colors duration-300 ${
@@ -99,7 +101,7 @@ export default function Navbar() {
             </motion.div>
           </motion.div>
 
-          {/* 2. أيقونة المتجر (ShoppingBag) والبروفايل (User) */}
+          {/* الأيقونات (Store) */}
           {actionIcons.map((item, idx) => (
             <motion.div
               key={idx}
@@ -119,6 +121,48 @@ export default function Navbar() {
               </Link>
             </motion.div>
           ))}
+
+          {/* أيقونة البروفايل (الديناميكية) */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4, ease: customEase }}
+            className="relative"
+          >
+            {isLoggedIn ? (
+              <button
+                onClick={() => setIsProfileOpen(!isProfileOpen)}
+                className="w-10 h-10 md:w-11 md:h-11 rounded-full overflow-hidden border border-white hover:scale-105 transition-all duration-300"
+              >
+                {session?.user?.image ? (
+                  <Image
+                    src={session.user.image}
+                    alt="Profile"
+                    width={40}
+                    height={40}
+                    className="w-full h-full object-cover cursor-pointer"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-black text-white flex items-center justify-center text-xs font-bold">
+                    {session?.user?.name?.[0] || "U"}
+                  </div>
+                )}
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                className="w-10 h-10 md:w-11 md:h-11 bg-border-white rounded-full flex items-center justify-center cursor-pointer hover:border-black hover:bg-black hover:text-border-white hover:scale-105 transition-all duration-300 border border-white text-black"
+              >
+                <User size={18} strokeWidth={1.5} />
+              </Link>
+            )}
+
+            {/* استخدام الكومبوننت المشترك */}
+            <ProfileDropdown
+              isOpen={isProfileOpen}
+              onClose={() => setIsProfileOpen(false)}
+            />
+          </motion.div>
         </div>
       </header>
     </>
