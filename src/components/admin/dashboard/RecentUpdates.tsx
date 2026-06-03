@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const updates = [
   {
     name: "Mike Tyson",
@@ -25,26 +27,28 @@ const updates = [
 export function RecentUpdates() {
   return (
     <div>
-      <h2 className="text-xl font-bold text-foreground mb-4">Recent Updates</h2>
-      <div className="bg-card p-6 rounded-3xl shadow-sm border border-border/50">
+      <h2 className="text-xl font-bold text-[#363949] mb-4">Recent Updates</h2>
+      <div className="bg-white p-6 rounded-[1.5rem] shadow-[0_2rem_3rem_rgba(132,139,200,0.18)] hover:shadow-none transition-shadow">
         <div className="flex flex-col gap-6">
           {updates.map((update, index) => (
             <div key={index} className="flex gap-4 items-start">
-              <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 border border-border/50 bg-secondary">
-                <img
+              <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 bg-[#f6f6f9]">
+                <Image
                   src={update.img}
                   alt={update.name}
-                  className="w-full h-full object-cover"
+                  width={40}
+                  height={40}
+                  className="object-cover"
                 />
               </div>
               <div>
-                <p className="text-sm text-foreground">
+                <p className="text-sm text-[#363949]">
                   <span className="font-bold">{update.name}</span>{" "}
-                  {update.action} {update.product}
+                  <span className="text-[#7d8da1]">
+                    {update.action} {update.product}
+                  </span>
                 </p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {update.time}
-                </p>
+                <p className="text-xs text-[#7d8da1] mt-1">{update.time}</p>
               </div>
             </div>
           ))}

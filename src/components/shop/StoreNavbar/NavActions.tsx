@@ -2,13 +2,19 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { User, Home, ShoppingCart, Search, Store } from "lucide-react";
+import {
+  User,
+  Home,
+  ShoppingCart,
+  Search,
+  Store,
+  LayoutDashboard,
+} from "lucide-react"; // إضافة LayoutDashboard
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCartStore } from "@/store/useCartStore";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-// استيراد الكومبوننت اللي فصلناه
 import ProfileDropdown from "@/components/common/nav-elements/ProfileDropdown";
 
 export default function NavActions() {
@@ -20,6 +26,9 @@ export default function NavActions() {
   const { data: session, status } = useSession();
   const isLoggedIn = status === "authenticated";
 
+  // التحقق هل اليوزر ده أدمن ولا لأ
+  const isAdmin = (session?.user as any)?.role === "ADMIN";
+
   const items = useCartStore((state) => state.items);
   const totalItems = items.reduce((total, item) => total + item.quantity, 0);
 
@@ -27,7 +36,19 @@ export default function NavActions() {
   const isCartPage = pathname === "/shop/cart";
   const customEase = [0.22, 1, 0.36, 1] as const;
 
+  // بناء القائمة ديناميكياً
   const navLinks = [
+    ...(isAdmin
+      ? [
+          {
+            name: "dashboard",
+            Icon: LayoutDashboard,
+            href: "/admin",
+            hasBadge: false,
+            hideOnMobile: false,
+          },
+        ]
+      : []),
     {
       name: "shop",
       Icon: isCartPage ? Store : ShoppingCart,
@@ -53,7 +74,6 @@ export default function NavActions() {
 
   return (
     <div className="flex justify-end items-center gap-2 md:gap-3">
-      {/* البحث */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -71,19 +91,24 @@ export default function NavActions() {
           <input
             ref={inputRef}
             onBlur={() => setIsSearchOpen(false)}
-            className={`absolute left-0 h-full w-full bg-transparent pl-4 pr-12 text-sm outline-none text-black ${isSearchOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
+            className={`absolute left-0 h-full w-full bg-transparent pl-4 pr-12 text-sm outline-none text-black ${
+              isSearchOpen
+                ? "pointer-events-auto opacity-100"
+                : "pointer-events-none opacity-0"
+            }`}
             placeholder="Search..."
           />
           <button
             onClick={() => setIsSearchOpen(true)}
-            className={`absolute right-0 w-10 h-10 md:w-11 md:h-11 flex items-center justify-center rounded-full z-10 transition-colors duration-300 ${isSearchOpen ? "text-black hover:bg-black/5" : "text-current"}`}
+            className={`absolute right-0 w-10 h-10 md:w-11 md:h-11 flex items-center justify-center rounded-full z-10 transition-colors duration-300 ${
+              isSearchOpen ? "text-black hover:bg-black/5" : "text-current"
+            }`}
           >
             <Search size={18} strokeWidth={1.5} />
           </button>
         </motion.div>
       </motion.div>
 
-      {/* الـ Loop للأيقونات */}
       {navLinks.map((item, idx) => (
         <motion.div
           key={item.name}
@@ -110,7 +135,6 @@ export default function NavActions() {
         </motion.div>
       ))}
 
-      {/* أيقونة البروفايل */}
       <div className="relative ">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -146,7 +170,6 @@ export default function NavActions() {
           )}
         </motion.div>
 
-        {/* استخدام الكومبوننت المشترك هنا */}
         <ProfileDropdown
           isOpen={isProfileOpen}
           onClose={() => setIsProfileOpen(false)}

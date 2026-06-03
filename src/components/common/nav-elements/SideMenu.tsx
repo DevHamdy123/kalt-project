@@ -1,22 +1,27 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { X, LogOut } from "lucide-react";
+import { X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import AuthButton from "./AuthButton";
-
+import { useSession } from "next-auth/react";
+// 1. بنستورد النوع الافتراضي بتاع الجلسة من المكتبة
+import type { DefaultSession } from "next-auth";
+// 2. بنعمل Interface مخصص بيورث خصائص اليوزر العادي وبنضيف عليه الـ role
+type CustomUser = DefaultSession["user"] & {
+  role?: string;
+};
 interface SideMenuProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-// التعديل هنا: إضافة رابط السلة (Cart) في الترتيب المناسب
 const MENU_LINKS = [
   { name: "Home", href: "/" },
   { name: "Shop", href: "/shop" },
-  { name: "Cart", href: "/shop/cart" }, // <-- الرابط الجديد
+  { name: "Cart", href: "/shop/cart" },
   { name: "All Archive", href: "/shop#shop-catalog" },
   {
     name: "Statement Pieces",
@@ -38,6 +43,17 @@ const MENU_LINKS = [
 
 export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
   const [mounted, setMounted] = useState(false);
+  const { data: session } = useSession();
+
+  // 3. بنحول اليوزر للنوع المخصص بتاعنا بشكل صريح وآمن (Type Casting)
+  const user = session?.user as CustomUser | undefined;
+
+  // 4. التايب سكريبت دلوقتي عارف إن فيه حاجة اسمها role وإنت في السليم
+  const isAdmin = user?.role === "ADMIN";
+
+  const activeLinks = isAdmin
+    ? [{ name: "KALT  (Admin)", href: "/admin" }, ...MENU_LINKS]
+    : MENU_LINKS;
 
   useEffect(() => {
     setMounted(true);
@@ -96,7 +112,7 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
             </div>
 
             <nav className="flex-1 flex flex-col justify-center px-8 md:px-12 gap-8">
-              {MENU_LINKS.map((link, i) => (
+              {activeLinks.map((link, i) => (
                 <motion.div
                   key={link.name}
                   initial={{ x: -20, opacity: 0 }}
@@ -111,7 +127,9 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
                     <span className="font-mono text-xs opacity-40">
                       0{i + 1}
                     </span>
-                    <span className="text-xl md:text-2xl font-medium uppercase tracking-tighter group-hover:translate-x-2 transition-transform duration-300">
+                    <span
+                      className={`text-xl md:text-2xl font-medium uppercase tracking-tighter group-hover:translate-x-2 transition-transform duration-300 ${link.name.includes("Admin") ? "text-[#ff5c00]" : ""}`}
+                    >
                       {link.name}
                     </span>
                   </Link>

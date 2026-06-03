@@ -2,20 +2,23 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Menu, Search, Store, User } from "lucide-react";
+import { Menu, Search, Store, User, LayoutDashboard } from "lucide-react"; // إضافة LayoutDashboard
 import Link from "next/link";
-import { useSession } from "next-auth/react"; // 1. استيراد الـ session
-import Image from "next/image"; // 2. استيراد Image
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 import SideMenu from "@/components/common/nav-elements/SideMenu";
-import ProfileDropdown from "@/components/common/nav-elements/ProfileDropdown"; // 3. استيراد المنيو المشتركة
+import ProfileDropdown from "@/components/common/nav-elements/ProfileDropdown";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false); // حالة المنيو
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
-  const { data: session, status } = useSession(); // جلب بيانات الجلسة
+  const { data: session, status } = useSession();
   const isLoggedIn = status === "authenticated";
+
+  // التحقق هل اليوزر ده أدمن ولا لأ
+  const isAdmin = (session?.user as any)?.role === "ADMIN";
 
   const inputRef = useRef<HTMLInputElement>(null);
   const customEase = [0.22, 1, 0.36, 1] as const;
@@ -26,15 +29,18 @@ export default function Navbar() {
     }
   }, [isSearchOpen]);
 
-  // الأيقونات الأساسية (شيلنا منها الـ User عشان هنعمله لوحده)
-  const actionIcons = [{ Icon: Store, href: "/shop", delay: 0.3 }];
+  // بناء الأيقونات ديناميكياً بناءً على الصلاحيات
+  const actionIcons = [];
+  if (isAdmin) {
+    actionIcons.push({ Icon: LayoutDashboard, href: "/admin", delay: 0.2 });
+  }
+  actionIcons.push({ Icon: Store, href: "/shop", delay: 0.3 });
 
   return (
     <>
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
       <header className="w-full flex items-center justify-between relative z-20 pt-4">
-        {/* زر القائمة الجانبية */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -49,7 +55,6 @@ export default function Navbar() {
           </button>
         </motion.div>
 
-        {/* اللوجو */}
         <motion.div
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -61,9 +66,7 @@ export default function Navbar() {
           </h2>
         </motion.div>
 
-        {/* الأيقونات وشريط البحث */}
         <div className="flex-1 flex justify-end gap-2 md:gap-3">
-          {/* البحث */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -101,7 +104,6 @@ export default function Navbar() {
             </motion.div>
           </motion.div>
 
-          {/* الأيقونات (Store) */}
           {actionIcons.map((item, idx) => (
             <motion.div
               key={idx}
@@ -122,7 +124,6 @@ export default function Navbar() {
             </motion.div>
           ))}
 
-          {/* أيقونة البروفايل (الديناميكية) */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -157,7 +158,6 @@ export default function Navbar() {
               </Link>
             )}
 
-            {/* استخدام الكومبوننت المشترك */}
             <ProfileDropdown
               isOpen={isProfileOpen}
               onClose={() => setIsProfileOpen(false)}
