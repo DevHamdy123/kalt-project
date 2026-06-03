@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const recentOrders = [
   {
     id: "85631",
@@ -76,12 +78,12 @@ export function RecentOrders() {
           </table>
         </div>
         <div className="p-4 text-center border-t border-[#f6f6f9]">
-          <a
+          <Link
             href="#"
             className="text-[#ff5c00] font-medium hover:underline text-sm"
           >
             Show All
-          </a>
+          </Link>
         </div>
       </div>
     </div>

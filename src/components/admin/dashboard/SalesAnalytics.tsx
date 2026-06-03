@@ -1,4 +1,4 @@
-import { ShoppingCart, ShoppingBag, UserPlus, Plus } from "lucide-react";
+import { ShoppingCart, ShoppingBag, UserPlus, Plus, Link } from "lucide-react";
 
 export function SalesAnalytics() {
   return (
@@ -62,10 +62,15 @@ export function SalesAnalytics() {
         </div>
 
         {/* Add Product Button */}
-        <button className="mt-2 flex items-center justify-center gap-2 w-full p-4 rounded-[1.5rem] border-2 border-dashed border-[#ff5c00]/50 text-[#ff5c00] font-bold hover:bg-[#ff5c00] hover:text-white transition-colors">
-          <Plus className="w-5 h-5" />
-          Add Product
-        </button>
+        <div className="w-full">
+          <Link
+            href="/admin/products/new"
+            className="mt-4 flex items-center justify-center gap-2 w-full p-4 rounded-[1.5rem] border-2 border-dashed border-[#ff5c00]/50 text-[#ff5c00] font-bold hover:bg-[#ff5c00] hover:text-white transition-all duration-300"
+          >
+            <Plus className="w-5 h-5" />
+            Add Product
+          </Link>
+        </div>
       </div>
     </div>
   );

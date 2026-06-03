@@ -75,7 +75,8 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         const u = user as unknown as ExtendedUser;
         token.id = u.id;
-        token.role = u.role;
+        // أضفنا القيمة الافتراضية هنا كنوع من الحماية الإضافية
+        token.role = u.role || "USER";
       }
       return token;
     },

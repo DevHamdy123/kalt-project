@@ -11,33 +11,42 @@ enum Role {
   ADMIN
 }
 
+// ضفنا enum لحالات الطلب عشان نتحكم في ألوان الـ Badges في الداشبورد
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
   email         String?   @unique
   emailVerified DateTime?
   image         String?
-  password      String?   // السطر ده هو اللي ضفناه
-  role          Role      @default(USER) // أو على حسب ما إنت كاتبها
+  password      String?   
+  role          Role      @default(USER) 
   accounts      Account[]
   sessions      Session[]
+  orders        Order[]   // علاقة جديدة: المستخدم الواحد يقدر يعمل كذا طلب
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
 
-// --- الجداول المطلوبة لعمل NextAuth ---
 model Account {
   id                 String  @id @default(cuid())
   userId             String
   type               String
   provider           String
   providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
+  refresh_token      String? @db.Text
+  access_token       String? @db.Text
   expires_at         Int?
   token_type         String?
   scope              String?
-  id_token           String?  @db.Text
+  id_token           String? @db.Text
   session_state      String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -53,7 +62,6 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-// --- الجداول الخاصة بالمتجر (بدون تعديل) ---
 model Category {
   id        String    @id @default(cuid())
   name      String    @unique
@@ -64,21 +72,26 @@ model Category {
 }
 
 model Product {
-  id          String   @id @default(cuid())
+  id          String      @id @default(cuid())
   name        String
-  slug        String   @unique
-  description String?  @db.Text
-  price       Decimal  @db.Decimal(10, 2)
-  stock       Int      @default(0)
-  isFeatured  Boolean  @default(false)
-  isArchived  Boolean  @default(false)
+  slug        String      @unique
+  description String?     @db.Text
+  price       Decimal     @db.Decimal(10, 2)
+  stock       Int         @default(0)
+  isFeatured  Boolean     @default(false)
+  isArchived  Boolean     @default(false)
   
-  category    Category @relation(fields: [categoryId], references: [id])
+  // ضفنا مصفوفات عشان الملابس بيكون ليها مقاسات وألوان متعددة
+  sizes       String[]    @default(["S", "M", "L", "XL"])
+  colors      String[]    @default([])
+  
+  category    Category    @relation(fields: [categoryId], references: [id])
   categoryId  String
   
   images      Image[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  orderItems  OrderItem[] // علاقة جديدة: المنتج ممكن يظهر في كذا طلبية
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 
   @@index([categoryId])
 }
@@ -91,6 +104,43 @@ model Image {
   productId String
   createdAt DateTime @default(now())
 
+  @@index([productId])
+}
+
+// --- الجداول الجديدة الخاصة بالطلبيات والمبيعات ---
+
+model Order {
+  id         String      @id @default(cuid())
+  status     OrderStatus @default(PENDING)
+  totalPrice Decimal     @db.Decimal(10, 2)
+  isPaid     Boolean     @default(false)
+  phone      String      @default("")
+  address    String      @default("")
+  
+  // ربط الطلب بالعميل (لو مسجل)
+  user       User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId     String?
+  
+  orderItems OrderItem[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@index([userId])
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  quantity  Int      @default(1)
+  size      String?  // المقاس اللي العميل اختاره للهودي
+  color     String?  // اللون اللي العميل اختاره
+  
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId   String
+  
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Restrict)
+  productId String
+
+  @@index([orderId])
   @@index([productId])
 }
 

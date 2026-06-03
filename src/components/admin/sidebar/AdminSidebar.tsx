@@ -21,7 +21,7 @@ const adminLinks = [
   { name: "Customers", href: "/admin/customers", icon: Users },
   { name: "Orders", href: "/admin/orders", icon: Receipt },
   { name: "Products", href: "/admin/products", icon: Package },
-  { name: "Add Product", href: "/admin/add-product", icon: Plus },
+  { name: "Add Product", href: "/admin/products/new", icon: Plus },
   { name: "Analytics", href: "/admin/analytics", icon: PieChart },
   { name: "Landing Page", href: "/", icon: Globe },
   { name: "Live Store", href: "/shop", icon: Store },
