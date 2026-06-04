@@ -4,10 +4,12 @@ import { useState, useRef, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { Plus, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 import { productSchema, ProductFormValues } from "@/lib/validations/product";
-import { createProduct } from "@/actions/products";
+// استيراد دالة الإضافة ودالة التحديث مع بعض
+import { createProduct, updateProduct } from "@/actions/products";
+
 import ImageUpload from "../ImageUpload";
 
 const AVAILABLE_SIZES = ["S", "M", "L", "XL", "2XL", "3XL"];
@@ -22,10 +24,12 @@ const AVAILABLE_COLORS = [
 ];
 
 interface ProductFormProps {
-  categories: {
+  categories?: {
     id: string;
     name: string;
   }[];
+  // 1. إضافة الـ Types الخاصة ببيانات التعديل
+  initialData?: (ProductFormValues & { id: string }) | null;
 }
 
 interface CustomSelectProps {
@@ -102,13 +106,23 @@ function CustomSelect({
   );
 }
 
-export default function ProductForm({ categories }: ProductFormProps) {
+// 2. استقبال initialData ضمن الـ Props
+export default function ProductForm({
+  categories = [],
+  initialData,
+}: ProductFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
+  // تحديد العنوان والنصوص بناءً على وجود بيانات سابقة
+  const title = initialData ? "Edit Product" : "Add New Product";
+  const actionText = initialData ? "Update Product" : "Save Product";
+  const loadingText = initialData ? "Updating..." : "Saving...";
+
+  // 3. ربط البيانات القديمة بالفورم
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
-    defaultValues: {
+    defaultValues: initialData || {
       name: "",
       price: 0,
       stock: 0,
@@ -132,7 +146,14 @@ export default function ProductForm({ categories }: ProductFormProps) {
             : [],
       };
 
-      await createProduct(formattedData);
+      if (initialData) {
+        // تنفيذ عملية التحديث الفعلية
+        await updateProduct(initialData.id, formattedData);
+      } else {
+        // تنفيذ عملية الإضافة
+        await createProduct(formattedData);
+      }
+
       router.push("/admin/products");
       router.refresh();
     } catch (error) {
@@ -145,7 +166,7 @@ export default function ProductForm({ categories }: ProductFormProps) {
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white dark:bg-[#202528] rounded-md shadow-sm border border-zinc-200 dark:border-[#313338] transition-colors duration-300">
       <h2 className="text-2xl font-bold mb-6 text-[#363949] dark:text-[#edeffd]">
-        Add New Product
+        {title}
       </h2>
 
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -179,7 +200,6 @@ export default function ProductForm({ categories }: ProductFormProps) {
           )}
         </div>
 
-        {/* قسم البيانات الأساسية - عدلت الـ grid لـ 4 أعمدة عشان الاستوك */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <label className="block text-sm font-medium mb-2 text-[#7d8da1] dark:text-zinc-400">
@@ -216,7 +236,6 @@ export default function ProductForm({ categories }: ProductFormProps) {
             )}
           </div>
 
-          {/* حقل الاستوك الجديد */}
           <div>
             <label className="block text-sm font-medium mb-2 text-[#7d8da1] dark:text-zinc-400">
               Stock
@@ -258,7 +277,6 @@ export default function ProductForm({ categories }: ProductFormProps) {
           </div>
         </div>
 
-        {/* قسم المقاسات والألوان */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-zinc-100 dark:border-[#313338]">
           <div>
             <label className="block text-sm font-medium mb-3 text-[#7d8da1] dark:text-zinc-400">
@@ -326,7 +344,7 @@ export default function ProductForm({ categories }: ProductFormProps) {
           disabled={loading}
           className="w-full bg-zinc-900 dark:bg-[#ff5c00] text-white p-3.5 rounded-md hover:bg-zinc-800 dark:hover:bg-[#e05200] transition-colors disabled:opacity-50 font-bold mt-8"
         >
-          {loading ? "Saving..." : "Save Product"}
+          {loading ? loadingText : actionText}
         </button>
       </form>
     </div>

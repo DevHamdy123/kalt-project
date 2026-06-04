@@ -50,3 +50,63 @@ export async function createProduct(data: ProductFormValues) {
     );
   }
 }
+
+// 5. دالة حذف المنتج الجديدة
+export async function deleteProduct(id: string) {
+  // التأكد من الصلاحيات قبل الحذف
+  const session = await getServerSession(authOptions);
+  if (!session || session.user?.role !== "ADMIN") {
+    throw new Error("Unauthorized");
+  }
+
+  try {
+    await prisma.product.delete({
+      where: { id },
+    });
+
+    // تحديث الصفحة بعد الحذف
+    revalidatePath("/admin/products");
+    return { success: true };
+  } catch (error) {
+    console.error("Delete Error:", error);
+    throw new Error("Failed to delete product.");
+  }
+}
+
+// 6. دالة تحديث المنتج المضافة حديثاً
+export async function updateProduct(id: string, data: ProductFormValues) {
+  // التأكد من الصلاحيات قبل التعديل
+  const session = await getServerSession(authOptions);
+  if (!session || session.user?.role !== "ADMIN") {
+    throw new Error("Unauthorized");
+  }
+
+  try {
+    await prisma.product.update({
+      where: { id },
+      data: {
+        name: data.name,
+        price: data.price,
+        stock: data.stock,
+        categoryId: data.categoryId,
+        sizes: data.sizes,
+        colors: data.colors,
+        // تحديث الصور بشكل آمن وآمن جداً
+        images: {
+          deleteMany: {},
+          createMany: {
+            data: data.images.map((img) => ({ url: img.url })),
+          },
+        },
+      },
+    });
+
+    // تحديث الكاش والصفحة لتعكس التعديلات الجديدة فوراً
+    revalidatePath("/admin/products");
+
+    return { success: true };
+  } catch (error) {
+    console.error("Prisma Update Error:", error);
+    throw new Error("Failed to update product.");
+  }
+}
