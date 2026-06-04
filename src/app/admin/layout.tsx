@@ -9,8 +9,8 @@ export default function AdminLayout({
 }) {
   return (
     <SidebarProvider>
-      {/* خلفية فاتحة ثابتة للداشبورد */}
-      <div className="flex min-h-screen bg-[#f6f6f9] text-[#363949] overflow-x-hidden">
+      {/* ضفنا admin-wrapper وكلاسات الدارك مود والخلفية */}
+      <div className="admin-wrapper flex min-h-screen bg-[#f6f6f9] dark:bg-[#181a1e] text-[#363949] dark:text-[#edeffd] overflow-x-hidden transition-colors duration-300">
         <AdminSidebar />
 
         <div className="flex-1 flex flex-col transition-all duration-300 ml-0 lg:ml-24 w-full">

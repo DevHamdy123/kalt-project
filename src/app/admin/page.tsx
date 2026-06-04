@@ -4,17 +4,23 @@ import { RecentUpdates } from "@/components/admin/dashboard/RecentUpdates";
 import { SalesAnalytics } from "@/components/admin/dashboard/SalesAnalytics";
 
 export default function AdminDashboardPage() {
+  // دالة صغيرة بتجيب تاريخ النهاردة وتنسقه بشكل شيك
+  const currentDate = new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date());
+
   return (
     <div className="pb-12">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          {new Date().toLocaleDateString("en-EG", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-          })}
+      <div className="mb-6">
+        {/* المربع اللي ماسك العنوان والتاريخ */}
+        <h1 className="text-3xl font-bold text-[#363949] dark:text-[#edeffd] transition-colors">
+          Dashboard
+        </h1>
+        <p className="text-sm text-[#7d8da1] dark:text-zinc-400 transition-colors mt-1">
+          {currentDate}
         </p>
       </div>
 

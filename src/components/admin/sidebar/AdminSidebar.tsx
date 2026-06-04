@@ -42,7 +42,7 @@ export default function AdminSidebar() {
       )}
 
       <aside
-        className={`fixed top-0 left-0 z-50 h-screen bg-white transition-all duration-300 overflow-hidden group
+        className={`fixed top-0 left-0 z-50 h-screen bg-white dark:bg-[#202528] transition-all duration-300 overflow-hidden group
         ${isOpen ? "translate-x-0 w-[18rem]" : "-translate-x-full w-[18rem]"}
         lg:translate-x-0 lg:w-24 lg:hover:w-[18rem]
       `}
@@ -54,7 +54,7 @@ export default function AdminSidebar() {
               K
             </div>
             <h2
-              className={`text-2xl font-bold text-[#363949] transition-opacity duration-300 whitespace-nowrap ${isOpen ? "opacity-100" : "opacity-0 lg:group-hover:opacity-100"}`}
+              className={`text-2xl font-bold text-[#363949] dark:text-[#edeffd] transition-opacity duration-300 whitespace-nowrap ${isOpen ? "opacity-100" : "opacity-0 lg:group-hover:opacity-100"}`}
             >
               KAL<span className="text-[#ff5c00]">T</span>
             </h2>
@@ -70,11 +70,11 @@ export default function AdminSidebar() {
                   key={link.name}
                   href={link.href}
                   className={`flex items-center gap-4 px-8 py-4 h-14 relative transition-all duration-300
-                    ${
-                      isActive
-                        ? "text-[#ff5c00] font-bold"
-                        : "text-[#7d8da1] hover:text-[#ff5c00] lg:hover:ml-4"
-                    }`}
+                  ${
+                    isActive
+                      ? "text-[#ff5c00] font-bold"
+                      : "text-[#7d8da1] dark:text-zinc-400 hover:text-[#ff5c00] dark:hover:text-[#ff5c00] lg:hover:ml-4"
+                  }`}
                 >
                   {/* الشريط الجانبي البرتقالي */}
                   {isActive && (
@@ -96,7 +96,7 @@ export default function AdminSidebar() {
           </nav>
 
           <div className="mb-8 mt-4">
-            <button className="flex items-center gap-4 px-8 py-4 h-14 text-[#7d8da1] hover:text-[#ff5c00] transition-all duration-300 lg:hover:ml-4 w-full">
+            <button className="flex items-center gap-4 px-8 py-4 h-14 text-[#7d8da1] dark:text-zinc-400 hover:text-[#ff5c00] dark:hover:text-[#ff5c00] transition-all duration-300 lg:hover:ml-4 w-full">
               <LogOut className="w-6 h-6 shrink-0" />
               <span
                 className={`font-medium text-[1.1rem] transition-opacity duration-300 whitespace-nowrap ${isOpen ? "opacity-100" : "opacity-0 lg:group-hover:opacity-100"}`}

@@ -41,13 +41,15 @@ const recentOrders = [
 export function RecentOrders() {
   return (
     <div className="mt-12">
-      <h2 className="text-xl font-bold text-[#363949] mb-4">Recent Orders</h2>
+      <h2 className="text-xl font-bold text-[#363949] dark:text-[#edeffd] mb-4 transition-colors">
+        Recent Orders
+      </h2>
 
-      <div className="bg-white rounded-[1.5rem] shadow-[0_2rem_3rem_rgba(132,139,200,0.18)] hover:shadow-none transition-shadow overflow-hidden">
+      <div className="bg-white dark:bg-[#202528] rounded-[1.5rem] shadow-[0_2rem_3rem_rgba(132,139,200,0.18)] dark:shadow-[0_2rem_3rem_rgba(0,0,0,0.4)] hover:shadow-none transition-all duration-300 overflow-hidden">
         <div className="overflow-x-auto p-6">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-[#f6f6f9] text-[#363949] font-bold">
+              <tr className="border-b border-[#f6f6f9] dark:border-[#313338] text-[#363949] dark:text-[#edeffd] font-bold transition-colors">
                 <th className="py-4 px-4">Product Name</th>
                 <th className="py-4 px-4">Product Number</th>
                 <th className="py-4 px-4">Payment</th>
@@ -59,9 +61,9 @@ export function RecentOrders() {
               {recentOrders.map((order, index) => (
                 <tr
                   key={index}
-                  className="border-b border-[#f6f6f9] last:border-none text-[#7d8da1] hover:bg-[#f6f6f9] transition-colors"
+                  className="border-b border-[#f6f6f9] dark:border-[#313338] last:border-none text-[#7d8da1] dark:text-zinc-400 hover:bg-[#f6f6f9] dark:hover:bg-[#181a1e] transition-colors"
                 >
-                  <td className="py-4 px-4 font-medium text-[#363949]">
+                  <td className="py-4 px-4 font-medium text-[#363949] dark:text-[#edeffd] transition-colors">
                     {order.name}
                   </td>
                   <td className="py-4 px-4">{order.id}</td>
@@ -69,7 +71,7 @@ export function RecentOrders() {
                   <td className={`py-4 px-4 font-bold ${order.statusColor}`}>
                     {order.status}
                   </td>
-                  <td className="py-4 px-4 text-[#ff5c00] cursor-pointer font-medium hover:underline">
+                  <td className="py-4 px-4 text-[#ff5c00] cursor-pointer font-medium hover:underline transition-colors">
                     Details
                   </td>
                 </tr>
@@ -77,10 +79,10 @@ export function RecentOrders() {
             </tbody>
           </table>
         </div>
-        <div className="p-4 text-center border-t border-[#f6f6f9]">
+        <div className="p-4 text-center border-t border-[#f6f6f9] dark:border-[#313338] transition-colors">
           <Link
             href="#"
-            className="text-[#ff5c00] font-medium hover:underline text-sm"
+            className="text-[#ff5c00] font-medium hover:underline text-sm transition-colors"
           >
             Show All
           </Link>

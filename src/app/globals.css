@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* السطر السحري اللي هيربط التيلويند بالزرار بتاعنا */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme inline {
   --color-bg-outer: #eaeaea;
   --color-bg-inner: #efefef;
@@ -90,4 +93,46 @@ html.lenis {
 /* منع تداخل الـ Iframe مع الاسكرول الناعم */
 .lenis.lenis-scrolling iframe {
   pointer-events: none;
+}
+
+/* ========================================= */
+/* Admin Dashboard Scoped Dark Mode          */
+/* ========================================= */
+
+.dark .admin-wrapper {
+  /* السطر السحري اللي بيظبط ألوان المتصفح الافتراضية */
+  color-scheme: dark;
+
+  /* متغيرات الألوان للوضع المظلم */
+  --admin-bg-dark: #181a1e;
+  --admin-surface-dark: #202528;
+  --admin-text-dark: #edeffd;
+  --admin-border-dark: #313338;
+
+  /* الحفاظ على لون البراند الأساسي */
+  --admin-accent-orange: #ff5c00;
+}
+
+/* تعديل بار الاسكرول في الدارك مود للداش بورد بس */
+.dark .admin-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dark .admin-wrapper::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ========================================= */
+/* تحسينات إضافية للفورم في الداش بورد       */
+/* ========================================= */
+
+/* إخفاء أسهم العداد في حقل الأرقام لشكل أنظف */
+.admin-wrapper input[type="number"]::-webkit-inner-spin-button,
+.admin-wrapper input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.admin-wrapper input[type="number"] {
+  -moz-appearance: textfield; /* لدعم فايرفوكس */
 }

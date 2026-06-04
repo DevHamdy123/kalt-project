@@ -7,6 +7,8 @@ import QueryProvider from "@/providers/QueryProvider";
 import AuthProvider from "@/providers/AuthProvider";
 // 2. استيراد التوستر
 import { Toaster } from "sonner";
+// استيراد الثيم
+import { ThemeProvider } from "@/providers/ThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,19 +28,26 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={geistSans.variable}>
       <body className="antialiased font-sans relative text-foreground selection:bg-black selection:text-white">
-        {/* تغليف الموقع بالكامل بمزود المصادقة */}
-        <AuthProvider>
-          <QueryProvider>
-            <SmoothScrollProvider>
-              <div className="fixed inset-0 pointer-events-none z-50" />
+        {/* تغليف المشروع بمزود الثيم لحل مشكلة السكريبت */}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+        >
+          {/* تغليف الموقع بالكامل بمزود المصادقة */}
+          <AuthProvider>
+            <QueryProvider>
+              <SmoothScrollProvider>
+                <div className="fixed inset-0 pointer-events-none z-50" />
 
-              <main>{children}</main>
-            </SmoothScrollProvider>
-          </QueryProvider>
-        </AuthProvider>
+                <main>{children}</main>
+              </SmoothScrollProvider>
+            </QueryProvider>
+          </AuthProvider>
 
-        {/* 3. إضافة التوستر هنا عشان يشتغل على مستوى المشروع كله */}
-        <Toaster position="bottom-right" richColors />
+          {/* 3. إضافة التوستر هنا عشان يشتغل على مستوى المشروع كله */}
+          <Toaster position="bottom-right" richColors />
+        </ThemeProvider>
       </body>
     </html>
   );

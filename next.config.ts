@@ -11,10 +11,15 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "*.githubusercontent.com",
       },
-      // التصريح الجديد بتاع صور الداشبورد
+      // التصريح القديم بتاع صور الداشبورد
       {
         protocol: "https",
         hostname: "api.dicebear.com",
+      },
+      // التصريح الجديد الخاص بصور المنتجات المرفوعة
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
       },
     ],
   },

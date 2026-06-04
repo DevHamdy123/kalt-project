@@ -1,13 +1,20 @@
 import * as z from "zod";
 
 export const productSchema = z.object({
-  name: z.string().min(3, { message: "الاسم لازم يكون 3 حروف على الأقل" }),
+  name: z.string().min(3, { message: "Name must be at least 3 characters" }),
 
-  price: z
-    .number({ message: "السعر لازم يكون رقم" })
-    .positive({ message: "السعر لازم يكون أكبر من صفر" }),
+  price: z.coerce
+    .number({ message: "Price must be a number" })
+    .positive({ message: "Price must be greater than zero" }),
 
-  categoryId: z.string().min(1, { message: "لازم تختار قسم للمنتج" }),
+  // أضفنا حقل الـ stock هنا
+  stock: z.coerce
+    .number({ message: "Stock must be a number" })
+    .min(0, { message: "Stock must be 0 or greater" }),
+
+  categoryId: z
+    .string()
+    .min(1, { message: "You must select a product category" }),
 
   images: z
     .array(
@@ -15,14 +22,14 @@ export const productSchema = z.object({
         url: z.string().url(),
       }),
     )
-    .min(1, { message: "لازم ترفع صورة واحدة على الأقل للمنتج" }),
+    .min(1, { message: "You must upload at least one product image" }),
 
   sizes: z
     .array(z.string())
-    .min(1, { message: "لازم تختار مقاس واحد على الأقل" }),
+    .min(1, { message: "You must select at least one size" }),
 
-  colors: z.array(z.string()).optional(), // الألوان ممكن تكون اختياري لو المنتج لون واحد
+  colors: z.array(z.string()).optional(),
 });
 
-// استخراج النوع الخاص بالفورم عشان نستخدمه في الواجهة
+// النوع هيتحدث أوتوماتيك عشان بيعتمد على الـ Schema
 export type ProductFormValues = z.infer<typeof productSchema>;
