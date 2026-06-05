@@ -1,15 +1,25 @@
 import { ShoppingCart, ShoppingBag, UserPlus, Plus } from "lucide-react";
 import Link from "next/link";
 
-export function SalesAnalytics() {
+interface SalesAnalyticsProps {
+  revenue: number;
+  ordersCount: number;
+  customersCount: number;
+}
+
+export function SalesAnalytics({
+  revenue,
+  ordersCount,
+  customersCount,
+}: SalesAnalyticsProps) {
   return (
     <div className="mt-8">
       <h2 className="text-xl font-bold text-[#363949] dark:text-[#edeffd] mb-4 transition-colors">
-        Sales Analytics
+        Store Overview
       </h2>
 
       <div className="flex flex-col gap-4">
-        {/* Item 1 - Orange */}
+        {/* Item 1 - Revenue */}
         <div className="bg-white dark:bg-[#202528] p-4 rounded-[1.5rem] shadow-[0_2rem_3rem_rgba(132,139,200,0.18)] dark:shadow-[0_2rem_3rem_rgba(0,0,0,0.4)] hover:shadow-none transition-all duration-300 flex items-center gap-4">
           <div className="p-3 bg-[#ff5c00]/10 rounded-full text-[#ff5c00] shrink-0">
             <ShoppingCart className="w-6 h-6" />
@@ -17,22 +27,21 @@ export function SalesAnalytics() {
           <div className="flex-1 flex justify-between items-center">
             <div>
               <h3 className="font-bold text-sm text-[#363949] dark:text-[#edeffd] transition-colors">
-                ONLINE ORDERS
+                TOTAL REVENUE
               </h3>
               <p className="text-xs text-[#7d8da1] dark:text-zinc-400 transition-colors">
-                Last 24 Hours
+                All Time
               </p>
             </div>
             <div className="flex items-center gap-4">
-              <span className="text-[#41f1b6] font-bold text-sm">+39%</span>
               <span className="font-black text-[#363949] dark:text-[#edeffd] transition-colors">
-                3849
+                ${revenue.toFixed(2)}
               </span>
             </div>
           </div>
         </div>
 
-        {/* Item 2 - Red */}
+        {/* Item 2 - Orders */}
         <div className="bg-white dark:bg-[#202528] p-4 rounded-[1.5rem] shadow-[0_2rem_3rem_rgba(132,139,200,0.18)] dark:shadow-[0_2rem_3rem_rgba(0,0,0,0.4)] hover:shadow-none transition-all duration-300 flex items-center gap-4">
           <div className="p-3 bg-[#ff7782]/10 rounded-full text-[#ff7782] shrink-0">
             <ShoppingBag className="w-6 h-6" />
@@ -40,22 +49,21 @@ export function SalesAnalytics() {
           <div className="flex-1 flex justify-between items-center">
             <div>
               <h3 className="font-bold text-sm text-[#363949] dark:text-[#edeffd] transition-colors">
-                OFFLINE ORDERS
+                TOTAL ORDERS
               </h3>
               <p className="text-xs text-[#7d8da1] dark:text-zinc-400 transition-colors">
-                Last 24 Hours
+                All Time
               </p>
             </div>
             <div className="flex items-center gap-4">
-              <span className="text-[#ff7782] font-bold text-sm">-17%</span>
               <span className="font-black text-[#363949] dark:text-[#edeffd] transition-colors">
-                1100
+                {ordersCount}
               </span>
             </div>
           </div>
         </div>
 
-        {/* Item 3 - Green */}
+        {/* Item 3 - Customers */}
         <div className="bg-white dark:bg-[#202528] p-4 rounded-[1.5rem] shadow-[0_2rem_3rem_rgba(132,139,200,0.18)] dark:shadow-[0_2rem_3rem_rgba(0,0,0,0.4)] hover:shadow-none transition-all duration-300 flex items-center gap-4">
           <div className="p-3 bg-[#41f1b6]/10 rounded-full text-[#41f1b6] shrink-0">
             <UserPlus className="w-6 h-6" />
@@ -63,16 +71,15 @@ export function SalesAnalytics() {
           <div className="flex-1 flex justify-between items-center">
             <div>
               <h3 className="font-bold text-sm text-[#363949] dark:text-[#edeffd] transition-colors">
-                NEW CUSTOMER
+                TOTAL CUSTOMERS
               </h3>
               <p className="text-xs text-[#7d8da1] dark:text-zinc-400 transition-colors">
-                Last 24 Hours
+                All Time
               </p>
             </div>
             <div className="flex items-center gap-4">
-              <span className="text-[#41f1b6] font-bold text-sm">+25%</span>
               <span className="font-black text-[#363949] dark:text-[#edeffd] transition-colors">
-                849
+                {customersCount}
               </span>
             </div>
           </div>

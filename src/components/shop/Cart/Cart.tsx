@@ -4,13 +4,19 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-// 1. ضفنا ArrowLeft في الاستيراد هنا
 import { Trash2, Plus, Minus, ArrowRight, ArrowLeft } from "lucide-react";
 import { useCartStore } from "@/store/useCartStore";
 import { toast } from "sonner";
 
+// 1. استدعاء مكون الشاشة الجانبية
+import CheckoutDrawer from "@/components/shop/Checkout/CheckoutDrawer";
+
 export default function Cart() {
   const [isMounted, setIsMounted] = useState(false);
+
+  // 2. حالة للتحكم في فتح وقفل الشاشة الجانبية
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
   const { items, removeItem, updateQuantity, getTotalPrice } = useCartStore();
 
   useEffect(() => {
@@ -51,7 +57,6 @@ export default function Cart() {
   return (
     <section className="min-h-screen bg-white pt-32 pb-20 px-5 md:px-10 lg:px-20 font-sans">
       <div className="max-w-7xl mx-auto">
-        {/* 2. زرار الرجوع للكتالوج (نفس تصميم صفحة المنتج بالظبط) */}
         <Link
           href="/shop"
           className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-black/50 hover:text-black transition-colors mb-8 shrink-0"
@@ -210,12 +215,13 @@ export default function Cart() {
                 </span>
               </div>
 
-              <Link
-                href="/shop/checkout"
-                className="w-full bg-black text-white py-5 text-xs font-black uppercase tracking-[0.2em] hover:bg-neutral-800 transition-colors duration-300 shadow-lg flex items-center justify-center"
+              {/* 3. استبدال رابط الدفع بزر يفتح الشاشة الجانبية */}
+              <button
+                onClick={() => setIsDrawerOpen(true)}
+                className="w-full bg-black text-white py-5 text-xs font-black uppercase tracking-[0.2em] hover:bg-neutral-800 transition-colors duration-300 shadow-lg flex items-center justify-center cursor-pointer"
               >
                 Checkout Securely
-              </Link>
+              </button>
 
               <div className="mt-6 flex items-center justify-center gap-4 text-black/30">
                 <span className="text-[10px] font-bold uppercase tracking-widest">
@@ -230,6 +236,12 @@ export default function Cart() {
           </div>
         </div>
       </div>
+
+      {/* 4. وضع مكون الشاشة الجانبية هنا في نهاية الصفحة */}
+      <CheckoutDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+      />
     </section>
   );
 }

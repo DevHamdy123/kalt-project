@@ -15,6 +15,7 @@ import {
   Store,
 } from "lucide-react";
 import { useSidebar } from "@/providers/SidebarProvider";
+import { signOut } from "next-auth/react";
 
 const adminLinks = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -96,7 +97,10 @@ export default function AdminSidebar() {
           </nav>
 
           <div className="mb-8 mt-4">
-            <button className="flex items-center gap-4 px-8 py-4 h-14 text-[#7d8da1] dark:text-zinc-400 hover:text-[#ff5c00] dark:hover:text-[#ff5c00] transition-all duration-300 lg:hover:ml-4 w-full">
+            <button
+              onClick={() => signOut({ callbackUrl: "/" })}
+              className="flex items-center gap-4 px-8 py-4 h-14 text-[#7d8da1] dark:text-zinc-400 hover:text-[#ff5c00] dark:hover:text-[#ff5c00] transition-all duration-300 lg:hover:ml-4 w-full"
+            >
               <LogOut className="w-6 h-6 shrink-0" />
               <span
                 className={`font-medium text-[1.1rem] transition-opacity duration-300 whitespace-nowrap ${isOpen ? "opacity-100" : "opacity-0 lg:group-hover:opacity-100"}`}
