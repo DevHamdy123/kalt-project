@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { Users, Mail, Phone, ShoppingBag } from "lucide-react";
+import { Users, Mail, Phone, ShoppingBag, Calendar } from "lucide-react";
 
 export default async function CustomersPage() {
   // 1. جلب كل الطلبات مع بيانات المستخدمين المرتبطة بيها
@@ -62,8 +62,10 @@ export default async function CustomersPage() {
         </div>
       </div>
 
-      {/* جدول العملاء */}
-      <div className="bg-white dark:bg-[#202528] rounded-[1.5rem] shadow-[0_2rem_3rem_rgba(132,139,200,0.18)] dark:shadow-[0_2rem_3rem_rgba(0,0,0,0.4)] transition-all overflow-hidden">
+      {/* ========================================= */}
+      {/* 1. عرض الشاشات الكبيرة (الجدول القديم بتاعك) */}
+      {/* ========================================= */}
+      <div className="hidden md:block bg-white dark:bg-[#202528] rounded-[1.5rem] shadow-[0_2rem_3rem_rgba(132,139,200,0.18)] dark:shadow-[0_2rem_3rem_rgba(0,0,0,0.4)] transition-all overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -150,6 +152,80 @@ export default async function CustomersPage() {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* ========================================= */}
+      {/* 2. عرض شاشات الموبايل (نظام البطاقات) */}
+      {/* ========================================= */}
+      <div className="md:hidden flex flex-col gap-4">
+        {customers.length === 0 ? (
+          <div className="bg-white dark:bg-[#202528] p-8 text-center rounded-[1.5rem] shadow-sm text-[#7d8da1]">
+            No customers found yet.
+          </div>
+        ) : (
+          customers.map((customer, index) => (
+            <div
+              key={index}
+              className="bg-white dark:bg-[#202528] rounded-[1.5rem] p-5 shadow-[0_2rem_3rem_rgba(132,139,200,0.18)] dark:shadow-[0_2rem_3rem_rgba(0,0,0,0.4)] transition-all"
+            >
+              {/* رأس البطاقة: صورة واسم العميل */}
+              <div className="flex items-center gap-4 mb-4 pb-4 border-b border-zinc-100 dark:border-zinc-800">
+                <div className="w-12 h-12 rounded-full bg-[#7380ec]/10 flex items-center justify-center text-[#7380ec] font-bold text-xl shrink-0">
+                  {customer.name.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg text-[#363949] dark:text-[#edeffd]">
+                    {customer.name}
+                  </h3>
+                  {customer.name === "Guest User" && (
+                    <span className="text-[10px] uppercase tracking-widest text-[#ffbb55] bg-[#ffbb55]/10 px-2 py-0.5 rounded-full mt-1 inline-block">
+                      Guest
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* محتوى البطاقة: التفاصيل */}
+              <div className="space-y-4">
+                {/* بيانات التواصل */}
+                <div className="space-y-2">
+                  <div className="flex items-center gap-3 text-sm text-[#7d8da1] dark:text-[#edeffd]">
+                    <div className="p-2 rounded-lg bg-[#7380ec]/10 text-[#7380ec]">
+                      <Phone className="w-4 h-4" />
+                    </div>
+                    {customer.phone}
+                  </div>
+                  {customer.email !== "N/A" && (
+                    <div className="flex items-center gap-3 text-sm text-[#7d8da1] dark:text-zinc-400">
+                      <div className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-500">
+                        <Mail className="w-4 h-4" />
+                      </div>
+                      {customer.email}
+                    </div>
+                  )}
+                </div>
+
+                {/* إحصائيات المبيعات */}
+                <div className="flex items-center justify-between pt-2">
+                  <div className="flex items-center gap-2 font-bold text-[#363949] dark:text-[#edeffd]">
+                    <ShoppingBag className="w-5 h-5 text-[#ffbb55]" />
+                    {customer.totalOrders} Orders
+                  </div>
+                  <div className="font-black text-[#41f1b6] text-xl">
+                    ${customer.totalSpent.toFixed(2)}
+                  </div>
+                </div>
+
+                {/* تاريخ آخر طلب */}
+                <div className="flex items-center gap-2 text-xs font-medium text-[#7d8da1] dark:text-zinc-500 pt-3 border-t border-zinc-100 dark:border-zinc-800">
+                  <Calendar className="w-4 h-4" />
+                  Last Order:{" "}
+                  {new Date(customer.lastOrderDate).toLocaleDateString()}
+                </div>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

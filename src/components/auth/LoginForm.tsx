@@ -12,7 +12,6 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-// 1. أيقونات جوجل وجيت هاب المخصصة
 const GoogleIcon = ({ size = 18 }: { size?: number }) => (
   <svg
     width={size}
@@ -37,7 +36,6 @@ const GithubIcon = ({ size = 18 }: { size?: number }) => (
   </svg>
 );
 
-// 2. إعدادات التحقق من الفورم
 const loginSchema = z.object({
   email: z.string().email({ message: "INVALID EMAIL FORMAT" }),
   password: z.string().min(6, { message: "MINIMUM 6 CHARACTERS REQUIRED" }),
@@ -74,7 +72,6 @@ export default function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
 
-  // دالة الدخول اليدوي
   const onSubmit = async (data: LoginValues) => {
     try {
       const res = await signIn("credentials", {
@@ -98,7 +95,6 @@ export default function LoginForm() {
     }
   };
 
-  // دالة الدخول بحسابات السوشيال
   const handleOAuthSignIn = async (provider: "google" | "github") => {
     try {
       await signIn(provider, { callbackUrl: "/" });
@@ -107,7 +103,6 @@ export default function LoginForm() {
     }
   };
 
-  // دالة الدخول كضيف
   const handleGuestSignIn = () => {
     toast.success("Welcome, Guest Agent. Access Limited.");
     router.push("/");
@@ -181,7 +176,6 @@ export default function LoginForm() {
             </p>
           </motion.div>
 
-          {/* الفورم اليدوية */}
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-6 mb-8"
@@ -197,7 +191,7 @@ export default function LoginForm() {
                 <input
                   type="email"
                   {...register("email")}
-                  className={`w-full border-b bg-transparent py-3 text-base font-medium outline-none transition-all duration-300 placeholder:text-black/20 ${errors.email ? "border-[#b91c1c] text-[#b91c1c]" : "border-black/10 focus:border-black text-black"}`}
+                  className={`w-full border-b bg-transparent py-3 text-base font-medium outline-none transition-all duration-300 placeholder:text-black/20 [&:-webkit-autofill]:bg-transparent [&:-webkit-autofill]:[-webkit-box-shadow:0_0_0_50px_white_inset] [&:-webkit-autofill]:[-webkit-text-fill-color:black] ${errors.email ? "border-[#b91c1c] text-[#b91c1c]" : "border-black/10 focus:border-black text-black"}`}
                   placeholder="agent@kalt.com"
                 />
               </div>
@@ -227,7 +221,7 @@ export default function LoginForm() {
                 <input
                   type={showPassword ? "text" : "password"}
                   {...register("password")}
-                  className={`w-full border-b bg-transparent py-3 text-base font-medium outline-none transition-all duration-300 placeholder:text-black/20 pr-10 ${errors.password ? "border-[#b91c1c] text-[#b91c1c]" : "border-black/10 focus:border-black text-black"}`}
+                  className={`w-full border-b bg-transparent py-3 text-base font-medium outline-none transition-all duration-300 placeholder:text-black/20 pr-10 [&:-webkit-autofill]:bg-transparent [&:-webkit-autofill]:[-webkit-box-shadow:0_0_0_50px_white_inset] [&:-webkit-autofill]:[-webkit-text-fill-color:black] ${errors.password ? "border-[#b91c1c] text-[#b91c1c]" : "border-black/10 focus:border-black text-black"}`}
                   placeholder="••••••••"
                 />
                 <button
@@ -257,7 +251,6 @@ export default function LoginForm() {
             </motion.button>
           </form>
 
-          {/* الفاصل الزخرفي */}
           <motion.div variants={itemVariants} className="relative mb-8">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t border-black/10" />
@@ -269,7 +262,6 @@ export default function LoginForm() {
             </div>
           </motion.div>
 
-          {/* زراير الدخول السريع (التعديل الجديد) */}
           <div className="flex flex-row items-center justify-center gap-6">
             <motion.button
               variants={itemVariants}

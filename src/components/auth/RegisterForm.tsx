@@ -167,7 +167,7 @@ export default function RegisterForm() {
               <input
                 type="text"
                 {...register("name")}
-                className={`w-full border-b bg-transparent py-3 text-base font-medium outline-none transition-all duration-300 placeholder:text-black/20 ${errors.name ? "border-[#b91c1c] text-[#b91c1c]" : "border-black/10 focus:border-black text-black"}`}
+                className={`w-full border-b bg-transparent py-3 text-base font-medium outline-none transition-all duration-300 placeholder:text-black/20 [&:-webkit-autofill]:bg-transparent [&:-webkit-autofill]:[-webkit-box-shadow:0_0_0_50px_white_inset] [&:-webkit-autofill]:[-webkit-text-fill-color:black] ${errors.name ? "border-[#b91c1c] text-[#b91c1c]" : "border-black/10 focus:border-black text-black"}`}
                 placeholder="John Doe"
               />
               {errors.name && (
@@ -187,7 +187,7 @@ export default function RegisterForm() {
               <input
                 type="email"
                 {...register("email")}
-                className={`w-full border-b bg-transparent py-3 text-base font-medium outline-none transition-all duration-300 placeholder:text-black/20 ${errors.email ? "border-[#b91c1c] text-[#b91c1c]" : "border-black/10 focus:border-black text-black"}`}
+                className={`w-full border-b bg-transparent py-3 text-base font-medium outline-none transition-all duration-300 placeholder:text-black/20 [&:-webkit-autofill]:bg-transparent [&:-webkit-autofill]:[-webkit-box-shadow:0_0_0_50px_white_inset] [&:-webkit-autofill]:[-webkit-text-fill-color:black] ${errors.email ? "border-[#b91c1c] text-[#b91c1c]" : "border-black/10 focus:border-black text-black"}`}
                 placeholder="agent@kalt.com"
               />
               {errors.email && (
@@ -208,7 +208,7 @@ export default function RegisterForm() {
                 <input
                   type={showPassword ? "text" : "password"}
                   {...register("password")}
-                  className={`w-full border-b bg-transparent py-3 text-base font-medium outline-none transition-all duration-300 pr-10 ${errors.password ? "border-[#b91c1c] text-[#b91c1c]" : "border-black/10 focus:border-black text-black"}`}
+                  className={`w-full border-b bg-transparent py-3 text-base font-medium outline-none transition-all duration-300 pr-10 [&:-webkit-autofill]:bg-transparent [&:-webkit-autofill]:[-webkit-box-shadow:0_0_0_50px_white_inset] [&:-webkit-autofill]:[-webkit-text-fill-color:black] ${errors.password ? "border-[#b91c1c] text-[#b91c1c]" : "border-black/10 focus:border-black text-black"}`}
                   placeholder="••••••••"
                 />
                 <button
@@ -237,7 +237,7 @@ export default function RegisterForm() {
                 <input
                   type={showConfirmPassword ? "text" : "password"}
                   {...register("confirmPassword")}
-                  className={`w-full border-b bg-transparent py-3 text-base font-medium outline-none transition-all duration-300 pr-10 ${errors.confirmPassword ? "border-[#b91c1c] text-[#b91c1c]" : "border-black/10 focus:border-black text-black"}`}
+                  className={`w-full border-b bg-transparent py-3 text-base font-medium outline-none transition-all duration-300 pr-10 [&:-webkit-autofill]:bg-transparent [&:-webkit-autofill]:[-webkit-box-shadow:0_0_0_50px_white_inset] [&:-webkit-autofill]:[-webkit-text-fill-color:black] ${errors.confirmPassword ? "border-[#b91c1c] text-[#b91c1c]" : "border-black/10 focus:border-black text-black"}`}
                   placeholder="••••••••"
                 />
                 <button
