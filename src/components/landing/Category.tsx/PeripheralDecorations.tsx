@@ -31,7 +31,7 @@ export default function PeripheralDecorations() {
 
       <motion.div
         variants={fadeUp}
-        className="absolute bottom-4 left-5 right-auto lg:left-auto lg:bottom-10 lg:right-10 text-[8px] lg:text-[10px] uppercase font-mono tracking-[0.2em] z-30 leading-none"
+        className="absolute bottom-4 left-5 right-auto lg:left-auto lg:bottom-20 lg:right-10 text-[8px] lg:text-[10px] uppercase font-mono tracking-[0.2em] z-30 leading-none"
       >
         <span className="opacity-40">[Categories.....]</span>
       </motion.div>

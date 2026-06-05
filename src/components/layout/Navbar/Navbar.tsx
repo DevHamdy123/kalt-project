@@ -93,7 +93,7 @@ export default function Navbar() {
               />
               <button
                 onClick={() => setIsSearchOpen(true)}
-                className={`absolute right-0 w-10 h-10 md:w-11 md:h-11 flex items-center justify-center rounded-full z-10 transition-colors duration-300 ${
+                className={`absolute right-0 w-10 h-10 md:w-11 md:h-11 cursor-pointer flex items-center justify-center rounded-full z-10 transition-colors duration-300 ${
                   isSearchOpen
                     ? "text-black hover:bg-black/5"
                     : "text-black group-hover:text-border-white"

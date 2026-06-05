@@ -35,7 +35,7 @@ export default function StoreNavbar() {
         <div className="flex flex-1 justify-start">
           <motion.button
             onClick={() => setIsMenuOpen(true)}
-            className="w-10 h-10 bg-white rounded-full flex items-center justify-center border border-black/10 hover:border-black transition-all"
+            className="w-10 h-10 bg-white rounded-full cursor-pointer flex items-center justify-center border border-black/10 hover:bg-black hover:text-white transition-all"
           >
             <Menu size={18} strokeWidth={1.5} />
           </motion.button>

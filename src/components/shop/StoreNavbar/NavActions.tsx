@@ -9,7 +9,7 @@ import {
   Search,
   Store,
   LayoutDashboard,
-} from "lucide-react"; // إضافة LayoutDashboard
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCartStore } from "@/store/useCartStore";
@@ -26,8 +26,8 @@ export default function NavActions() {
   const { data: session, status } = useSession();
   const isLoggedIn = status === "authenticated";
 
-  // التحقق هل اليوزر ده أدمن ولا لأ
-  const isAdmin = (session?.user as any)?.role === "ADMIN";
+  // التحقق هل اليوزر ده أدمن ولا لأ بدون استخدام any
+  const isAdmin = (session?.user as { role?: string })?.role === "ADMIN";
 
   const items = useCartStore((state) => state.items);
   const totalItems = items.reduce((total, item) => total + item.quantity, 0);
@@ -100,7 +100,7 @@ export default function NavActions() {
           />
           <button
             onClick={() => setIsSearchOpen(true)}
-            className={`absolute right-0 w-10 h-10 md:w-11 md:h-11 flex items-center justify-center rounded-full z-10 transition-colors duration-300 ${
+            className={`absolute right-0 w-10 h-10 cursor-pointer md:w-11 md:h-11 flex items-center justify-center rounded-full z-10 transition-colors duration-300 ${
               isSearchOpen ? "text-black hover:bg-black/5" : "text-current"
             }`}
           >
