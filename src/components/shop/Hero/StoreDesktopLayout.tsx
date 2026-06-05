@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react"; // 1. أضفنا الاستيرادات دي
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { ArrowDown } from "lucide-react";
@@ -19,17 +20,41 @@ const fadeUpVariants = {
 export default function StoreDesktopLayout() {
   const lenis = useLenis();
 
+  // 2. منطق الكتابة والمسح للكلمة
+  const [displayText, setDisplayText] = useState("KALT.");
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const fullText = "KALT..";
+    const timeout = setTimeout(
+      () => {
+        if (isDeleting) {
+          setDisplayText((prev) => prev.slice(0, -1));
+          if (displayText === "") setIsDeleting(false);
+        } else {
+          setDisplayText(fullText.substring(0, displayText.length + 1));
+          if (displayText === fullText) {
+            // استنى ثانيتين قبل ما يبدأ يمسح
+            setTimeout(() => setIsDeleting(true), 2000);
+            return;
+          }
+        }
+      },
+      isDeleting ? 100 : 200,
+    ); // سرعة المسح أسرع من الكتابة
+
+    return () => clearTimeout(timeout);
+  }, [displayText, isDeleting]);
+
   const scrollToCatalog = () => {
-    // 3. الحركة السحرية: سكرول ناعم للـ ID بتاع السكشن
     lenis?.scrollTo("#shop-catalog", {
-      offset: -100, // عشان النافبار ميبقاش فوق العنوان
+      offset: -100,
       duration: 1.5,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     });
   };
 
   return (
-    // تم تقليل المساحة العلوية لتناسب شاشات اللابتوب العادية
     <div className="hidden xl:grid xl:grid-cols-[1fr_1.4fr_1fr] 2xl:grid-cols-[1fr_1.2fr_1fr] w-full h-full justify-between gap-4 px-[clamp(2rem,4vw,4rem)] pt-4 2xl:pt-12 pb-0 min-h-0 relative">
       {/* 1. النص الترحيبي (يسار) */}
       <div className="flex flex-col justify-center z-10 pb-4 2xl:pb-12 min-h-0">
@@ -39,8 +64,9 @@ export default function StoreDesktopLayout() {
           animate="visible"
           variants={fadeUpVariants}
         >
+          {/* 3. استخدمنا الـ displayText هنا */}
           <h1 className="font-black uppercase tracking-tighter leading-[0.85] text-black text-[clamp(2.5rem,3.5vw,4.5rem)] 2xl:text-[5.5rem]">
-            KALT. <br />
+            {displayText} <br />
             The Syndicate <br />
             Urban Precision <br />
             Est. 2026 <br />
@@ -90,14 +116,10 @@ export default function StoreDesktopLayout() {
           className="w-full max-w-[300px] 2xl:max-w-[360px]"
         >
           <motion.div
-            // التعديل 1: زيادة مدى الحركة من -12 إلى -20
             animate={{ y: [0, -20, 0] }}
-            // التعديل 2: زيادة السرعة بتقليل المدة من 4 إلى 3
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            // التعديل 3: تقوية التأثير الزجاجي والظل ليفصل الكارت عن الخلفية
             className="bg-white/40 backdrop-blur-xl border border-white/50 p-5 2xl:p-8 rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.08)] w-full will-change-transform"
           >
-            {/* ... باقي محتوى الكارت كما هو ... */}
             <h3 className="text-black/60 text-xs 2xl:text-sm font-bold uppercase tracking-widest mb-2 2xl:mb-3">
               Exclusive Offer
             </h3>
@@ -113,7 +135,7 @@ export default function StoreDesktopLayout() {
               </span>
             </div>
             <button
-              onClick={scrollToCatalog} // 4. ربط الدالة بالزرار
+              onClick={scrollToCatalog}
               className="bg-black text-white px-8 py-4 font-bold uppercase tracking-widest rounded-xl cursor-pointer hover:bg-neutral-800 transition-all"
             >
               SHOP NOW →

@@ -13,8 +13,6 @@ import CheckoutDrawer from "@/components/shop/Checkout/CheckoutDrawer";
 
 export default function Cart() {
   const [isMounted, setIsMounted] = useState(false);
-
-  // 2. حالة للتحكم في فتح وقفل الشاشة الجانبية
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const { items, removeItem, updateQuantity, getTotalPrice } = useCartStore();
@@ -64,7 +62,8 @@ export default function Cart() {
           <ArrowLeft size={16} /> Back to Catalog
         </Link>
 
-        <h1 className="text-4xl lg:text-5xl font-black uppercase tracking-tighter mb-12 border-b border-black/10 pb-6">
+        {/* الحدود هنا بقت border-black/20 عشان تبان أكتر */}
+        <h1 className="text-4xl lg:text-5xl font-black uppercase tracking-tighter mb-12 border-b border-black/20 pb-6">
           Your Archive
         </h1>
 
@@ -79,14 +78,16 @@ export default function Cart() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.4 }}
-                  className="flex flex-col sm:flex-row gap-6 border-b border-black/5 pb-8"
+                  // Border بقت border-black/15
+                  className="flex flex-col sm:flex-row gap-6 border-b border-black/15 pb-8"
                 >
-                  <div className="w-full sm:w-40 aspect-[4/5] relative bg-[#fcfcfc] border border-black/5 shrink-0 flex items-center justify-center overflow-hidden">
+                  {/* خلفية الصورة بقت neutral-50 وبوردر أوضح */}
+                  <div className="w-full sm:w-40 aspect-[4/5] relative bg-neutral-50 border border-black/15 shrink-0 flex items-center justify-center overflow-hidden">
                     <Image
                       src={item.image}
                       alt={item.name}
                       fill
-                      className="object-contain object-bottom p-4 drop-shadow-md"
+                      className="object-contain object-bottom p-4 drop-shadow-sm"
                     />
                   </div>
 
@@ -115,7 +116,7 @@ export default function Cart() {
                         <span className="text-[10px] font-bold uppercase tracking-widest text-black/50 block mb-2">
                           Quantity
                         </span>
-                        <div className="flex items-center border border-black/20 h-10">
+                        <div className="flex items-center border border-black/30 h-10">
                           <button
                             onClick={() =>
                               updateQuantity(
@@ -140,11 +141,6 @@ export default function Cart() {
                                 updateQuantity(item.id, parseInt(val));
                               }
                             }}
-                            onBlur={() => {
-                              if (item.quantity < 1) {
-                                updateQuantity(item.id, 1);
-                              }
-                            }}
                             className="w-10 text-center text-xs font-bold bg-transparent outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none m-0"
                             style={{ MozAppearance: "textfield" }}
                           />
@@ -163,15 +159,9 @@ export default function Cart() {
                       <button
                         onClick={() => {
                           removeItem(item.id);
-                          toast.error(`${item.name} REMOVED FROM ARCHIVE`, {
-                            style: {
-                              background: "#b91c1c",
-                              color: "white",
-                              borderColor: "#991b1b",
-                            },
-                          });
+                          toast.error(`${item.name} REMOVED FROM ARCHIVE`);
                         }}
-                        className="text-black/40 hover:text-red-500 transition-colors flex items-center gap-2 text-xs font-bold uppercase tracking-widest"
+                        className="text-black/60 hover:text-red-600 transition-colors flex items-center gap-2 text-xs font-bold uppercase tracking-widest"
                       >
                         <Trash2 size={16} />
                         <span className="hidden sm:inline">Remove</span>
@@ -184,8 +174,9 @@ export default function Cart() {
           </div>
 
           <div className="w-full lg:w-[380px] shrink-0">
-            <div className="bg-[#fcfcfc] border border-black/10 p-8 sticky top-32">
-              <h2 className="text-xl font-black uppercase tracking-tighter mb-6 border-b border-black/10 pb-4">
+            {/* Summary Box: خليتها background أبيض صريح وبوردر أغمق */}
+            <div className="bg-white border border-black/20 p-8 sticky top-32 shadow-sm">
+              <h2 className="text-xl font-black uppercase tracking-tighter mb-6 border-b border-black/20 pb-4">
                 Summary
               </h2>
 
@@ -206,7 +197,7 @@ export default function Cart() {
                 </div>
               </div>
 
-              <div className="flex justify-between items-end border-t border-black/10 pt-6 mb-8">
+              <div className="flex justify-between items-end border-t border-black/20 pt-6 mb-8">
                 <span className="font-bold uppercase tracking-widest text-sm">
                   Total
                 </span>
@@ -215,7 +206,6 @@ export default function Cart() {
                 </span>
               </div>
 
-              {/* 3. استبدال رابط الدفع بزر يفتح الشاشة الجانبية */}
               <button
                 onClick={() => setIsDrawerOpen(true)}
                 className="w-full bg-black text-white py-5 text-xs font-black uppercase tracking-[0.2em] hover:bg-neutral-800 transition-colors duration-300 shadow-lg flex items-center justify-center cursor-pointer"
@@ -223,7 +213,7 @@ export default function Cart() {
                 Checkout Securely
               </button>
 
-              <div className="mt-6 flex items-center justify-center gap-4 text-black/30">
+              <div className="mt-6 flex items-center justify-center gap-4 text-black/40">
                 <span className="text-[10px] font-bold uppercase tracking-widest">
                   SSL Encrypted
                 </span>
@@ -237,7 +227,6 @@ export default function Cart() {
         </div>
       </div>
 
-      {/* 4. وضع مكون الشاشة الجانبية هنا في نهاية الصفحة */}
       <CheckoutDrawer
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}

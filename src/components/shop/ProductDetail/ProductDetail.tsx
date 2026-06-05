@@ -7,7 +7,6 @@ import { ArrowLeft, Plus, Minus } from "lucide-react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { useCartStore } from "@/store/useCartStore";
-// تم إضافة الاستدعاء هنا
 import { toast } from "sonner";
 
 interface ProductDetailProps {
@@ -83,7 +82,6 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
       quantity: validQuantity,
     });
 
-    // تم إضافة الإشعار وتصفير العداد هنا
     toast.success(`${validQuantity}x ${product.name} ADDED TO ARCHIVE`);
     setQuantity(1);
   };
@@ -103,7 +101,8 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="flex-1 relative min-h-[40vh] lg:min-h-0 bg-[#fcfcfc] border border-black/5 flex items-end justify-center overflow-hidden"
+            // تم التعديل هنا: bg-neutral-100 و border-black/10
+            className="flex-1 relative min-h-[40vh] lg:min-h-0 bg-neutral-300 border border-black/35 flex items-end justify-center overflow-hidden"
           >
             <Image
               src={product.images?.[0]?.url || "/images/img6.webp"}

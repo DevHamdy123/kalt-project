@@ -95,7 +95,11 @@ export default function BridgeSection() {
         </motion.div>
       </section>
 
-      <div className="w-full h-15 bg-[#333333]" />
+      <div className="w-full h-[80px] bg-gray-700 flex items-center justify-center shrink-0">
+        <span className="text-[10px] font-bold text-white/40 uppercase tracking-[0.5em]">
+          End of BRIGE // Archive Status: Active
+        </span>
+      </div>
     </>
   );
 }
