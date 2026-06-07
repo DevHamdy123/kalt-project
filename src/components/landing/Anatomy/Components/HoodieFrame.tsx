@@ -89,6 +89,7 @@ export default function HoodieFrame({
           src="/images/img18.webp"
           alt="Anatomy"
           fill
+          sizes="(max-width: 640px) 90vw, (max-width: 768px) 75vw, (max-width: 1024px) 52vw, 320px"
           className="object-contain drop-shadow-2xl"
           priority
         />

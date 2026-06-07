@@ -52,6 +52,7 @@ export default function ImageUpload({
             </div>
             <Image
               fill
+              sizes="200px"
               className="object-contain p-2"
               alt="Product Image"
               src={url}

@@ -114,7 +114,7 @@ export default function CatalogSection() {
     >
       <div
         className="absolute inset-0 opacity-[0.04] pointer-events-none mix-blend-overlay"
-        style={{ backgroundImage: "url('/images/noise.png')" }}
+        style={{ backgroundImage: "url('/images/grain.png')" }}
       />
 
       <div className="max-w-[1600px] mx-auto w-full relative z-10">

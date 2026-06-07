@@ -87,6 +87,7 @@ export default function Cart() {
                       src={item.image}
                       alt={item.name}
                       fill
+                      sizes="(max-width: 640px) 100vw, 160px"
                       className="object-contain object-bottom p-4 drop-shadow-sm"
                     />
                   </div>

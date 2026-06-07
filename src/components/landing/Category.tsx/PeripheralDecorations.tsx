@@ -24,7 +24,7 @@ export default function PeripheralDecorations() {
       <motion.div
         variants={fadeUp}
         onClick={() => router.push("/shop#shop-catalog")}
-        className="absolute top-4 left-4 lg:top-auto lg:bottom-20 lg:left-10 border border-black rounded-full px-4 lg:px-6 py-1.5 lg:py-2 text-[10px] lg:text-xs uppercase font-bold cursor-pointer hover:bg-black hover:text-white transition-all z-30 bg-white/50 lg:bg-transparent backdrop-blur-sm lg:backdrop-blur-none leading-none"
+        className="absolute top-4 left-4 lg:top-auto lg:bottom-20 lg:left-10 border border-black rounded-full px-4 lg:px-6 py-1.5 lg:py-2 text-[10px] lg:text-xs uppercase font-bold cursor-pointer hover:bg-white hover:text-black transition-all z-30 bg-black text-white lg:bg-black backdrop-blur-sm lg:backdrop-blur-none leading-none"
       >
         See Product →
       </motion.div>

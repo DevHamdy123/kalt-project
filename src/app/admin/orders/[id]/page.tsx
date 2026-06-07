@@ -114,6 +114,7 @@ export default async function OrderDetailsPage({
                         src={item.product.images[0].url}
                         alt={item.product.name}
                         fill
+                        sizes="64px"
                         className="object-contain p-2"
                       />
                     ) : (

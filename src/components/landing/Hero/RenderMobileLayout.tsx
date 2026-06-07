@@ -33,6 +33,7 @@ const RenderMobileLayout = () => {
             alt="Model"
             fill
             priority
+            sizes="(max-width: 768px) 90vw, 50vw"
             className="object-contain object-center drop-shadow-2xl"
           />
         </motion.div>

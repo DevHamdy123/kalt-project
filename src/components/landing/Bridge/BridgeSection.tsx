@@ -62,6 +62,7 @@ export default function BridgeSection() {
                     src={activeCollection.image}
                     alt={activeCollection.title}
                     fill
+                    sizes="(max-width: 640px) 45vw, (max-width: 768px) 40vw, 400px"
                     className={`object-cover object-top transition-all duration-700 ${isHoveringList ? "grayscale-0 scale-105" : "grayscale scale-100"}`}
                   />
                 </motion.div>

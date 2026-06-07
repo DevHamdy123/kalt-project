@@ -334,7 +334,7 @@ export default function RegisterForm() {
       >
         <div
           className="absolute inset-0 opacity-20 pointer-events-none mix-blend-overlay"
-          style={{ backgroundImage: "url('/images/noise.png')" }}
+          style={{ backgroundImage: "url('/images/grain.png')" }}
         />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-white/5 blur-[120px] rounded-full pointer-events-none" />
         <motion.div

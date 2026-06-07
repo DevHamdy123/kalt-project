@@ -90,11 +90,16 @@ export default function ShopTheLook() {
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
             className="relative w-full max-w-lg aspect-[3/4] bg-neutral-200 rounded-lg overflow-hidden shadow-2xl border border-black/5"
           >
-            <Link href={`/shop/${product.id}`} className="block w-full h-full">
+            {/* تم إضافة relative للينك لحل تحذير الـ fill */}
+            <Link
+              href={`/shop/${product.id}`}
+              className="relative block w-full h-full"
+            >
               <Image
                 src={product.images?.[0]?.url || "/images/img17.webp"}
                 alt={product.name}
                 fill
+                sizes="(max-width: 768px) 100vw, 512px"
                 className="object-contain p-4 md:p-8 hover:scale-[1.02] transition-transform duration-500"
               />
             </Link>
@@ -132,6 +137,7 @@ export default function ShopTheLook() {
                           src={product.images?.[0]?.url || "/images/img17.webp"}
                           alt="thumb"
                           fill
+                          sizes="80px"
                           className="object-cover"
                         />
                       </div>

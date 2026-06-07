@@ -39,8 +39,7 @@ export default function RootLayout({
             <QueryProvider>
               <SmoothScrollProvider>
                 <div className="fixed inset-0 pointer-events-none z-50" />
-
-                <main>{children}</main>
+                <main className="relative">{children}</main>
               </SmoothScrollProvider>
             </QueryProvider>
           </AuthProvider>

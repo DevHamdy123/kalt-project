@@ -109,6 +109,7 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
               alt={product.name}
               fill
               priority
+              sizes="(max-width: 768px) 100vw, 50vw"
               className="object-contain object-bottom drop-shadow-xl"
             />
           </motion.div>

@@ -37,6 +37,7 @@ const RenderDesktopLayout = () => {
               fill
               priority
               quality={100}
+              sizes="(max-width: 768px) 90vw, (max-width: 1024px) 50vw, 40vw"
               className="object-contain object-bottom scale-[1.2] lg:scale-[1.15] drop-shadow-2xl transition-transform duration-700"
             />
           </motion.div>

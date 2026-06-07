@@ -35,6 +35,7 @@ export default function SlideImage({ currentSlide }: SlideImageProps) {
               alt={`KALT ${currentSlide.label}`}
               fill
               priority
+              sizes="(max-width: 768px) 100vw, 50vw"
               className="object-contain object-bottom scale-[0.98] origin-bottom drop-shadow-2xl"
             />
           </div>

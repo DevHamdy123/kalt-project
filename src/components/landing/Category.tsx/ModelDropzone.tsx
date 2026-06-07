@@ -36,6 +36,7 @@ export default function ModelDropzone({ activeCat }: ModelDropzoneProps) {
                 alt={activeCat.name}
                 fill
                 priority
+                sizes="70vw"
                 className="object-contain object-bottom drop-shadow-xl"
               />
             </motion.div>

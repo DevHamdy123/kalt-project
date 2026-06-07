@@ -140,6 +140,7 @@ export default function StoreMobileLayout() {
             src="/images/img10.webp"
             alt="KALT New Drop Model"
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 420px, 460px"
             className="object-contain object-bottom drop-shadow-2xl md:scale-[1.25] lg:scale-[1.05] origin-bottom transition-transform duration-500"
             priority
           />

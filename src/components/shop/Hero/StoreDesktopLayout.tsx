@@ -100,6 +100,7 @@ export default function StoreDesktopLayout() {
             src="/images/img10.webp"
             alt="KALT New Drop Model"
             fill
+            sizes="(max-width: 500px) 100vw, (max-width: 1536px) 500px, 650px"
             className="object-contain object-bottom drop-shadow-2xl"
             priority
           />
