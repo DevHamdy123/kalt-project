@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
+const CUSTOM_EASE = [0.22, 1, 0.36, 1] as const;
+
 const RenderDesktopLayout = () => {
   return (
     <div className="hidden md:flex flex-1 w-full items-end justify-center relative z-20">
@@ -10,7 +12,7 @@ const RenderDesktopLayout = () => {
         <motion.div
           initial={{ opacity: 0, x: -40 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 1, delay: 0.3, ease: CUSTOM_EASE }}
           className="absolute right-[clamp(82%,10vw,90%)] top-[clamp(8%,12vh,18%)] flex flex-col items-end w-max z-30"
         >
           <h2 className="text-[clamp(3rem,6.5vw,8rem)] font-black tracking-tighter uppercase leading-[0.75] text-right text-black/90 select-none drop-shadow-sm">
@@ -24,12 +26,16 @@ const RenderDesktopLayout = () => {
           </p>
         </motion.div>
 
-        <div className="relative w-full h-full overflow-hidden">
+        <div
+          className="relative w-full h-full overflow-hidden"
+          style={{ contain: "layout paint" }}
+        >
+          {/* التعديل تم هنا: إضافة كلاسات التسريع لكارت الشاشة */}
           <motion.div
             initial={{ y: "20%", opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 1.2, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="relative w-full h-full"
+            transition={{ duration: 1.2, delay: 0.1, ease: CUSTOM_EASE }}
+            className="relative w-full h-full will-change-transform transform-gpu"
           >
             <Image
               src="/images/img6.webp"
@@ -46,14 +52,13 @@ const RenderDesktopLayout = () => {
         <motion.div
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 1, delay: 0.4, ease: CUSTOM_EASE }}
           className="absolute left-[clamp(82%,10vw,90%)] top-[clamp(8%,12vh,18%)] flex flex-col items-start w-max z-30"
         >
           <h2 className="text-[clamp(3rem,6.5vw,8rem)] font-black tracking-tighter uppercase leading-[0.75] text-left text-black/90 select-none drop-shadow-sm">
             lives <br /> - now
           </h2>
 
-          {/* التعديل تم هنا: استبدال button بـ Link */}
           <Link
             href="/shop"
             className="mt-8 group relative flex items-center justify-center"

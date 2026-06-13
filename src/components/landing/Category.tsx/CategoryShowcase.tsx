@@ -22,7 +22,6 @@ export default function CategoryShowcase() {
         className="absolute inset-0 z-0 pointer-events-none"
       />
 
-      {/* العناصر الأساسية للسكشن */}
       <SectionHeader />
       <ModelDropzone activeCat={activeCat} />
       <CategoryMenu
@@ -31,7 +30,6 @@ export default function CategoryShowcase() {
         onSelect={setActiveCat}
       />
 
-      {/* الـ Slider مثبت في الأسفل بـ absolute عشان ميأثرش على الـ Layout */}
       <div className="absolute bottom-0 left-0 w-full z-20">
         <Slider theme="light" />
       </div>

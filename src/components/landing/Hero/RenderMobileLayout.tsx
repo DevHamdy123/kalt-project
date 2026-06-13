@@ -3,42 +3,48 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
+const CUSTOM_EASE = [0.22, 1, 0.36, 1] as const;
+
 const RenderMobileLayout = () => {
   return (
-    <div className="flex md:hidden flex-col w-full h-full pt-20 pb-16 px-6 z-20 justify-between items-center relative">
+    <div className="flex md:hidden flex-col w-full h-full pt-24 pb-16 px-6 z-20 justify-start items-center relative">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="w-full text-center flex flex-col items-center z-20"
+        className="w-full text-center flex flex-col items-center z-30 mb-8"
       >
-        <h2 className="text-[clamp(1.2rem,6vw,1.8rem)] font-black tracking-[0.3em] uppercase leading-none text-black/90 whitespace-nowrap">
-          where - style
+        <h2 className="text-[clamp(1.8rem,8vw,2.5rem)] font-black tracking-[0.15em] uppercase leading-tight text-black/90">
+          WHERE STYLE <br /> LIVES NOW
         </h2>
-        <p className="mt-3 text-[10px] font-medium text-black/40 max-w-[80%] leading-relaxed uppercase tracking-widest">
+
+        <p className="mt-4 text-[11px] sm:text-xs font-bold text-black/70 max-w-[90%] leading-relaxed uppercase tracking-widest">
           Crafting the future of urban essentials. Blending raw street culture
           with high-end aesthetics.
         </p>
       </motion.div>
 
-      <div className="relative flex-1 w-full min-h-[45vh] my-4 flex items-center justify-center">
+      <div
+        className="relative flex-1 w-full flex items-center justify-center mt-2"
+        style={{ contain: "layout paint" }}
+      >
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1.2, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className="relative w-full h-full"
+          transition={{ duration: 1.2, delay: 0.2, ease: CUSTOM_EASE }}
+          className="relative w-full h-[45vh] min-h-87.5 will-change-transform transform-gpu"
         >
           <Image
             src="/images/img6.webp"
             alt="Model"
             fill
             priority
-            sizes="(max-width: 768px) 90vw, 50vw"
-            className="object-contain object-center drop-shadow-2xl"
+            fetchPriority="high"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-contain object-bottom "
           />
         </motion.div>
 
-        {/* التعديل هنا: استخدام motion.div بدلاً من button لكي لا يتعارض مع Link */}
         <motion.div
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -48,29 +54,17 @@ const RenderMobileLayout = () => {
             stiffness: 200,
             damping: 15,
           }}
-          className="absolute right-3 bottom-[15%] z-30 group"
+          className="absolute right-5 bottom-[15%] z-40 group"
         >
-          {/* تغليف المحتوى بـ Link لتوجيه المستخدم للمتجر مباشرة */}
           <Link href="/shop">
-            <div className="w-24 h-24 border border-black/50 rounded-full backdrop-blur-sm flex items-center justify-center active:scale-95 transition-transform group-hover:border-black group-hover:bg-black cursor-pointer">
-              <span className="text-[9px] font-bold text-black uppercase tracking-tighter leading-tight text-center group-hover:text-white">
+            <div className="w-24 h-24 bg-white/40 border border-black/50 rounded-full backdrop-blur-md flex items-center justify-center active:scale-95 transition-all duration-300 group-hover:border-black group-hover:bg-black group-hover:shadow-xl cursor-pointer">
+              <span className="text-[10px] font-bold text-black uppercase tracking-tighter leading-tight text-center transition-colors group-hover:text-white">
                 Shop '26 <br /> Collection
               </span>
             </div>
           </Link>
         </motion.div>
       </div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
-        className="w-full text-center relative z-30"
-      >
-        <h2 className="text-[clamp(1.2rem,6vw,1.8rem)] font-black tracking-[0.3em] uppercase leading-none text-black/90 whitespace-nowrap">
-          lives - now
-        </h2>
-      </motion.div>
     </div>
   );
 };

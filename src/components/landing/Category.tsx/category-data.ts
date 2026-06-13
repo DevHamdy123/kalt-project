@@ -12,14 +12,14 @@ export const CATEGORIES_DATA: CategoryData[] = [
     name: "BOXY",
     count: "(31)",
     img: "/images/img3.webp",
-    color: "#7292af", // أزرق مائل للرمادي
+    color: "#7292af",
   },
   {
     id: "03",
     name: "VAULT",
     count: "(18)",
     img: "/images/img1.webp",
-    color: "#d4a39b", // المائل للوردي/السيمون الفاتح
+    color: "#d4a39b",
   },
 
   {
@@ -27,36 +27,34 @@ export const CATEGORIES_DATA: CategoryData[] = [
     name: "RAW",
     count: "(42)",
     img: "/images/img10.webp",
-    color: "#18181b", // الأسود الكلاسيكي
+    color: "#18181b",
   },
   {
     id: "01",
     name: "CORE",
     count: "(24)",
     img: "/images/img6.webp",
-    color: "#FF7A00", // البرتقالي
+    color: "#FF7A00",
   },
-  // --- المنتجات الجديدة تم إضافتها هنا ---
   {
     id: "06",
     name: "EARTH",
     count: "(18)",
-    img: "/images/img4.webp", // قم بتغيير الاسم ليطابق صورة الهودي البني لديك
-    color: "#5C4033", // البني
+    img: "/images/img4.webp",
+    color: "#5C4033",
   },
   {
     id: "07",
     name: "SAGE",
     count: "(21)",
-    img: "/images/img7.webp", // قم بتغيير الاسم ليطابق صورة الهودي الأخضر لديك
-    color: "#8E937F", // الأخضر الفاتح (Sage)
+    img: "/images/img7.webp",
+    color: "#8E937F",
   },
-  // ----------------------------------------
   {
     id: "04",
     name: "DROP",
     count: "(12)",
     img: "/images/img13.webp",
-    color: "#101820", // الأسود الداكن أو الكحلي الغامق
+    color: "#101820",
   },
 ];

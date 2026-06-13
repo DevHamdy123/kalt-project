@@ -1,9 +1,9 @@
 "use client";
 import { motion, Variants } from "framer-motion";
-import { useRouter } from "next/navigation"; // 1. استيراد الـ Router
+import { useRouter } from "next/navigation";
 
 export default function PeripheralDecorations() {
-  const router = useRouter(); // 2. تفعيل الـ Router داخل الكومبوننت
+  const router = useRouter();
 
   const fadeUp: Variants = {
     hidden: { opacity: 0, y: 20 },
@@ -20,7 +20,6 @@ export default function PeripheralDecorations() {
       whileInView="visible"
       viewport={{ once: true }}
     >
-      {/* التعديل الوحيد: أضفنا حدث الـ onClick للتوجيه البرمجي المباشر دون تغيير الأنماط */}
       <motion.div
         variants={fadeUp}
         onClick={() => router.push("/shop#shop-catalog")}
@@ -31,9 +30,9 @@ export default function PeripheralDecorations() {
 
       <motion.div
         variants={fadeUp}
-        className="absolute bottom-4 left-5 right-auto lg:left-auto lg:bottom-20 lg:right-10 text-[8px] lg:text-[10px] uppercase font-mono tracking-[0.2em] z-30 leading-none"
+        className="absolute bottom-17 left-5 right-auto lg:left-auto lg:bottom-20 lg:right-10 text-[8px] lg:text-[10px] uppercase font-mono tracking-[0.2em] z-30 leading-none"
       >
-        <span className="opacity-40">[Categories.....]</span>
+        <span className="opacity-50">[Categories.....]</span>
       </motion.div>
 
       <motion.div

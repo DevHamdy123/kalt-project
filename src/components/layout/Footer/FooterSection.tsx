@@ -20,19 +20,19 @@ const FOOTER_LINKS = [
   {
     title: "Navigation",
     links: [
-      { name: "Shop_All", href: "/shop" },
-      { name: "Collections", href: "/collections" },
-      { name: "Product_Anatomy", href: "#anatomy" },
-      { name: "The_Bridge", href: "#bridge" },
+      { name: "Shop_All", href: "/#" },
+      { name: "Collections", href: "/#" },
+      { name: "Product_Anatomy", href: "#" },
+      { name: "The_Bridge", href: "#" },
     ],
   },
   {
     title: "Support",
     links: [
-      { name: "FAQ", href: "/faq" },
-      { name: "Shipping_&_Returns", href: "/returns" },
-      { name: "Size_Guide", href: "/size-guide" },
-      { name: "Contact_Us", href: "/contact" },
+      { name: "FAQ", href: "/#" },
+      { name: "Shipping_&_Returns", href: "/#" },
+      { name: "Size_Guide", href: "/#" },
+      { name: "Contact_Us", href: "/#" },
     ],
   },
   {

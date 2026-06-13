@@ -1,7 +1,7 @@
 "use client";
 import { motion, useTransform } from "framer-motion";
 import { useEffect, useState } from "react";
-import { AnatomyStep, SharedAnimationProps } from "../../types"; // تأكد من المسار
+import { AnatomyStep, SharedAnimationProps } from "../types";
 
 interface AnnotationProps extends SharedAnimationProps {
   step: AnatomyStep;
@@ -53,7 +53,7 @@ export default function Annotation({ step, progress }: AnnotationProps) {
       <motion.div
         style={{ opacity, top: step.position.top }}
         // التعديل هنا: hidden lg:flex بدلاً من hidden md:flex
-        className={`hidden lg:flex absolute z-50 flex-col gap-1 w-27.5 sm:w-40 md:w-44 lg:w-50 xl:w-70 -translate-y-1/2 ${
+        className={`hidden lg:flex absolute z-50 flex-col gap-1 w-27.5 sm:w-40 md:w-44 lg:w-50 xl:w-70 -translate-y-1/2  ${
           isRight
             ? "right-[1%] sm:right-[3%] md:right-[12%] lg:right-[8%] xl:right-[10%]"
             : "left-[1%] sm:left-[3%] md:left-[12%] lg:left-[8%] xl:left-[10%]"
@@ -88,7 +88,7 @@ export default function Annotation({ step, progress }: AnnotationProps) {
             isRight ? "items-end text-right" : "items-start text-left"
           }`}
         >
-          <span className="font-mono text-[8px] lg:text-[10px] text-[#FF5A00] font-bold uppercase tracking-widest mb-1">
+          <span className="font-mono text-[8px] lg:text-[10px] text-[#FF5A00]  font-bold uppercase tracking-widest mb-1">
             Spec // 0{step.id}
           </span>
           <h4 className="text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-black uppercase tracking-tighter leading-none text-black drop-shadow-md">
