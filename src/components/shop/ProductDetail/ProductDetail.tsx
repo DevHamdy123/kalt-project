@@ -5,21 +5,13 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { ArrowLeft, Plus, Minus } from "lucide-react";
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
 import { useCartStore } from "@/store/useCartStore";
 import { toast } from "sonner";
+import { useProduct } from "@/hooks/queries/useProducts";
 
 interface ProductDetailProps {
   productId: string;
 }
-
-const fetchProduct = async (id: string) => {
-  const res = await fetch(`/api/products/${id}`);
-  if (!res.ok) {
-    throw new Error("Product not found");
-  }
-  return res.json();
-};
 
 export default function ProductDetail({ productId }: ProductDetailProps) {
   const [selectedSize, setSelectedSize] = useState("L");
@@ -35,14 +27,7 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
 
   const addItem = useCartStore((state) => state.addItem);
 
-  const {
-    data: product,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["product", productId],
-    queryFn: () => fetchProduct(productId),
-  });
+  const { data: product, isLoading, isError } = useProduct(productId);
 
   if (isLoading) {
     return (
@@ -80,6 +65,7 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
       price: product.price,
       image: product.images?.[0]?.url || "/images/img6.webp",
       quantity: validQuantity,
+      // ملاحظة: يمكنك إضافة selectedSize هنا إذا كان الستور يدعمها
     });
 
     toast.success(`${validQuantity}x ${product.name} ADDED TO ARCHIVE`);
@@ -101,7 +87,6 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            // تم التعديل هنا: bg-neutral-100 و border-black/10
             className="flex-1 relative min-h-[40vh] lg:min-h-0 bg-neutral-300 border border-black/35 flex items-end justify-center overflow-hidden"
           >
             <Image

@@ -15,8 +15,8 @@ export default function SlideImage({ currentSlide }: SlideImageProps) {
       <AnimatePresence mode="wait">
         <motion.div
           key={currentSlide.id}
-          //(Motion Blur effect)
-          initial={{ opacity: 0, scale: 0.95, x: 40, filter: "blur(8px)" }}
+          // التعديل هنا: غيرنا opacity لـ 1 عشان المتصفح يشوفها من أول لحظة ويحسبها LCP
+          initial={{ opacity: 1, scale: 0.95, x: 40, filter: "blur(8px)" }}
           animate={{ opacity: 1, scale: 1, x: 0, filter: "blur(0px)" }}
           exit={{ opacity: 0, scale: 1.02, x: -40, filter: "blur(8px)" }}
           transition={{ duration: 0.7, ease: customEase }}
@@ -35,6 +35,8 @@ export default function SlideImage({ currentSlide }: SlideImageProps) {
               alt={`KALT ${currentSlide.label}`}
               fill
               priority
+              fetchPriority="high"
+              quality={80}
               sizes="(max-width: 768px) 100vw, 50vw"
               className="object-contain object-bottom scale-[0.98] origin-bottom drop-shadow-2xl"
             />

@@ -6,13 +6,12 @@ import Link from "next/link";
 interface Props {
   collection: BridgeCollection;
   isOpen: boolean;
-  onHover: (id: number | null) => void;
+  onClick: (id: number | null) => void;
 }
 
-export default function BridgeCard({ collection, isOpen, onHover }: Props) {
+export default function BridgeCard({ collection, isOpen, onClick }: Props) {
   const customEase = [0.22, 1, 0.36, 1] as const;
 
-  // تحويل "Statement Pieces" إلى "statement-pieces" بشكل دقيق ومطابق للـ DB والـ CatalogHeader
   const categorySlug = collection.title
     .toLowerCase()
     .trim()
@@ -28,13 +27,16 @@ export default function BridgeCard({ collection, isOpen, onHover }: Props) {
           transition: { duration: 0.8, ease: customEase },
         },
       }}
-      onMouseEnter={() => onHover(collection.id)}
-      className="relative border-b border-black/10 py-3 lg:py-6 cursor-pointer group"
+      // التعديلات كلها هنا: لغينا الهوفر واعتمدنا على الفوكس والكليك
+      onClick={() => onClick(collection.id)}
+      onFocus={() => onClick(collection.id)}
+      tabIndex={0}
+      className="relative border-b border-black/10 py-3 lg:py-6 cursor-pointer group outline-none"
     >
-      <div className="flex justify-between items-center z-10 relative">
-        <div className="flex flex-col w-full">
+      <div className="flex justify-between items-center z-10 relative pointer-events-none">
+        <div className="flex flex-col w-full pointer-events-auto">
           <h3
-            className={`text-xl md:text-3xl lg:text-4xl tracking-tight flex items-center transition-colors duration-300 ${
+            className={`text-xl md:text-3xl lg:text-4xl tracking-tight flex items-center transition-colors duration-300 select-none ${
               isOpen
                 ? "text-black font-bold"
                 : "text-black/40 font-medium group-hover:text-black/80"
@@ -59,15 +61,13 @@ export default function BridgeCard({ collection, isOpen, onHover }: Props) {
                 transition={{ duration: 0.4, ease: customEase }}
                 className="overflow-hidden"
               >
-                <p className="max-w-sm text-xs text-neutral-500 mt-2 lg:mt-4 leading-relaxed font-medium">
+                <p className="max-w-sm text-xs text-neutral-500 mt-2 lg:mt-4 leading-relaxed font-medium select-none">
                   {collection.description}
                 </p>
 
                 <Link
-                  /* ضفنا كلمة /shop قبل علامة الاستفهام عشان نجبره يروح للصفحة الصح */
                   href={`/shop?category=${categorySlug}#shop-catalog`}
-                  /* شيلنا scroll={false} عشان نسمح للمتصفح ينزل للكاتالوج في الصفحة الجديدة */
-                  className="mt-3 lg:mt-5 border border-black px-4 lg:px-5 py-1.5 lg:py-2 rounded-full text-[10px] lg:text-xs tracking-wider uppercase font-bold flex items-center gap-2 hover:bg-black hover:text-white transition-all w-fit group/btn"
+                  className="mt-3 lg:mt-5 border border-black px-4 lg:px-5 py-1.5 lg:py-2 rounded-full text-[10px] lg:text-xs tracking-wider uppercase font-bold flex items-center gap-2 hover:bg-black hover:text-white transition-all w-fit group/btn select-none"
                 >
                   GET STARTED{" "}
                   <span className="group-hover/btn:translate-x-1 transition-transform">
@@ -80,7 +80,7 @@ export default function BridgeCard({ collection, isOpen, onHover }: Props) {
         </div>
 
         <div
-          className={`w-5 h-5 lg:w-8 lg:h-8 border rounded-full flex items-center justify-center transition-all duration-500 shrink-0 ${
+          className={`w-5 h-5 lg:w-8 lg:h-8 border rounded-full flex items-center justify-center transition-all duration-500 shrink-0 pointer-events-auto ${
             isOpen
               ? "border-black bg-black text-white -rotate-45"
               : "border-black/20 text-black opacity-100 group-hover:border-black"

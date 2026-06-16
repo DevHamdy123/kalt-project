@@ -29,7 +29,6 @@ export default function CatalogHeader({
   activeCategory,
   setCategory,
 }: CatalogHeaderProps) {
-  // دالة مساعدة لعكس الـ Slug (مثال: "statement-pieces" -> "STATEMENT PIECES")
   const formattedActive =
     activeCategory === "ALL ARCHIVE"
       ? "ALL ARCHIVE"
@@ -60,7 +59,6 @@ export default function CatalogHeader({
 
       <div className="flex flex-wrap gap-x-6 gap-y-3 border-t border-black/10 lg:border-t-0 pt-4 lg:pt-0">
         {CATEGORIES.map((cat) => {
-          // 2. التحقق من القسم النشط بعد الفورمات
           const isActive = formattedActive === cat;
 
           return (

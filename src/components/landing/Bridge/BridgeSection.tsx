@@ -7,7 +7,6 @@ import Image from "next/image";
 
 export default function BridgeSection() {
   const [activeId, setActiveId] = useState<number | null>(1);
-  const [isHoveringList, setIsHoveringList] = useState(false);
 
   const activeCollection =
     BRIDGE_COLLECTIONS.find((c) => c.id === activeId) || BRIDGE_COLLECTIONS[0];
@@ -15,24 +14,31 @@ export default function BridgeSection() {
 
   return (
     <>
-      <section className="w-full min-h-[calc(100vh-60px)] bg-white px-5 md:px-12 lg:px-16 xl:px-24 flex flex-col lg:flex-row items-center justify-center overflow-hidden gap-0 lg:gap-10 xl:gap-20">
+      <section className="w-full min-h-[calc(100vh-60px)] bg-bg-inner px-5 md:px-12 lg:px-16 xl:px-24 flex flex-col lg:flex-row items-center justify-center overflow-hidden gap-0 lg:gap-10 xl:gap-20">
         <div className="w-full flex-1 flex flex-col items-center lg:items-start justify-center pt-10 lg:pt-0 gap-3 lg:gap-8 relative shrink-0">
-          <motion.p
+          {/* التعديل هنا: حاوية بتضم العنوان والباراجراف بنفس ستايل باقي الموقع */}
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: customEase }}
-            className="max-w-70 font-medium text-[10px] md:text-[11px] leading-tight text-black/80 text-center lg:text-left"
+            className="flex flex-col items-center lg:items-start gap-2 max-w-sm mb-4 lg:mb-0 text-center lg:text-left z-20"
           >
-            From enduring classics to daring statement pieces, our collections
-            are crafted with intention.
-          </motion.p>
+            <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-black">
+              The Bridge
+            </h2>
+            <p className="font-medium text-[10px] md:text-[11px] leading-relaxed text-black/60 uppercase tracking-widest max-w-[280px]">
+              From enduring classics to daring statement pieces, our collections
+              are crafted with intention.
+            </p>
+          </motion.div>
 
+          {/* التعديل الأول: شيلنا opacity: 0 و delay من الأب عشان ميخفيش الصورة اللي جواه */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={{ scale: 0.95, y: 15 }}
+            whileInView={{ scale: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.2, ease: customEase }}
+            transition={{ duration: 0.8, ease: customEase }}
             className="relative w-fit mx-auto lg:mx-0 flex items-center justify-center drop-shadow-[0_0_1px_rgba(0,0,0,0.3)]"
           >
             <div className="absolute -top-3 -left-3 text-neutral-400 font-mono text-[10px]">
@@ -49,12 +55,14 @@ export default function BridgeSection() {
                   "polygon(20% 0%, 100% 0%, 100% 80%, 80% 100%, 0% 100%, 0% 20%)",
               }}
             >
-              <AnimatePresence mode="wait">
+              {/* التعديل التاني: إضافة initial={false} ضرورية جداً هنا */}
+              <AnimatePresence mode="wait" initial={false}>
                 <motion.div
                   key={activeCollection.id}
-                  initial={{ opacity: 0, scale: 1.05, filter: "blur(5px)" }}
+                  /* رجعنا الـ opacity: 0 هنا عشان التقليب بين الكروت يفضل ناعم، بس initial={false} فوق هتلغيها لأول صورة بس */
+                  initial={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
                   animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, scale: 0.95, filter: "blur(5px)" }}
+                  exit={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}
                   transition={{ duration: 0.5, ease: customEase }}
                   className="absolute inset-0 w-full h-full"
                 >
@@ -62,8 +70,11 @@ export default function BridgeSection() {
                     src={activeCollection.image}
                     alt={activeCollection.title}
                     fill
+                    priority
+                    fetchPriority="high"
+                    quality={80}
                     sizes="(max-width: 640px) 45vw, (max-width: 768px) 40vw, 400px"
-                    className={`object-cover object-top transition-all duration-700 ${isHoveringList ? "grayscale-0 scale-105" : "grayscale scale-100"}`}
+                    className="object-cover object-top transition-all duration-700"
                   />
                 </motion.div>
               </AnimatePresence>
@@ -81,16 +92,13 @@ export default function BridgeSection() {
             },
           }}
           className="w-full lg:flex-1 flex flex-col justify-center pt-10 lg:pt-0"
-          onMouseEnter={() => setIsHoveringList(true)}
-          onMouseLeave={() => setIsHoveringList(false)}
         >
-          {/* تأكد إن BRIDGE_COLLECTIONS مش فاضية */}
           {BRIDGE_COLLECTIONS.map((col) => (
             <BridgeCard
               key={col.id}
               collection={col}
               isOpen={activeId === col.id}
-              onHover={(id) => setActiveId(id)}
+              onClick={(id) => setActiveId(id)}
             />
           ))}
         </motion.div>

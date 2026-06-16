@@ -6,28 +6,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { Plus, ShoppingBag, X } from "lucide-react";
 import { useCartStore } from "@/store/useCartStore";
-import { useQuery } from "@tanstack/react-query";
-import { toast } from "sonner"; // عشان الإشعارات
-import axios from "axios";
+import { toast } from "sonner";
+import ShopTheLookSkeleton from "./ShopTheLookSkeleton";
+import { useProduct } from "@/hooks/queries/useProducts";
 
-// ID المنتج الحقيقي من الداتا بيز
 const PRODUCT_ID = "cmpm4qr9y000k1oujdr5hs7x3";
 
 export default function ShopTheLook() {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // استدعاء الـ addItem من الستور
   const addItem = useCartStore((state) => state.addItem);
 
-  // جلب الداتا من الـ API
-  const { data: product, isLoading } = useQuery({
-    queryKey: ["product", PRODUCT_ID],
-    queryFn: async () => {
-      const { data } = await axios.get(`/api/products/${PRODUCT_ID}`);
-      return data;
-    },
-  });
+  const { data: product, isLoading } = useProduct(PRODUCT_ID);
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -44,7 +35,6 @@ export default function ShopTheLook() {
     setIsOpen(false);
   };
 
-  // إغلاق الكارت عند الضغط خارجه
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -58,16 +48,13 @@ export default function ShopTheLook() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  if (isLoading)
-    return (
-      <div className="py-20 text-center text-black/50">LOADING ARCHIVE...</div>
-    );
+  if (isLoading) return <ShopTheLookSkeleton />;
+
   if (!product) return null;
 
   return (
     <section className="w-full bg-[#fdfdfd] py-20 px-6 md:px-12 lg:px-20">
-      <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-y-10 items-center min-h-[80vh]">
-        {/* العنوان */}
+      <div className="max-w-350 mx-auto grid grid-cols-1 lg:grid-cols-12 gap-y-10 items-center min-h-[80vh]">
         <div className="lg:col-span-6 flex flex-col justify-start">
           <motion.h2
             initial={{ opacity: 0, x: -30 }}
@@ -82,15 +69,13 @@ export default function ShopTheLook() {
           </p>
         </div>
 
-        {/* حاوية الصورة */}
         <div className="lg:col-span-6 flex justify-center w-full">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-            className="relative w-full max-w-lg aspect-[3/4] bg-neutral-200 rounded-lg overflow-hidden shadow-2xl border border-black/5"
+            className="relative w-full max-w-lg aspect-3/4 bg-neutral-200 rounded-lg overflow-hidden shadow-2xl border border-black/5"
           >
-            {/* تم إضافة relative للينك لحل تحذير الـ fill */}
             <Link
               href={`/shop/${product.id}`}
               className="relative block w-full h-full"
@@ -104,7 +89,6 @@ export default function ShopTheLook() {
               />
             </Link>
 
-            {/* Hotspot */}
             <div
               ref={containerRef}
               className="absolute top-1/2 right-4 z-30 -translate-y-1/2"
@@ -132,7 +116,7 @@ export default function ShopTheLook() {
                     className="absolute top-full mt-4 right-0 w-64 bg-white border-2 border-black p-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] z-50"
                   >
                     <div className="flex gap-4">
-                      <div className="w-20 h-20 bg-zinc-100 relative flex-shrink-0">
+                      <div className="w-20 h-20 bg-zinc-100 relative shrink-0">
                         <Image
                           src={product.images?.[0]?.url || "/images/img17.webp"}
                           alt="thumb"
@@ -165,7 +149,6 @@ export default function ShopTheLook() {
           </motion.div>
         </div>
 
-        {/* زرار الشراء الخارجي */}
         <div className="lg:col-span-12 flex justify-end">
           <motion.button
             onClick={handleAddToCart}

@@ -123,13 +123,14 @@ const LegalLinks = ({ active }: { active: boolean }) => (
   </div>
 );
 
-const BrandSignature = ({ active }: { active: boolean }) => (
+const BrandSignature = () => (
   <div className="w-full overflow-hidden flex justify-center items-end leading-[0.75] select-none pointer-events-none mt-10 md:mt-0">
-    <Reveal active={active} delay={0.5} threshold={0.8}>
-      <h1 className="text-[28vw] md:text-[24vw] font-black tracking-tighter text-white uppercase">
-        KALT
-      </h1>
-    </Reveal>
+    <div
+      aria-hidden="true"
+      className="text-[28vw] md:text-[24vw] font-black tracking-tighter text-white uppercase"
+    >
+      KALT
+    </div>
   </div>
 );
 
@@ -178,7 +179,7 @@ export default function FooterSection() {
 
         <div className="flex flex-col items-center mt-16 lg:mt-0">
           <LegalLinks active={holdVisible} />
-          <BrandSignature active={holdVisible} />
+          <BrandSignature />
         </div>
       </div>
 

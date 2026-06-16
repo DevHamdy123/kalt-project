@@ -1,46 +1,74 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Menu, Search, Store, User, LayoutDashboard } from "lucide-react"; // إضافة LayoutDashboard
+import { Menu, Store, User, LayoutDashboard, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import SideMenu from "@/components/common/nav-elements/SideMenu";
 import ProfileDropdown from "@/components/common/nav-elements/ProfileDropdown";
+import { useCartStore } from "@/store/useCartStore";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   const { data: session, status } = useSession();
   const isLoggedIn = status === "authenticated";
 
   // التحقق هل اليوزر ده أدمن ولا لأ
-  const isAdmin = (session?.user as any)?.role === "ADMIN";
+  const isAdmin = (session?.user as { role?: string })?.role === "ADMIN";
 
-  const inputRef = useRef<HTMLInputElement>(null);
+  // لوجيك سلة المشتريات
+  const items = useCartStore((state) => state.items);
+  const totalItems = items.reduce((total, item) => total + item.quantity, 0);
+
   const customEase = [0.22, 1, 0.36, 1] as const;
 
+  // حل مشكلة الـ Hydration للعداد بتاع السلة
   useEffect(() => {
-    if (isSearchOpen && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [isSearchOpen]);
+    setIsMounted(true);
+  }, []);
 
-  // بناء الأيقونات ديناميكياً بناءً على الصلاحيات
+  // بناء الأيقونات ديناميكياً
   const actionIcons = [];
+
   if (isAdmin) {
-    actionIcons.push({ Icon: LayoutDashboard, href: "/admin", delay: 0.2 });
+    actionIcons.push({
+      name: "dashboard",
+      Icon: LayoutDashboard,
+      href: "/admin",
+      delay: 0.2,
+      hasBadge: false,
+    });
   }
-  actionIcons.push({ Icon: Store, href: "/shop", delay: 0.3 });
+
+  // التعديل الوحيد هنا: ضفنا السلة الأول
+  actionIcons.push({
+    name: "cart",
+    Icon: ShoppingCart,
+    href: "/shop/cart",
+    delay: 0.3,
+    hasBadge: true,
+  });
+
+  // وبعدين المتجر
+  actionIcons.push({
+    name: "shop",
+    Icon: Store,
+    href: "/shop",
+    delay: 0.4,
+    hasBadge: false,
+  });
 
   return (
     <>
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
       <header className="w-full flex items-center justify-between relative z-20 pt-4">
+        {/* زرار القائمة (Menu) */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -55,6 +83,7 @@ export default function Navbar() {
           </button>
         </motion.div>
 
+        {/* لوجو KALT */}
         <motion.div
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -66,47 +95,11 @@ export default function Navbar() {
           </h2>
         </motion.div>
 
+        {/* الأيقونات اليمين (المتجر، السلة، البروفايل) */}
         <div className="flex-1 flex justify-end gap-2 md:gap-3">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2, ease: customEase }}
-            className="flex items-center"
-          >
+          {actionIcons.map((item) => (
             <motion.div
-              layout
-              className={`relative h-10 md:h-11 flex items-center rounded-full border overflow-hidden group ${
-                isSearchOpen
-                  ? "bg-white border-black/20 w-45 md:w-60"
-                  : "bg-border-white border-white w-10 md:w-11 cursor-pointer hover:border-black hover:bg-black transition-colors duration-300"
-              }`}
-            >
-              <input
-                ref={inputRef}
-                onBlur={() => setIsSearchOpen(false)}
-                className={`absolute left-0 h-full w-full bg-transparent pl-4 pr-12 text-sm outline-none text-black ${
-                  isSearchOpen
-                    ? "pointer-events-auto opacity-100"
-                    : "pointer-events-none opacity-0"
-                }`}
-                placeholder="Search..."
-              />
-              <button
-                onClick={() => setIsSearchOpen(true)}
-                className={`absolute right-0 w-10 h-10 md:w-11 md:h-11 cursor-pointer flex items-center justify-center rounded-full z-10 transition-colors duration-300 ${
-                  isSearchOpen
-                    ? "text-black hover:bg-black/5"
-                    : "text-black group-hover:text-border-white"
-                }`}
-              >
-                <Search size={18} strokeWidth={1.5} />
-              </button>
-            </motion.div>
-          </motion.div>
-
-          {actionIcons.map((item, idx) => (
-            <motion.div
-              key={idx}
+              key={item.name}
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
@@ -117,17 +110,25 @@ export default function Navbar() {
             >
               <Link
                 href={item.href}
-                className="w-10 h-10 md:w-11 md:h-11 bg-border-white rounded-full flex items-center justify-center cursor-pointer hover:border-black hover:bg-black hover:text-border-white hover:scale-105 transition-all duration-300 border border-white text-black"
+                className="relative w-10 h-10 md:w-11 md:h-11 bg-border-white rounded-full flex items-center justify-center cursor-pointer hover:border-black hover:bg-black hover:text-border-white hover:scale-105 transition-all duration-300 border border-white text-black group"
               >
                 <item.Icon size={18} strokeWidth={1.5} />
+
+                {/* عداد السلة بيظهر بس لو العنصر ليه Badge وفي عناصر في السلة */}
+                {isMounted && item.hasBadge && totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 min-w-[16px] h-4 bg-[#b91c1c] text-white text-[10px] font-bold rounded-full border border-white flex items-center justify-center px-1 shadow-sm">
+                    {totalItems}
+                  </span>
+                )}
               </Link>
             </motion.div>
           ))}
 
+          {/* البروفايل أو تسجيل الدخول */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4, ease: customEase }}
+            transition={{ duration: 0.6, delay: 0.5, ease: customEase }}
             className="relative"
           >
             {isLoggedIn ? (

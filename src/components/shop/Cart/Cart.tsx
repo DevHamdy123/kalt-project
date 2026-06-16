@@ -7,10 +7,193 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Trash2, Plus, Minus, ArrowRight, ArrowLeft } from "lucide-react";
 import { useCartStore } from "@/store/useCartStore";
 import { toast } from "sonner";
-
-// 1. استدعاء مكون الشاشة الجانبية
 import CheckoutDrawer from "@/components/shop/Checkout/CheckoutDrawer";
 
+// ==========================================
+// تعريف الـ Types
+// ==========================================
+
+interface CartItemType {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  quantity: number;
+}
+
+interface CartItemCardProps {
+  item: CartItemType;
+  updateQuantity: (id: string, quantity: number) => void;
+  removeItem: (id: string) => void;
+}
+
+interface OrderSummaryProps {
+  subtotal: number;
+  onCheckoutClick: () => void;
+}
+
+// ==========================================
+// 1. مكون عرض المنتج في السلة (Cart Item)
+// ==========================================
+const CartItemCard = ({
+  item,
+  updateQuantity,
+  removeItem,
+}: CartItemCardProps) => {
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.4 }}
+      className="flex flex-col sm:flex-row gap-6 border-b border-black/15 pb-8"
+    >
+      <div className="w-full sm:w-40 aspect-[4/5] relative bg-neutral-50 border border-black/15 shrink-0 flex items-center justify-center overflow-hidden">
+        <Image
+          src={item.image}
+          alt={item.name}
+          fill
+          sizes="(max-width: 640px) 100vw, 160px"
+          className="object-contain object-bottom p-4 drop-shadow-sm"
+        />
+      </div>
+
+      <div className="flex-1 flex flex-col justify-between py-2">
+        <div className="flex justify-between items-start gap-4">
+          <div>
+            <span className="text-black/40 font-mono text-[10px] font-bold uppercase tracking-[0.2em] mb-2 block">
+              ID // {item.id.slice(-6)}
+            </span>
+            <Link
+              href={`/shop/${item.id}`}
+              className="hover:opacity-70 transition-opacity"
+            >
+              <h3 className="text-xl lg:text-2xl font-black uppercase tracking-tighter leading-none mb-2">
+                {item.name}
+              </h3>
+            </Link>
+          </div>
+          <p className="text-lg lg:text-xl font-medium">
+            ${(item.price * item.quantity).toFixed(2)}
+          </p>
+        </div>
+
+        <div className="flex items-end justify-between mt-6">
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-black/50 block mb-2">
+              Quantity
+            </span>
+            <div className="flex items-center border border-black/30 h-10">
+              <button
+                onClick={() =>
+                  updateQuantity(item.id, Math.max(1, item.quantity - 1))
+                }
+                className="w-10 h-full flex items-center justify-center hover:bg-black/5 transition-colors"
+              >
+                <Minus size={14} />
+              </button>
+
+              <input
+                type="number"
+                min="1"
+                value={item.quantity === 0 ? "" : item.quantity}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === "") {
+                    updateQuantity(item.id, 0);
+                  } else {
+                    updateQuantity(item.id, parseInt(val));
+                  }
+                }}
+                className="w-10 text-center text-xs font-bold bg-transparent outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none m-0"
+                style={{ MozAppearance: "textfield" }}
+              />
+
+              <button
+                onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                className="w-10 h-full flex items-center justify-center hover:bg-black/5 transition-colors"
+              >
+                <Plus size={14} />
+              </button>
+            </div>
+          </div>
+
+          <button
+            onClick={() => {
+              removeItem(item.id);
+              toast.error(`${item.name} REMOVED FROM ARCHIVE`);
+            }}
+            className="text-black/60 hover:text-red-600 transition-colors flex items-center gap-2 text-xs font-bold uppercase tracking-widest"
+          >
+            <Trash2 size={16} />
+            <span className="hidden sm:inline">Remove</span>
+          </button>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+// ==========================================
+// 2. مكون ملخص الطلب (Order Summary)
+// ==========================================
+const OrderSummary = ({ subtotal, onCheckoutClick }: OrderSummaryProps) => {
+  return (
+    <div className="w-full lg:w-[380px] shrink-0">
+      <div className="bg-white border border-black/20 p-8 sticky top-32 shadow-sm">
+        <h2 className="text-xl font-black uppercase tracking-tighter mb-6 border-b border-black/20 pb-4">
+          Summary
+        </h2>
+
+        <div className="flex flex-col gap-4 text-sm font-medium mb-8">
+          <div className="flex justify-between items-center">
+            <span className="text-black/60 uppercase tracking-widest text-xs">
+              Subtotal
+            </span>
+            <span className="text-base">${subtotal.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-black/60 uppercase tracking-widest text-xs">
+              Shipping
+            </span>
+            <span className="text-black/40 text-xs italic uppercase">
+              Calculated at checkout
+            </span>
+          </div>
+        </div>
+
+        <div className="flex justify-between items-end border-t border-black/20 pt-6 mb-8">
+          <span className="font-bold uppercase tracking-widest text-sm">
+            Total
+          </span>
+          <span className="text-3xl font-black">${subtotal.toFixed(2)}</span>
+        </div>
+
+        <button
+          onClick={onCheckoutClick}
+          className="w-full bg-black text-white py-5 text-xs font-black uppercase tracking-[0.2em] hover:bg-neutral-800 transition-colors duration-300 shadow-lg flex items-center justify-center cursor-pointer"
+        >
+          Checkout Securely
+        </button>
+
+        <div className="mt-6 flex items-center justify-center gap-4 text-black/40">
+          <span className="text-[10px] font-bold uppercase tracking-widest">
+            SSL Encrypted
+          </span>
+          <span className="w-1 h-1 bg-black/30 rounded-full"></span>
+          <span className="text-[10px] font-bold uppercase tracking-widest">
+            Free Returns
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ==========================================
+// 3. المكون الرئيسي (Main Cart Component)
+// ==========================================
 export default function Cart() {
   const [isMounted, setIsMounted] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -62,169 +245,30 @@ export default function Cart() {
           <ArrowLeft size={16} /> Back to Catalog
         </Link>
 
-        {/* الحدود هنا بقت border-black/20 عشان تبان أكتر */}
         <h1 className="text-4xl lg:text-5xl font-black uppercase tracking-tighter mb-12 border-b border-black/20 pb-6">
           Your Archive
         </h1>
 
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-20">
+          {/* حاوية المنتجات */}
           <div className="flex-1 flex flex-col gap-8">
             <AnimatePresence>
               {items.map((item) => (
-                <motion.div
+                <CartItemCard
                   key={item.id}
-                  layout
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.4 }}
-                  // Border بقت border-black/15
-                  className="flex flex-col sm:flex-row gap-6 border-b border-black/15 pb-8"
-                >
-                  {/* خلفية الصورة بقت neutral-50 وبوردر أوضح */}
-                  <div className="w-full sm:w-40 aspect-[4/5] relative bg-neutral-50 border border-black/15 shrink-0 flex items-center justify-center overflow-hidden">
-                    <Image
-                      src={item.image}
-                      alt={item.name}
-                      fill
-                      sizes="(max-width: 640px) 100vw, 160px"
-                      className="object-contain object-bottom p-4 drop-shadow-sm"
-                    />
-                  </div>
-
-                  <div className="flex-1 flex flex-col justify-between py-2">
-                    <div className="flex justify-between items-start gap-4">
-                      <div>
-                        <span className="text-black/40 font-mono text-[10px] font-bold uppercase tracking-[0.2em] mb-2 block">
-                          ID // {item.id.slice(-6)}
-                        </span>
-                        <Link
-                          href={`/shop/${item.id}`}
-                          className="hover:opacity-70 transition-opacity"
-                        >
-                          <h3 className="text-xl lg:text-2xl font-black uppercase tracking-tighter leading-none mb-2">
-                            {item.name}
-                          </h3>
-                        </Link>
-                      </div>
-                      <p className="text-lg lg:text-xl font-medium">
-                        ${(item.price * item.quantity).toFixed(2)}
-                      </p>
-                    </div>
-
-                    <div className="flex items-end justify-between mt-6">
-                      <div>
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-black/50 block mb-2">
-                          Quantity
-                        </span>
-                        <div className="flex items-center border border-black/30 h-10">
-                          <button
-                            onClick={() =>
-                              updateQuantity(
-                                item.id,
-                                Math.max(1, item.quantity - 1),
-                              )
-                            }
-                            className="w-10 h-full flex items-center justify-center hover:bg-black/5 transition-colors"
-                          >
-                            <Minus size={14} />
-                          </button>
-
-                          <input
-                            type="number"
-                            min="1"
-                            value={item.quantity === 0 ? "" : item.quantity}
-                            onChange={(e) => {
-                              const val = e.target.value;
-                              if (val === "") {
-                                updateQuantity(item.id, 0);
-                              } else {
-                                updateQuantity(item.id, parseInt(val));
-                              }
-                            }}
-                            className="w-10 text-center text-xs font-bold bg-transparent outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none m-0"
-                            style={{ MozAppearance: "textfield" }}
-                          />
-
-                          <button
-                            onClick={() =>
-                              updateQuantity(item.id, item.quantity + 1)
-                            }
-                            className="w-10 h-full flex items-center justify-center hover:bg-black/5 transition-colors"
-                          >
-                            <Plus size={14} />
-                          </button>
-                        </div>
-                      </div>
-
-                      <button
-                        onClick={() => {
-                          removeItem(item.id);
-                          toast.error(`${item.name} REMOVED FROM ARCHIVE`);
-                        }}
-                        className="text-black/60 hover:text-red-600 transition-colors flex items-center gap-2 text-xs font-bold uppercase tracking-widest"
-                      >
-                        <Trash2 size={16} />
-                        <span className="hidden sm:inline">Remove</span>
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
+                  item={item}
+                  updateQuantity={updateQuantity}
+                  removeItem={removeItem}
+                />
               ))}
             </AnimatePresence>
           </div>
 
-          <div className="w-full lg:w-[380px] shrink-0">
-            {/* Summary Box: خليتها background أبيض صريح وبوردر أغمق */}
-            <div className="bg-white border border-black/20 p-8 sticky top-32 shadow-sm">
-              <h2 className="text-xl font-black uppercase tracking-tighter mb-6 border-b border-black/20 pb-4">
-                Summary
-              </h2>
-
-              <div className="flex flex-col gap-4 text-sm font-medium mb-8">
-                <div className="flex justify-between items-center">
-                  <span className="text-black/60 uppercase tracking-widest text-xs">
-                    Subtotal
-                  </span>
-                  <span className="text-base">${subtotal.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-black/60 uppercase tracking-widest text-xs">
-                    Shipping
-                  </span>
-                  <span className="text-black/40 text-xs italic uppercase">
-                    Calculated at checkout
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex justify-between items-end border-t border-black/20 pt-6 mb-8">
-                <span className="font-bold uppercase tracking-widest text-sm">
-                  Total
-                </span>
-                <span className="text-3xl font-black">
-                  ${subtotal.toFixed(2)}
-                </span>
-              </div>
-
-              <button
-                onClick={() => setIsDrawerOpen(true)}
-                className="w-full bg-black text-white py-5 text-xs font-black uppercase tracking-[0.2em] hover:bg-neutral-800 transition-colors duration-300 shadow-lg flex items-center justify-center cursor-pointer"
-              >
-                Checkout Securely
-              </button>
-
-              <div className="mt-6 flex items-center justify-center gap-4 text-black/40">
-                <span className="text-[10px] font-bold uppercase tracking-widest">
-                  SSL Encrypted
-                </span>
-                <span className="w-1 h-1 bg-black/30 rounded-full"></span>
-                <span className="text-[10px] font-bold uppercase tracking-widest">
-                  Free Returns
-                </span>
-              </div>
-            </div>
-          </div>
+          {/* حاوية ملخص الطلب */}
+          <OrderSummary
+            subtotal={subtotal}
+            onCheckoutClick={() => setIsDrawerOpen(true)}
+          />
         </div>
       </div>
 

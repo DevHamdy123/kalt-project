@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react"; // 1. أضفنا الاستيرادات دي
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import Image from "next/image";
 import { ArrowDown } from "lucide-react";
 import { useLenis } from "lenis/react";
+import TypewriterEffect from "./TypewriterEffect";
 
 const customEase = [0.22, 1, 0.36, 1] as const;
 
-const fadeUpVariants = {
+const fadeUpVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: (customDelay: number) => ({
     opacity: 1,
@@ -20,43 +20,16 @@ const fadeUpVariants = {
 export default function StoreDesktopLayout() {
   const lenis = useLenis();
 
-  // 2. منطق الكتابة والمسح للكلمة
-  const [displayText, setDisplayText] = useState("KALT.");
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  useEffect(() => {
-    const fullText = "KALT..";
-    const timeout = setTimeout(
-      () => {
-        if (isDeleting) {
-          setDisplayText((prev) => prev.slice(0, -1));
-          if (displayText === "") setIsDeleting(false);
-        } else {
-          setDisplayText(fullText.substring(0, displayText.length + 1));
-          if (displayText === fullText) {
-            // استنى ثانيتين قبل ما يبدأ يمسح
-            setTimeout(() => setIsDeleting(true), 2000);
-            return;
-          }
-        }
-      },
-      isDeleting ? 100 : 200,
-    ); // سرعة المسح أسرع من الكتابة
-
-    return () => clearTimeout(timeout);
-  }, [displayText, isDeleting]);
-
-  const scrollToCatalog = () => {
+  const scrollToCatalog = (): void => {
     lenis?.scrollTo("#shop-catalog", {
       offset: -100,
       duration: 1.5,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     });
   };
 
   return (
     <div className="hidden xl:grid xl:grid-cols-[1fr_1.4fr_1fr] 2xl:grid-cols-[1fr_1.2fr_1fr] w-full h-full justify-between gap-4 px-[clamp(2rem,4vw,4rem)] pt-4 2xl:pt-12 pb-0 min-h-0 relative">
-      {/* 1. النص الترحيبي (يسار) */}
       <div className="flex flex-col justify-center z-10 pb-4 2xl:pb-12 min-h-0">
         <motion.div
           custom={0.2}
@@ -64,15 +37,15 @@ export default function StoreDesktopLayout() {
           animate="visible"
           variants={fadeUpVariants}
         >
-          {/* 3. استخدمنا الـ displayText هنا */}
           <h1 className="font-black uppercase tracking-tighter leading-[0.85] text-black text-[clamp(2.5rem,3.5vw,4.5rem)] 2xl:text-[5.5rem]">
-            {displayText} <br />
+            <TypewriterEffect /> <br />
             The Syndicate <br />
             Urban Precision <br />
             Est. 2026 <br />
             Raw Aesthetics.
           </h1>
         </motion.div>
+
         <motion.div
           custom={0.4}
           initial="hidden"
@@ -87,15 +60,14 @@ export default function StoreDesktopLayout() {
         </motion.div>
       </div>
 
-      {/* 2. صورة الموديل (وسط) */}
       <motion.div
         custom={0.1}
         initial="hidden"
         animate="visible"
         variants={fadeUpVariants}
-        className="relative flex justify-center items-end h-full z-0 min-w-[300px] min-h-0"
+        className="relative flex justify-center items-end h-full z-0 min-w-75 min-h-0"
       >
-        <div className="relative w-full h-[95%] 2xl:h-full max-w-[500px] 2xl:max-w-[650px]">
+        <div className="relative w-full h-[95%] 2xl:h-full max-w-125 2xl:max-w-162.5">
           <Image
             src="/images/img10.webp"
             alt="KALT New Drop Model"
@@ -107,14 +79,13 @@ export default function StoreDesktopLayout() {
         </div>
       </motion.div>
 
-      {/* 3. كارت الخصم (يمين) */}
       <div className="flex flex-col justify-center items-end z-10 w-full pb-4 2xl:pb-12 min-h-0">
         <motion.div
           custom={0.5}
           initial="hidden"
           animate="visible"
           variants={fadeUpVariants}
-          className="w-full max-w-[300px] 2xl:max-w-[360px]"
+          className="w-full max-w-75 2xl:max-w-90"
         >
           <motion.div
             animate={{ y: [0, -20, 0] }}
@@ -145,7 +116,6 @@ export default function StoreDesktopLayout() {
         </motion.div>
       </div>
 
-      {/* 4. مؤشر التمرير لأسفل */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

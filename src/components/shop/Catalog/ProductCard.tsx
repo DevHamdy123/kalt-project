@@ -4,7 +4,6 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-// 1. استيراد المخزن والإشعارات
 import { useCartStore } from "@/store/useCartStore";
 import { toast } from "sonner";
 
@@ -25,35 +24,29 @@ export default function ProductCard({
   category,
   imageAspect = "aspect-[4/5]",
 }: ProductCardProps) {
-  // 2. تعديل النوع ليقبل نص فارغ أثناء الكتابة
   const [qty, setQty] = useState<number | string>(1);
 
-  // استدعاء دالة الإضافة
   const addItem = useCartStore((state) => state.addItem);
 
   const CARD_CLIP_PATH =
     "polygon(24px 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%, 0 24px)";
 
-  const IMAGE_CLIP_PATH = "polygon(24px 0, 100% 0, 100% 100%, 0 100%, 0 24px)";
+  // const IMAGE_CLIP_PATH = "polygon(24px 0, 100% 0, 100% 100%, 0 100%, 0 24px)";
 
-  // 3. تأمين الكمية وحساب السعر الديناميكي
   const validQty = Number(qty) || 1;
   const displayPrice = (price * validQty).toFixed(2);
 
-  // 4. دالة الإضافة للسلة مع الإشعار
   const handleAddToCart = () => {
     addItem({
       id: id,
       name: name,
-      price: price, // نرسل السعر الأساسي للمخزن
+      price: price,
       image: images?.[0]?.url || "/images/placeholder.webp",
       quantity: validQty,
     });
 
-    // إشعار شيك بنجاح الإضافة
     toast.success(`${validQty}x ${name} ADDED TO ARCHIVE`);
 
-    // تصفير العداد بعد الإضافة (اختياري، بس بيدي تجربة مستخدم أفضل)
     setQty(1);
   };
 
@@ -94,7 +87,6 @@ export default function ProductCard({
           </div>
 
           <div className="flex items-end justify-between">
-            {/* 5. عرض السعر الديناميكي */}
             <span className="font-bold text-lg text-black">
               ${displayPrice}
             </span>
@@ -107,7 +99,6 @@ export default function ProductCard({
                 >
                   -
                 </button>
-                {/* 6. إصلاح حقل الإدخال ليدعم المسح والكتابة */}
                 <input
                   type="number"
                   min="1"
@@ -130,7 +121,6 @@ export default function ProductCard({
                 </button>
               </div>
 
-              {/* 7. ربط زرار الـ Add to cart */}
               <button
                 onClick={handleAddToCart}
                 className="bg-black text-white px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest hover:bg-black/80 transition-colors w-full"

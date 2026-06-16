@@ -1,5 +1,5 @@
 import ProductCard from "./ProductCard";
-import ProductCardSkeleton from "./ProductCardSkeleton"; // استيراد الـ Skeleton
+import ProductCardSkeleton from "./ProductCardSkeleton";
 
 interface Product {
   id: string;
@@ -11,7 +11,7 @@ interface Product {
 
 interface CatalogGridProps {
   products: Product[];
-  isLoading?: boolean; // أضفنا الخاصية دي
+  isLoading?: boolean;
 }
 
 export default function CatalogGrid({ products, isLoading }: CatalogGridProps) {
@@ -50,17 +50,15 @@ export default function CatalogGrid({ products, isLoading }: CatalogGridProps) {
   return (
     <div className="grid grid-cols-12 gap-y-20 md:gap-y-32 gap-x-6 md:gap-x-10 w-full mt-10 relative">
       {isLoading ? (
-        // في حالة التحميل، بنرسم 4 كروت Skeleton بنفس الـ Layout بالضبط
         [...Array(4)].map((_, i) => {
-          const { gridClass } = getLayoutStyles(i);
+          const { gridClass, imageAspect } = getLayoutStyles(i);
           return (
             <div key={`skeleton-${i}`} className={gridClass}>
-              <ProductCardSkeleton />
+              <ProductCardSkeleton imageAspect={imageAspect} />
             </div>
           );
         })
       ) : (
-        // في حالة الداتا موجودة، بنرسم المنتجات
         <>
           {products.map((product, index) => {
             const { gridClass, imageAspect } = getLayoutStyles(index);

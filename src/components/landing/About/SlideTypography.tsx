@@ -35,10 +35,11 @@ export default function SlideTypography({
       <AnimatePresence mode="wait">
         <motion.h2
           key={currentSlide.id}
-          initial={{ x: 50, opacity: 0 }}
+          // التعديل هنا: شيلنا opacity: 0 واستخدمنا blur
+          initial={{ x: 50, opacity: 1 }}
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: -50, opacity: 0 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
+          transition={{ duration: 0.6, ease: "easeInOut" }}
           className="text-[clamp(2rem,6vw,5rem)] uppercase tracking-tighter leading-none lg:leading-[0.9] font-light whitespace-nowrap max-w-lg mt-1 lg:mt-0"
         >
           {currentSlide.titleLine1} <br className="hidden lg:block" />
@@ -50,10 +51,11 @@ export default function SlideTypography({
       <AnimatePresence mode="wait">
         <motion.p
           key={currentSlide.id}
-          initial={{ y: 30, opacity: 0 }}
+          // التعديل هنا: شيلنا opacity: 0 واستخدمنا blur
+          initial={{ y: 30, opacity: 1 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 30, opacity: 0 }}
-          transition={{ duration: 0.5, delay: 0.2, ease: "easeInOut" }}
+          transition={{ duration: 0.6, delay: 0.2, ease: "easeInOut" }}
           className="text-xs md:text-base lg:text-lg text-black/70 font-light leading-snug lg:leading-relaxed max-w-md"
         >
           {currentSlide.paragraph}

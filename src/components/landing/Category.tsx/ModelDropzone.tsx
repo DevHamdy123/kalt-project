@@ -10,7 +10,8 @@ interface ModelDropzoneProps {
 export default function ModelDropzone({ activeCat }: ModelDropzoneProps) {
   return (
     <div className="relative w-full flex-1 min-h-0 flex justify-center items-center z-10 py-2 lg:py-0">
-      <div className="relative w-[60%] sm:w-[50%] md:w-[45%] lg:w-[85%] xl:w-[70%] max-w-137.5 max-h-full aspect-4/5">
+      {/* التعديل هنا: تمت إضافة كلاس overflow-hidden في آخر السطر */}
+      <div className="relative w-[60%] sm:w-[50%] md:w-[45%] lg:w-[85%] xl:w-[70%] max-w-137.5 max-h-full aspect-4/5 overflow-hidden">
         <div
           className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent z-0"
           style={{
@@ -24,9 +25,9 @@ export default function ModelDropzone({ activeCat }: ModelDropzoneProps) {
           <AnimatePresence mode="popLayout" initial={false}>
             <motion.div
               key={activeCat.id}
-              initial={{ opacity: 0, x: "100%", filter: "blur(10px)" }}
-              animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, x: "-100%", filter: "blur(10px)" }}
+              initial={{ opacity: 0, y: 60, filter: "blur(10px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              exit={{ opacity: 0, y: -60, filter: "blur(10px)" }}
               transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
               className="relative w-full h-full"
             >

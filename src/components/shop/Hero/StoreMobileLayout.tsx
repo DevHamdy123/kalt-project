@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import Image from "next/image";
 import { useLenis } from "lenis/react";
+import TypewriterEffect from "./TypewriterEffect";
 
 const customEase = [0.22, 1, 0.36, 1] as const;
 
-const fadeUpVariants = {
+const fadeUpVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: (customDelay: number) => ({
     opacity: 1,
@@ -19,44 +19,17 @@ const fadeUpVariants = {
 export default function StoreMobileLayout() {
   const lenis = useLenis();
 
-  // منطق الكتابة والمسح للكلمة
-  const [displayText, setDisplayText] = useState("KALT..");
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  useEffect(() => {
-    const fullText = "KALT..";
-    const timeout = setTimeout(
-      () => {
-        if (isDeleting) {
-          setDisplayText((prev) => prev.slice(0, -1));
-          if (displayText === "") setIsDeleting(false);
-        } else {
-          setDisplayText(fullText.substring(0, displayText.length + 1));
-          if (displayText === fullText) {
-            setTimeout(() => setIsDeleting(true), 2000); // استنى ثانيتين قبل ما يبدأ يمسح
-            return;
-          }
-        }
-      },
-      isDeleting ? 100 : 200,
-    );
-
-    return () => clearTimeout(timeout);
-  }, [displayText, isDeleting]);
-
-  const scrollToCatalog = () => {
+  const scrollToCatalog = (): void => {
     lenis?.scrollTo("#shop-catalog", {
       offset: -100,
       duration: 1.5,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     });
   };
 
   return (
     <div className="flex flex-col md:grid md:grid-cols-2 xl:hidden w-full h-full px-5 py-6 md:p-8 md:pb-0 gap-4 md:gap-6 min-h-0 relative">
-      {/* 1. قسم النصوص والكارت */}
       <div className="flex flex-col justify-center md:justify-between h-full order-1 z-10 w-full md:pb-6 min-h-0 gap-6 md:gap-0">
-        {/* النصوص */}
         <div className="flex flex-col justify-start items-start">
           <motion.div
             custom={0.1}
@@ -65,7 +38,7 @@ export default function StoreMobileLayout() {
             variants={fadeUpVariants}
           >
             <h1 className="font-black uppercase tracking-tighter leading-[0.85] text-black text-[clamp(3.5rem,12vw,4.5rem)] md:text-[clamp(3rem,5vw,4.5rem)]">
-              {displayText} <br />
+              <TypewriterEffect /> <br />
               The Syndicate <br />
               <span>Urban Precision</span>
             </h1>
@@ -84,14 +57,13 @@ export default function StoreMobileLayout() {
           </motion.div>
         </div>
 
-        {/* الكارت */}
         <div className="flex flex-col justify-center items-center md:items-start w-full">
           <motion.div
             custom={0.5}
             initial="hidden"
             animate="visible"
             variants={fadeUpVariants}
-            className="w-full max-w-[360px] md:max-w-[340px]"
+            className="w-full max-w-90 md:max-w-85"
           >
             <motion.div
               animate={{ y: [0, -15, 0] }}
@@ -127,7 +99,6 @@ export default function StoreMobileLayout() {
         </div>
       </div>
 
-      {/* 2. صورة الموديل */}
       <motion.div
         custom={0.3}
         initial="hidden"
@@ -135,7 +106,7 @@ export default function StoreMobileLayout() {
         variants={fadeUpVariants}
         className="hidden md:flex relative justify-center items-end z-0 order-2 h-full min-h-0"
       >
-        <div className="relative w-full h-[90%] lg:h-[95%] md:max-w-[420px] lg:max-w-[460px]">
+        <div className="relative w-full h-[90%] lg:h-[95%] md:max-w-105 lg:max-w-115">
           <Image
             src="/images/img10.webp"
             alt="KALT New Drop Model"

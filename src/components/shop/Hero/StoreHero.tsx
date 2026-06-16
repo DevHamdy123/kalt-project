@@ -2,10 +2,9 @@ import StoreHeroContent from "./StoreHeroContent";
 
 export default function StoreHero() {
   return (
-    // التعديل هنا: استخدام calc(100dvh - 85px) لخصم مساحة الناف بار، وإزالة pt-[88px] العلوية
     <section className="relative w-full h-[calc(100dvh-110px)] pb-4 px-4 md:px-6 flex flex-col overflow-hidden mt-2">
       <div
-        className="relative w-full flex-1 rounded-[2rem] overflow-hidden flex items-stretch"
+        className="relative w-full flex-1 rounded-4xl overflow-hidden flex items-stretch"
         style={{
           background:
             "radial-gradient(circle at 50% 50%, #FFFFFF 0%, #E2E2E2 40%, #9E9E9E 100%)",
@@ -18,7 +17,6 @@ export default function StoreHero() {
           }}
         />
 
-        {/* استدعاء المحتوى الذي سيحدد التصميم بناءً على الشاشة */}
         <StoreHeroContent />
       </div>
     </section>

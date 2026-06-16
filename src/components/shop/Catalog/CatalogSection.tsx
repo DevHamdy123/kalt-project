@@ -13,23 +13,17 @@ export default function CatalogSection() {
   const router = useRouter();
   const pathname = usePathname();
 
-  // 1. مصدر الحقيقة الوحيد: قراءة القسم من الرابط مباشرة
   const activeCategory = searchParams.get("category") || undefined;
 
-  // 2. حذفنا الـ useState الخاصة بالقسم تماماً
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  // 3. بنمرر activeCategory مباشرة للـ API
   const { data, isLoading, isError } = useProducts(activeCategory, currentPage);
   const lenis = useLenis();
 
-  // 4. الـ useEffect بقت نظيفة جداً: وظيفتها تصفير الصفحة وعمل سكرول لو جينا من البريدج
   useEffect(() => {
     setCurrentPage(1);
 
-    // بنشيك لو الرابط فيه الهاش بتاع الكاتالوج
     if (window.location.hash === "#shop-catalog") {
-      // بنستنى جزء من الثانية عشان نضمن إن الداتا الجديدة (لو فيه) عملت ريندر
       const timer = setTimeout(() => {
         if (lenis) {
           lenis.scrollTo("#shop-catalog", {
@@ -79,9 +73,8 @@ export default function CatalogSection() {
         : newCategory.toLowerCase().replace(/\s+/g, "-");
 
     if (slug !== activeCategory) {
-      setCurrentPage(1); // تصفير فوري هنا
+      setCurrentPage(1);
 
-      // تحديث الـ URL بسلاسة
       const params = new URLSearchParams(searchParams.toString());
       if (slug) {
         params.set("category", slug);
@@ -89,7 +82,6 @@ export default function CatalogSection() {
         params.delete("category");
       }
 
-      // التغيير هنا هيعمل Trigger أوتوماتيك للـ Component عشان يعيد الشحن بالداتا الجديدة
       router.push(`${pathname}?${params.toString()}#shop-catalog`, {
         scroll: false,
       });
@@ -117,7 +109,7 @@ export default function CatalogSection() {
         style={{ backgroundImage: "url('/images/grain.png')" }}
       />
 
-      <div className="max-w-[1600px] mx-auto w-full relative z-10">
+      <div className="max-w-400 mx-auto w-full relative z-10">
         <CatalogHeader
           activeCategory={activeCategory || "ALL ARCHIVE"}
           setCategory={handleCategoryChange}
