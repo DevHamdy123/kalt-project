@@ -125,8 +125,19 @@ export default async function OrderDetailsPage({
                     <h4 className="font-semibold text-[#363949] dark:text-[#edeffd] truncate">
                       {item.product.name}
                     </h4>
-                    <p className="text-xs text-[#7d8da1] dark:text-zinc-400 mt-1">
-                      Qty: {item.quantity}
+                    {/* التعديل هنا: عرض المقاس بجانب الكمية */}
+                    <p className="text-xs text-[#7d8da1] dark:text-zinc-400 mt-1 flex items-center gap-2">
+                      <span>Qty: {item.quantity}</span>
+                      {item.size && (
+                        <>
+                          <span className="text-zinc-300 dark:text-zinc-600">
+                            |
+                          </span>
+                          <span className="uppercase font-bold text-[#363949] dark:text-[#edeffd]">
+                            Size: {item.size}
+                          </span>
+                        </>
+                      )}
                     </p>
                   </div>
                   <div className="text-right">

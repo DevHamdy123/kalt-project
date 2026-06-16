@@ -7,6 +7,7 @@ interface Product {
   price: number;
   images: { url: string }[];
   category: { name: string };
+  stock: number;
 }
 
 interface CatalogGridProps {
@@ -72,6 +73,7 @@ export default function CatalogGrid({ products, isLoading }: CatalogGridProps) {
                   images={product.images}
                   category={product.category}
                   imageAspect={imageAspect}
+                  stock={product.stock}
                 />
               </div>
             );

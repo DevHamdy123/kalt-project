@@ -5,34 +5,49 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { Plus, ShoppingBag, X } from "lucide-react";
-import { useCartStore } from "@/store/useCartStore";
 import { toast } from "sonner";
 import ShopTheLookSkeleton from "./ShopTheLookSkeleton";
 import { useProduct } from "@/hooks/queries/useProducts";
+import { useAddToCartMutation } from "@/hooks/queries/useCartQuery";
 
 const PRODUCT_ID = "cmpm4qr9y000k1oujdr5hs7x3";
+
+// --- تعريف التايبس لضمان الـ Type Safety ---
+interface ProductImage {
+  url: string;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  description: string;
+  images: ProductImage[];
+}
 
 export default function ShopTheLook() {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const addItem = useCartStore((state) => state.addItem);
-
+  // استخدام الـ Mutation الجديد بدل Zustand
+  const { mutate: addToCart, isPending } = useAddToCartMutation();
   const { data: product, isLoading } = useProduct(PRODUCT_ID);
 
   const handleAddToCart = () => {
     if (!product) return;
 
-    addItem({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.images?.[0]?.url || "/images/img17.webp",
-      quantity: 1,
-    });
-
-    toast.success(`1x ${product.name} ADDED TO ARCHIVE`);
-    setIsOpen(false);
+    addToCart(
+      {
+        productId: product.id,
+        quantity: 1,
+      },
+      {
+        onSuccess: () => {
+          toast.success(`1x ${product.name} ADDED TO ARCHIVE`);
+          setIsOpen(false);
+        },
+      },
+    );
   };
 
   useEffect(() => {
@@ -54,7 +69,7 @@ export default function ShopTheLook() {
 
   return (
     <section className="w-full bg-[#fdfdfd] py-20 px-6 md:px-12 lg:px-20">
-      <div className="max-w-350 mx-auto grid grid-cols-1 lg:grid-cols-12 gap-y-10 items-center min-h-[80vh]">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-y-10 items-center min-h-[80vh]">
         <div className="lg:col-span-6 flex flex-col justify-start">
           <motion.h2
             initial={{ opacity: 0, x: -30 }}
@@ -136,9 +151,10 @@ export default function ShopTheLook() {
                         </div>
                         <button
                           onClick={handleAddToCart}
-                          className="w-full bg-black text-white text-[10px] uppercase font-bold py-2 hover:bg-[#FF5A00] transition-colors"
+                          disabled={isPending}
+                          className="w-full bg-black text-white text-[10px] uppercase font-bold py-2 hover:bg-[#FF5A00] transition-colors disabled:opacity-50"
                         >
-                          Add to Cart
+                          {isPending ? "ADDING..." : "Add to Cart"}
                         </button>
                       </div>
                     </div>
@@ -152,10 +168,12 @@ export default function ShopTheLook() {
         <div className="lg:col-span-12 flex justify-end">
           <motion.button
             onClick={handleAddToCart}
+            disabled={isPending}
             whileHover={{ scale: 1.05 }}
-            className="group flex items-center gap-4 bg-black text-white px-10 py-5 uppercase font-black text-sm tracking-[0.2em]"
+            className="group flex items-center gap-4 bg-black text-white px-10 py-5 uppercase font-black text-sm tracking-[0.2em] disabled:opacity-50"
           >
-            Acquire Full Set <span className="text-[#FF5A00]">[-15%]</span>
+            {isPending ? "PROCESSING..." : "Acquire Full Set"}
+            <span className="text-[#FF5A00]">[-15%]</span>
             <ShoppingBag size={16} />
           </motion.button>
         </div>

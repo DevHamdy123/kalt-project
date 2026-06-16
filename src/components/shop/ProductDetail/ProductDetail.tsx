@@ -5,9 +5,26 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { ArrowLeft, Plus, Minus } from "lucide-react";
 import Link from "next/link";
-import { useCartStore } from "@/store/useCartStore";
 import { toast } from "sonner";
 import { useProduct } from "@/hooks/queries/useProducts";
+import {
+  useAddToCartMutation,
+  useCartQuery,
+} from "@/hooks/queries/useCartQuery";
+
+// --- تعريف التايبس ---
+interface ProductImage {
+  url: string;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  stock: number;
+  images: ProductImage[];
+  description?: string;
+}
 
 interface ProductDetailProps {
   productId: string;
@@ -18,16 +35,13 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
   const [quantity, setQuantity] = useState<number | string>(1);
   const sizes = ["S", "M", "L", "XL", "XXL"];
 
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: "instant",
-    });
-  }, [productId]);
-
-  const addItem = useCartStore((state) => state.addItem);
-
+  const { mutate: addToCart, isPending } = useAddToCartMutation();
   const { data: product, isLoading, isError } = useProduct(productId);
+  const { data: cartData, refetch } = useCartQuery();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [productId]);
 
   if (isLoading) {
     return (
@@ -57,19 +71,50 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
 
   const validQuantity = Number(quantity) || 1;
   const displayPrice = (product.price * validQuantity).toFixed(2);
+  const isOutOfStock = product.stock <= 0;
 
-  const handleAddToCart = () => {
-    addItem({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.images?.[0]?.url || "/images/img6.webp",
-      quantity: validQuantity,
-      // ملاحظة: يمكنك إضافة selectedSize هنا إذا كان الستور يدعمها
-    });
+  const handleAddToCart = async () => {
+    if (isOutOfStock || isPending) return;
 
-    toast.success(`${validQuantity}x ${product.name} ADDED TO ARCHIVE`);
-    setQuantity(1);
+    // تحديث بيانات السلة فوراً قبل الحساب
+    const { data: freshCartData } = await refetch();
+
+    // 1. حساب الكمية الموجودة في السلة حالياً
+    const existingItem = freshCartData?.items?.find(
+      (item: any) => item.productId === product.id,
+    );
+    const quantityInCart = existingItem ? existingItem.quantity : 0;
+    const totalRequested = quantityInCart + validQuantity;
+
+    // 2. فحص المخزون (Guard)
+    if (totalRequested > product.stock) {
+      toast.error(
+        `Cannot add to cart. You have ${quantityInCart} in your cart, and only ${product.stock} available in total.`,
+      );
+      return;
+    }
+
+    // 3. إرسال الطلب للسيرفر
+    addToCart(
+      {
+        productId: product.id,
+        quantity: validQuantity,
+        size: selectedSize,
+      },
+      {
+        onSuccess: () => {
+          toast.success(
+            `${validQuantity}x ${product.name} (Size: ${selectedSize}) ADDED TO ARCHIVE`,
+          );
+          setQuantity(1);
+        },
+        onError: (error: any) => {
+          const errorMessage =
+            error?.response?.data?.message || "Failed to add item to cart.";
+          toast.error(errorMessage);
+        },
+      },
+    );
   };
 
   return (
@@ -128,9 +173,6 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
                   <span className="text-xs font-bold uppercase tracking-widest text-black">
                     Select Size
                   </span>
-                  <button className="text-[10px] font-medium underline text-black/50 hover:text-black uppercase tracking-widest">
-                    Size Guide
-                  </button>
                 </div>
                 <div className="flex gap-2 flex-wrap">
                   {sizes.map((size) => (
@@ -150,12 +192,14 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
               </div>
 
               <div>
+                {/* هنا التعديل يا هندسة */}
                 <span className="text-xs font-bold uppercase tracking-widest text-black block mb-3">
-                  Quantity
+                  Quantity ({product.stock} available)
                 </span>
                 <div className="flex items-center border border-black/20 h-10 lg:h-12">
                   <button
                     onClick={() => setQuantity(Math.max(1, validQuantity - 1))}
+                    disabled={isOutOfStock || isPending}
                     className="w-10 lg:w-12 h-full flex items-center justify-center hover:bg-black/5 transition-colors"
                   >
                     <Minus size={14} />
@@ -164,22 +208,30 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
                   <input
                     type="number"
                     min="1"
+                    max={product.stock}
                     value={quantity}
+                    disabled={isOutOfStock || isPending}
                     onChange={(e) => {
-                      const val = e.target.value;
-                      if (val === "") setQuantity("");
-                      else setQuantity(parseInt(val));
+                      const val = parseInt(e.target.value);
+                      if (isNaN(val)) setQuantity("");
+                      else setQuantity(Math.min(val, product.stock));
                     }}
                     onBlur={() => {
                       if (quantity === "" || Number(quantity) < 1)
                         setQuantity(1);
                     }}
-                    className="w-10 lg:w-12 text-center text-xs lg:text-sm font-bold bg-transparent outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none m-0"
-                    style={{ MozAppearance: "textfield" }}
+                    className="w-10 lg:w-12 text-center text-xs lg:text-sm font-bold bg-transparent outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
 
                   <button
-                    onClick={() => setQuantity(validQuantity + 1)}
+                    onClick={() =>
+                      setQuantity(Math.min(validQuantity + 1, product.stock))
+                    }
+                    disabled={
+                      isOutOfStock ||
+                      validQuantity >= product.stock ||
+                      isPending
+                    }
                     className="w-10 lg:w-12 h-full flex items-center justify-center hover:bg-black/5 transition-colors"
                   >
                     <Plus size={14} />
@@ -190,9 +242,14 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
 
             <button
               onClick={handleAddToCart}
-              className="w-full bg-black text-white py-4 lg:py-5 text-xs lg:text-sm font-black uppercase tracking-[0.2em] hover:bg-neutral-800 transition-colors duration-300 shadow-lg shrink-0"
+              disabled={isOutOfStock || isPending}
+              className="w-full bg-black text-white py-4 lg:py-5 text-xs lg:text-sm font-black uppercase tracking-[0.2em] hover:bg-neutral-800 transition-colors duration-300 shadow-lg shrink-0 disabled:opacity-50"
             >
-              Add To Cart
+              {isPending
+                ? "ADDING..."
+                : isOutOfStock
+                  ? "OUT OF STOCK"
+                  : "Add To Cart"}
             </button>
           </motion.div>
         </div>

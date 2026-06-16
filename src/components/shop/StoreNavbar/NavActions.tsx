@@ -1,14 +1,38 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { User, Home, ShoppingCart, Store, LayoutDashboard } from "lucide-react"; // تم إزالة Search
+import {
+  User,
+  Home,
+  ShoppingCart,
+  Store,
+  LayoutDashboard,
+  LucideIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCartStore } from "@/store/useCartStore";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import ProfileDropdown from "@/components/common/nav-elements/ProfileDropdown";
+import { useCartQuery } from "@/hooks/queries/useCartQuery";
+
+// --- تعريف التايبس بدقة ---
+interface CartItem {
+  quantity: number;
+}
+
+interface Cart {
+  items: CartItem[];
+}
+
+interface NavLink {
+  name: string;
+  Icon: LucideIcon;
+  href: string;
+  hasBadge: boolean;
+  hideOnMobile: boolean;
+}
 
 export default function NavActions() {
   const [isMounted, setIsMounted] = useState(false);
@@ -17,18 +41,26 @@ export default function NavActions() {
   const { data: session, status } = useSession();
   const isLoggedIn = status === "authenticated";
 
-  // التحقق هل اليوزر ده أدمن ولا لأ بدون استخدام any
-  const isAdmin = (session?.user as { role?: string })?.role === "ADMIN";
+  // جلب بيانات السلة مع تحديد النوع للبيانات القادمة
+  const { data: cart } = useCartQuery();
 
-  const items = useCartStore((state) => state.items);
-  const totalItems = items.reduce((total, item) => total + item.quantity, 0);
+  // حساب العدد بأمان بعد التأكد من نوع البيانات
+  const totalItems =
+    (cart as Cart | undefined)?.items.reduce(
+      (total: number, item: CartItem) => total + item.quantity,
+      0,
+    ) || 0;
+
+  // التحقق من صلاحية الأدمن
+  const isAdmin =
+    (session?.user as { role?: string } | undefined)?.role === "ADMIN";
 
   const pathname = usePathname();
   const isCartPage = pathname === "/shop/cart";
   const customEase = [0.22, 1, 0.36, 1] as const;
 
   // بناء القائمة ديناميكياً
-  const navLinks = [
+  const navLinks: NavLink[] = [
     ...(isAdmin
       ? [
           {
@@ -56,7 +88,6 @@ export default function NavActions() {
     },
   ];
 
-  // تشغيل isMounted عشان الـ Hydration للعداد
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -70,7 +101,7 @@ export default function NavActions() {
           animate={{ opacity: 1, y: 0 }}
           transition={{
             duration: 0.6,
-            delay: 0.3 + idx * 0.1, // تم التعديل عشان يبدأ الأنيميشن فوراً من غير فجوات
+            delay: 0.3 + idx * 0.1,
             ease: customEase,
           }}
           className={item.hideOnMobile ? "hidden md:block" : "block"}

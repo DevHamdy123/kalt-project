@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { useCartStore } from "@/store/useCartStore";
-import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+import { useAddToCartMutation } from "@/hooks/queries/useCartQuery";
 
 interface ProductCardProps {
   id: string;
@@ -14,6 +14,7 @@ interface ProductCardProps {
   images: { url: string }[];
   category: { name: string };
   imageAspect?: string;
+  stock: number;
 }
 
 export default function ProductCard({
@@ -23,29 +24,54 @@ export default function ProductCard({
   images,
   category,
   imageAspect = "aspect-[4/5]",
+  stock,
 }: ProductCardProps) {
   const [qty, setQty] = useState<number | string>(1);
 
-  const addItem = useCartStore((state) => state.addItem);
+  const { mutate: addToCart, isPending } = useAddToCartMutation();
 
   const CARD_CLIP_PATH =
     "polygon(24px 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%, 0 24px)";
 
-  // const IMAGE_CLIP_PATH = "polygon(24px 0, 100% 0, 100% 100%, 0 100%, 0 24px)";
-
   const validQty = Number(qty) || 1;
   const displayPrice = (price * validQty).toFixed(2);
 
+  // تحديث الشرط ليكون أكثر دقة
+  const isOutOfStock = stock <= 0;
+  const isLowStock = stock > 0 && stock <= 10;
+
+  const renderStockStatus = () => {
+    if (isOutOfStock) {
+      return (
+        <span className="flex items-center gap-1.5 text-[9px] font-black text-red-500 uppercase tracking-widest">
+          <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+          Out of Stock
+        </span>
+      );
+    }
+    if (isLowStock) {
+      return (
+        <span className="flex items-center gap-1.5 text-[9px] font-black text-orange-500 uppercase tracking-widest">
+          <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
+          Low Stock
+        </span>
+      );
+    }
+    return (
+      <span className="flex items-center gap-1.5 text-[9px] font-black text-green-600 uppercase tracking-widest">
+        <span className="w-1.5 h-1.5 rounded-full bg-green-600" />
+        In Stock
+      </span>
+    );
+  };
+
   const handleAddToCart = () => {
-    addItem({
-      id: id,
-      name: name,
-      price: price,
-      image: images?.[0]?.url || "/images/placeholder.webp",
+    if (isOutOfStock || isPending) return;
+
+    addToCart({
+      productId: id,
       quantity: validQty,
     });
-
-    toast.success(`${validQty}x ${name} ADDED TO ARCHIVE`);
 
     setQty(1);
   };
@@ -60,12 +86,16 @@ export default function ProductCard({
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
       <div
-        className="flex flex-col w-full bg-white/30 backdrop-blur-xl border-2 border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.15)] overflow-hidden transition-all duration-500 relative"
+        className={`flex flex-col w-full bg-white/30 backdrop-blur-xl border-2 border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.15)] overflow-hidden transition-all duration-500 relative ${
+          isOutOfStock ? "grayscale-[50%] opacity-80" : ""
+        }`}
         style={{ clipPath: CARD_CLIP_PATH, WebkitClipPath: CARD_CLIP_PATH }}
       >
         <Link
           href={`/shop/${id}`}
-          className={`relative w-full block overflow-hidden ${imageAspect}`}
+          className={`relative w-full block overflow-hidden ${imageAspect} ${
+            isOutOfStock ? "pointer-events-none" : ""
+          }`}
         >
           <Image
             src={images?.[0]?.url || "/images/placeholder.webp"}
@@ -78,10 +108,14 @@ export default function ProductCard({
 
         <div className="flex flex-col p-6 bg-white/20 border-t-2 border-white/40">
           <div className="flex flex-col mb-6">
-            <span className="text-[10px] font-bold text-black/50 uppercase tracking-[0.2em]">
-              {category?.name || "CATEGORY"}
-            </span>
-            <h3 className="font-black text-xl uppercase tracking-tighter leading-[0.9] mt-2 text-black line-clamp-1">
+            <div className="flex justify-between items-start mb-2">
+              <span className="text-[10px] font-bold text-black/50 uppercase tracking-[0.2em]">
+                {category?.name || "CATEGORY"}
+              </span>
+              {renderStockStatus()}
+            </div>
+
+            <h3 className="font-black text-xl uppercase tracking-tighter leading-[0.9] mt-1 text-black line-clamp-1">
               {name}
             </h3>
           </div>
@@ -92,30 +126,40 @@ export default function ProductCard({
             </span>
 
             <div className="flex flex-col items-end gap-3">
-              <div className="flex items-center gap-1 bg-black/5 p-1 backdrop-blur-sm border border-black/10">
+              <div
+                className={`flex items-center gap-1 p-1 backdrop-blur-sm border transition-colors ${
+                  isOutOfStock
+                    ? "border-black/5 bg-black/5 pointer-events-none opacity-50"
+                    : "border-black/10 bg-black/5"
+                }`}
+              >
                 <button
                   onClick={() => setQty(Math.max(1, validQty - 1))}
-                  className="px-3 py-1 font-bold hover:bg-black/10"
+                  disabled={isOutOfStock || isPending}
+                  className="px-3 py-1 font-bold hover:bg-black/10 disabled:opacity-50"
                 >
                   -
                 </button>
                 <input
                   type="number"
                   min="1"
+                  max={stock}
                   value={qty}
+                  disabled={isOutOfStock || isPending}
                   onChange={(e) => {
                     const val = e.target.value;
                     if (val === "") setQty("");
-                    else setQty(parseInt(val));
+                    else setQty(Math.min(parseInt(val), stock));
                   }}
                   onBlur={() => {
                     if (qty === "" || Number(qty) < 1) setQty(1);
                   }}
-                  className="w-10 text-center font-black text-sm bg-transparent outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
+                  className="w-10 text-center font-black text-sm bg-transparent outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none disabled:opacity-50"
                 />
                 <button
-                  onClick={() => setQty(validQty + 1)}
-                  className="px-3 py-1 font-bold hover:bg-black/10"
+                  onClick={() => setQty(Math.min(validQty + 1, stock))}
+                  disabled={isOutOfStock || validQty >= stock || isPending}
+                  className="px-3 py-1 font-bold hover:bg-black/10 disabled:opacity-50"
                 >
                   +
                 </button>
@@ -123,9 +167,23 @@ export default function ProductCard({
 
               <button
                 onClick={handleAddToCart}
-                className="bg-black text-white px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest hover:bg-black/80 transition-colors w-full"
+                disabled={isOutOfStock || isPending}
+                className={`px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest transition-colors w-full flex items-center justify-center gap-2 ${
+                  isOutOfStock
+                    ? "bg-black/20 text-black/50 cursor-not-allowed"
+                    : "bg-black text-white hover:bg-black/80"
+                }`}
               >
-                Add To Cart
+                {isPending ? (
+                  <>
+                    <Loader2 size={14} className="animate-spin" />
+                    ADDING...
+                  </>
+                ) : isOutOfStock ? (
+                  "OUT OF STOCK"
+                ) : (
+                  "ADD TO CART"
+                )}
               </button>
             </div>
           </div>

@@ -11,7 +11,6 @@ enum Role {
   ADMIN
 }
 
-// ضفنا enum لحالات الطلب عشان نتحكم في ألوان الـ Badges في الداشبورد
 enum OrderStatus {
   PENDING
   PROCESSING
@@ -28,9 +27,12 @@ model User {
   image         String?
   password      String?   
   role          Role      @default(USER) 
+  
   accounts      Account[]
   sessions      Session[]
-  orders        Order[]   // علاقة جديدة: المستخدم الواحد يقدر يعمل كذا طلب
+  orders        Order[]   
+  cart          Cart?     // علاقة جديدة: المستخدم يمتلك سلة تسوق واحدة
+  
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
@@ -81,7 +83,6 @@ model Product {
   isFeatured  Boolean     @default(false)
   isArchived  Boolean     @default(false)
   
-  // ضفنا مصفوفات عشان الملابس بيكون ليها مقاسات وألوان متعددة
   sizes       String[]    @default(["S", "M", "L", "XL"])
   colors      String[]    @default([])
   
@@ -89,7 +90,9 @@ model Product {
   categoryId  String
   
   images      Image[]
-  orderItems  OrderItem[] // علاقة جديدة: المنتج ممكن يظهر في كذا طلبية
+  orderItems  OrderItem[] 
+  cartItems   CartItem[]  // علاقة جديدة: المنتج يمكن أن يتواجد في عدة سلال
+  
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
@@ -107,8 +110,6 @@ model Image {
   @@index([productId])
 }
 
-// --- الجداول الجديدة الخاصة بالطلبيات والمبيعات ---
-
 model Order {
   id         String      @id @default(cuid())
   status     OrderStatus @default(PENDING)
@@ -117,7 +118,6 @@ model Order {
   phone      String      @default("")
   address    String      @default("")
   
-  // ربط الطلب بالعميل (لو مسجل)
   user       User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
   userId     String?
   
@@ -131,8 +131,8 @@ model Order {
 model OrderItem {
   id        String   @id @default(cuid())
   quantity  Int      @default(1)
-  size      String?  // المقاس اللي العميل اختاره للهودي
-  color     String?  // اللون اللي العميل اختاره
+  size      String?  
+  color     String?  
   
   order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId   String
@@ -150,4 +150,36 @@ model Inquiry {
   email     String
   message   String   @db.Text
   createdAt DateTime @default(now())
+}
+
+// --- الجداول الجديدة الخاصة بسلة التسوق ---
+
+model Cart {
+  id        String     @id @default(cuid())
+  
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String     @unique 
+  
+  items     CartItem[]
+  
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  quantity  Int      @default(1)
+  size      String?  
+  
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  cartId    String
+  
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([cartId])
+  @@index([productId])
 }

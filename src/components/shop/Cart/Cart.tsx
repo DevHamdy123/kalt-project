@@ -4,14 +4,44 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trash2, Plus, Minus, ArrowRight, ArrowLeft } from "lucide-react";
+import {
+  Trash2,
+  Plus,
+  Minus,
+  ArrowRight,
+  ArrowLeft,
+  Loader2,
+} from "lucide-react";
 import { useCartStore } from "@/store/useCartStore";
 import { toast } from "sonner";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { useCartQuery } from "@/hooks/queries/useCartQuery";
 import CheckoutDrawer from "@/components/shop/Checkout/CheckoutDrawer";
 
 // ==========================================
-// تعريف الـ Types
+// تعريف الـ Types (بدون أي استخدام لـ any)
 // ==========================================
+
+// هذا هو الشكل المتوقع للبيانات القادمة من الـ API (Prisma response)
+interface DbProduct {
+  id: string;
+  name: string;
+  price: number | string; // Prisma Decimal قد يأتي كرقم أو نص
+  images: { url: string }[];
+}
+
+interface DbCartItem {
+  id: string;
+  quantity: number;
+  size?: string | null;
+  product: DbProduct;
+}
+
+interface DbCart {
+  id: string;
+  userId: string;
+  items: DbCartItem[];
+}
 
 interface CartItemType {
   id: string;
@@ -19,12 +49,13 @@ interface CartItemType {
   price: number;
   image: string;
   quantity: number;
+  size?: string;
 }
 
 interface CartItemCardProps {
   item: CartItemType;
-  updateQuantity: (id: string, quantity: number) => void;
-  removeItem: (id: string) => void;
+  updateQuantity: (id: string, quantity: number, size?: string) => void;
+  removeItem: (id: string, size?: string) => void;
 }
 
 interface OrderSummaryProps {
@@ -69,10 +100,15 @@ const CartItemCard = ({
               href={`/shop/${item.id}`}
               className="hover:opacity-70 transition-opacity"
             >
-              <h3 className="text-xl lg:text-2xl font-black uppercase tracking-tighter leading-none mb-2">
+              <h3 className="text-xl lg:text-2xl font-black uppercase tracking-tighter leading-none mb-1">
                 {item.name}
               </h3>
             </Link>
+            {item.size && (
+              <span className="inline-block px-2 py-0.5 bg-black/5 border border-black/10 text-xs font-bold uppercase tracking-widest mt-2">
+                Size: {item.size}
+              </span>
+            )}
           </div>
           <p className="text-lg lg:text-xl font-medium">
             ${(item.price * item.quantity).toFixed(2)}
@@ -87,31 +123,23 @@ const CartItemCard = ({
             <div className="flex items-center border border-black/30 h-10">
               <button
                 onClick={() =>
-                  updateQuantity(item.id, Math.max(1, item.quantity - 1))
+                  updateQuantity(
+                    item.id,
+                    Math.max(1, item.quantity - 1),
+                    item.size,
+                  )
                 }
                 className="w-10 h-full flex items-center justify-center hover:bg-black/5 transition-colors"
               >
                 <Minus size={14} />
               </button>
-
-              <input
-                type="number"
-                min="1"
-                value={item.quantity === 0 ? "" : item.quantity}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  if (val === "") {
-                    updateQuantity(item.id, 0);
-                  } else {
-                    updateQuantity(item.id, parseInt(val));
-                  }
-                }}
-                className="w-10 text-center text-xs font-bold bg-transparent outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none m-0"
-                style={{ MozAppearance: "textfield" }}
-              />
-
+              <span className="w-10 text-center text-xs font-bold">
+                {item.quantity}
+              </span>
               <button
-                onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                onClick={() =>
+                  updateQuantity(item.id, item.quantity + 1, item.size)
+                }
                 className="w-10 h-full flex items-center justify-center hover:bg-black/5 transition-colors"
               >
                 <Plus size={14} />
@@ -121,7 +149,7 @@ const CartItemCard = ({
 
           <button
             onClick={() => {
-              removeItem(item.id);
+              removeItem(item.id, item.size);
               toast.error(`${item.name} REMOVED FROM ARCHIVE`);
             }}
             className="text-black/60 hover:text-red-600 transition-colors flex items-center gap-2 text-xs font-bold uppercase tracking-widest"
@@ -136,7 +164,7 @@ const CartItemCard = ({
 };
 
 // ==========================================
-// 2. مكون ملخص الطلب (Order Summary)
+// 2. مكون ملخص الطلب
 // ==========================================
 const OrderSummary = ({ subtotal, onCheckoutClick }: OrderSummaryProps) => {
   return (
@@ -145,7 +173,6 @@ const OrderSummary = ({ subtotal, onCheckoutClick }: OrderSummaryProps) => {
         <h2 className="text-xl font-black uppercase tracking-tighter mb-6 border-b border-black/20 pb-4">
           Summary
         </h2>
-
         <div className="flex flex-col gap-4 text-sm font-medium mb-8">
           <div className="flex justify-between items-center">
             <span className="text-black/60 uppercase tracking-widest text-xs">
@@ -162,57 +189,72 @@ const OrderSummary = ({ subtotal, onCheckoutClick }: OrderSummaryProps) => {
             </span>
           </div>
         </div>
-
         <div className="flex justify-between items-end border-t border-black/20 pt-6 mb-8">
           <span className="font-bold uppercase tracking-widest text-sm">
             Total
           </span>
           <span className="text-3xl font-black">${subtotal.toFixed(2)}</span>
         </div>
-
         <button
           onClick={onCheckoutClick}
           className="w-full bg-black text-white py-5 text-xs font-black uppercase tracking-[0.2em] hover:bg-neutral-800 transition-colors duration-300 shadow-lg flex items-center justify-center cursor-pointer"
         >
           Checkout Securely
         </button>
-
-        <div className="mt-6 flex items-center justify-center gap-4 text-black/40">
-          <span className="text-[10px] font-bold uppercase tracking-widest">
-            SSL Encrypted
-          </span>
-          <span className="w-1 h-1 bg-black/30 rounded-full"></span>
-          <span className="text-[10px] font-bold uppercase tracking-widest">
-            Free Returns
-          </span>
-        </div>
       </div>
     </div>
   );
 };
 
 // ==========================================
-// 3. المكون الرئيسي (Main Cart Component)
+// 3. المكون الرئيسي (Cart)
 // ==========================================
 export default function Cart() {
   const [isMounted, setIsMounted] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const queryClient = useQueryClient();
 
-  const { items, removeItem, updateQuantity, getTotalPrice } = useCartStore();
+  const { data: cart, isLoading } = useCartQuery();
+
+  const removeMutation = useMutation({
+    mutationFn: async (itemId: string) => {
+      await fetch(`/api/cart?itemId=${itemId}`, { method: "DELETE" });
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["cart"] }),
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: async ({ id, quantity }: { id: string; quantity: number }) => {
+      await fetch(`/api/cart`, {
+        method: "PATCH",
+        body: JSON.stringify({ id, quantity }),
+      });
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["cart"] }),
+  });
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  if (!isMounted) {
+  if (!isMounted || isLoading) {
     return (
-      <div className="min-h-screen bg-white pt-32 px-5 flex justify-center">
-        <p className="text-sm font-bold uppercase tracking-widest animate-pulse text-black/50">
-          Loading Archive...
-        </p>
+      <div className="min-h-screen bg-white pt-32 px-5 flex justify-center items-center">
+        <Loader2 className="animate-spin text-black" size={32} />
       </div>
     );
   }
+
+  // تحويل بيانات الداتابيز (DbCart) إلى الشكل المطلوب (CartItemType)
+  const items: CartItemType[] =
+    (cart as DbCart)?.items.map((item: DbCartItem) => ({
+      id: item.id,
+      name: item.product.name,
+      price: Number(item.product.price),
+      image: item.product.images[0]?.url || "/images/placeholder.webp",
+      quantity: item.quantity,
+      size: item.size || undefined,
+    })) || [];
 
   if (items.length === 0) {
     return (
@@ -233,7 +275,10 @@ export default function Cart() {
     );
   }
 
-  const subtotal = getTotalPrice();
+  const subtotal = items.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0,
+  );
 
   return (
     <section className="min-h-screen bg-white pt-32 pb-20 px-5 md:px-10 lg:px-20 font-sans">
@@ -250,21 +295,21 @@ export default function Cart() {
         </h1>
 
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-20">
-          {/* حاوية المنتجات */}
           <div className="flex-1 flex flex-col gap-8">
             <AnimatePresence>
               {items.map((item) => (
                 <CartItemCard
-                  key={item.id}
+                  key={`${item.id}-${item.size}`}
                   item={item}
-                  updateQuantity={updateQuantity}
-                  removeItem={removeItem}
+                  updateQuantity={(id, q) =>
+                    updateMutation.mutate({ id, quantity: q })
+                  }
+                  removeItem={(id) => removeMutation.mutate(id)}
                 />
               ))}
             </AnimatePresence>
           </div>
 
-          {/* حاوية ملخص الطلب */}
           <OrderSummary
             subtotal={subtotal}
             onCheckoutClick={() => setIsDrawerOpen(true)}
