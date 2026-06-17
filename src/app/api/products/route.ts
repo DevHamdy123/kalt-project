@@ -34,7 +34,7 @@ export async function GET(request: Request) {
       totalCount,
       totalPages: Math.ceil(totalCount / limit),
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },

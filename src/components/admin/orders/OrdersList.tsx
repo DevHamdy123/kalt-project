@@ -16,7 +16,8 @@ export type FormattedOrderType = {
   address: string;
   createdAt: string;
   user: { name: string | null; email: string | null } | null;
-  orderItems: Record<string, unknown>[];
+  // Updated to match Prisma's inferred type for order items
+  orderItems: unknown[];
 };
 
 export default function OrdersList({

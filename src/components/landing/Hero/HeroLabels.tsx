@@ -4,26 +4,31 @@ const luxLabelStyle =
 export default function HeroLabels() {
   return (
     <>
+      {/* Top left studio label */}
       <span className={`${luxLabelStyle} absolute top-3 left-0 pt-2`}>
         © KALT STUDIO / ©26
       </span>
 
+      {/* Top right collection label with escaped apostrophe */}
       <span
         className={`${luxLabelStyle} absolute top-3 right-0 pt-2 text-right`}
       >
-        URBAN / <br /> ESSENTIALS '26
+        URBAN / <br /> ESSENTIALS &apos;26
       </span>
 
+      {/* Decorative star icon */}
       <span className="absolute bottom-1 right-35 pb-2 text-[#FF5A00] text-4xl hidden md:block">
         ✦
       </span>
 
+      {/* Bottom left category label */}
       <span
         className={`${luxLabelStyle} absolute bottom-0 md:bottom-8 left-0 pb-2`}
       >
         HIGH-END / STREETWEAR
       </span>
 
+      {/* Bottom right style label */}
       <span
         className={`${luxLabelStyle} absolute bottom-0 md:bottom-8 right-0 pb-2 text-right`}
       >

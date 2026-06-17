@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import CatalogHeader from "./CatalogHeader";
 import CatalogGrid from "./CatalogGrid";
@@ -18,7 +18,8 @@ interface Product {
   category: { name: string };
 }
 
-export default function CatalogSection() {
+// Inner component containing the searchParams logic
+function CatalogContent() {
   // Routing & State
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -133,5 +134,28 @@ export default function CatalogSection() {
         )}
       </div>
     </section>
+  );
+}
+
+// Export the wrapper component with Suspense boundary
+export default function CatalogSection() {
+  return (
+    <Suspense
+      fallback={
+        <section
+          className="relative w-full min-h-screen px-6 md:px-12 lg:px-20 pt-12 pb-12 md:pt-16 md:pb-16 overflow-hidden flex items-center justify-center"
+          style={{
+            background:
+              "linear-gradient(180deg, #E5E5E5 0%, #D4D4D4 50%, #9CA3AF 100%)",
+          }}
+        >
+          <div className="text-black/50 font-bold uppercase tracking-widest animate-pulse">
+            Loading Catalog...
+          </div>
+        </section>
+      }
+    >
+      <CatalogContent />
+    </Suspense>
   );
 }
