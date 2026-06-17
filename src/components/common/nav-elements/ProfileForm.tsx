@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 export default function ProfileForm() {
   const { data: session } = useSession();
 
+  // UI Render
   return (
     <div className="min-h-screen bg-[#050505] flex items-center justify-center p-6">
       <motion.div
@@ -17,7 +18,7 @@ export default function ProfileForm() {
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className="bg-white/10 backdrop-blur-xl border border-white/20 p-10 md:p-12 rounded-[2.5rem] w-full max-w-lg shadow-2xl flex flex-col items-center"
       >
-        {/* الصورة الشخصية */}
+        {/* Profile Picture */}
         <div className="mb-8">
           <div className="w-28 h-28 rounded-full border-4 border-white/20 shadow-lg overflow-hidden bg-neutral-800 flex items-center justify-center relative">
             {session?.user?.image ? (
@@ -30,7 +31,7 @@ export default function ProfileForm() {
                 priority
               />
             ) : (
-              /* التعديل: هنا المنطق لو مفيش صورة */
+              // Fallback
               <div className="w-full h-full flex items-center justify-center bg-neutral-700 text-white text-4xl font-black uppercase">
                 {session?.user?.name
                   ? session.user.name.charAt(0).toUpperCase()
@@ -44,14 +45,14 @@ export default function ProfileForm() {
           MY ACCOUNT
         </h2>
 
-        {/* بيانات العرض (عرض فقط) */}
+        {/* Display Data */}
         <div className="w-full flex flex-col gap-6">
           <div className="flex flex-col gap-3">
             <label className="text-[11px] font-bold uppercase tracking-widest text-white/50">
               FULL NAME
             </label>
             <div className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 px-5 text-base font-bold text-white shadow-sm">
-              {session?.user?.name || "Zoroo"}
+              {session?.user?.name || "User Name"}
             </div>
           </div>
 
@@ -60,11 +61,11 @@ export default function ProfileForm() {
               EMAIL ADDRESS
             </label>
             <div className="w-full bg-white/5 border border-transparent rounded-2xl py-5 px-5 text-base font-bold text-white/70 shadow-sm">
-              {session?.user?.email || "dzoroo402@gmail.com"}
+              {session?.user?.email || "User Email"}
             </div>
           </div>
 
-          {/* زرار الرجوع */}
+          {/* Navigation */}
           <Link
             href="/shop"
             className="w-full bg-white text-black py-5 rounded-2xl mt-4 font-black uppercase tracking-[0.2em] text-xs hover:bg-neutral-200 transition-colors flex items-center justify-center gap-2 shadow-lg"

@@ -7,7 +7,7 @@ export const productSchema = z.object({
     .number({ message: "Price must be a number" })
     .positive({ message: "Price must be greater than zero" }),
 
-  // أضفنا حقل الـ stock هنا
+  // Add stock field
   stock: z.coerce
     .number({ message: "Stock must be a number" })
     .min(0, { message: "Stock must be 0 or greater" }),
@@ -31,5 +31,5 @@ export const productSchema = z.object({
   colors: z.array(z.string()).optional(),
 });
 
-// النوع هيتحدث أوتوماتيك عشان بيعتمد على الـ Schema
+// Type is automatically inferred from the schema
 export type ProductFormValues = z.infer<typeof productSchema>;

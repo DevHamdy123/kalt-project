@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { useInView, motion, Variants } from "framer-motion";
 import { Reveal } from "@/components/common/Reveal";
 
+// Constants
 const PRINCIPLES = [
   {
     id: 1,
@@ -28,6 +29,7 @@ const PRINCIPLES = [
   },
 ];
 
+// Animation Config
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
@@ -43,18 +45,19 @@ const itemVariants: Variants = {
 };
 
 export default function ManifestoSection() {
+  // Local Refs & State
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
 
+  // Section Wrapper
   return (
-    // التعديل 1: min-h-screen و flex flex-col عشان نتحكم في التوزيع
     <section
       ref={sectionRef}
       className="relative w-full min-h-screen bg-white flex flex-col justify-between"
     >
-      {/* التعديل 2: Container بياخد flex-grow عشان يملا المساحة بين الهيدر والفوتر */}
+      {/* Main Container */}
       <div className="flex-grow flex flex-col justify-center px-6 md:px-12 lg:px-20 max-w-[1600px] mx-auto w-full pt-32 pb-16">
-        {/* المانيفستو هيدر */}
+        {/* Manifesto Header */}
         <div className="mb-24 md:mb-32">
           <span className="text-[10px] font-bold text-[#FF5A00] tracking-[0.3em] uppercase mb-6 block">
             `// Manifesto`
@@ -70,7 +73,7 @@ export default function ManifestoSection() {
           </Reveal>
         </div>
 
-        {/* الجريد */}
+        {/* Principles Grid */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -103,7 +106,7 @@ export default function ManifestoSection() {
         </motion.div>
       </div>
 
-      {/* التعديل 3: الفوتر بقى ثابت في الأسفل من غير margin-top */}
+      {/* Footer Banner */}
       <div className="w-full h-[80px] bg-gray-700 flex items-center justify-center shrink-0">
         <span className="text-[10px] font-bold text-white/40 uppercase tracking-[0.5em]">
           End of Manifesto // Archive Status: Active

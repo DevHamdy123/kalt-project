@@ -7,7 +7,6 @@ import Link from "next/link";
 export default function AuthButton() {
   const { status } = useSession();
 
-  // لو لسه بيحمل، ممكن نرجع null أو skeleton بسيط
   if (status === "loading") return null;
 
   if (status === "authenticated") {

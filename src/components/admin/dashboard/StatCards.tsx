@@ -1,6 +1,5 @@
 import { BarChart3, ShoppingBag, Users } from "lucide-react";
 
-// تعريف البيانات اللي الكومبوننت هيستقبلها
 interface StatCardsProps {
   revenue: number;
   ordersCount: number;

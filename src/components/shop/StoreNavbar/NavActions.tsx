@@ -17,7 +17,7 @@ import Image from "next/image";
 import ProfileDropdown from "@/components/common/nav-elements/ProfileDropdown";
 import { useCartQuery } from "@/hooks/queries/useCartQuery";
 
-// --- تعريف التايبس بدقة ---
+// --- Type Definitions ---
 interface CartItem {
   quantity: number;
 }
@@ -41,17 +41,17 @@ export default function NavActions() {
   const { data: session, status } = useSession();
   const isLoggedIn = status === "authenticated";
 
-  // جلب بيانات السلة مع تحديد النوع للبيانات القادمة
+  // Fetch cart data with proper typing
   const { data: cart } = useCartQuery();
 
-  // حساب العدد بأمان بعد التأكد من نوع البيانات
+  // Safely calculate total quantity of items
   const totalItems =
     (cart as Cart | undefined)?.items.reduce(
       (total: number, item: CartItem) => total + item.quantity,
       0,
     ) || 0;
 
-  // التحقق من صلاحية الأدمن
+  // Check if current user is an admin
   const isAdmin =
     (session?.user as { role?: string } | undefined)?.role === "ADMIN";
 
@@ -59,7 +59,7 @@ export default function NavActions() {
   const isCartPage = pathname === "/shop/cart";
   const customEase = [0.22, 1, 0.36, 1] as const;
 
-  // بناء القائمة ديناميكياً
+  // Build dynamic navigation links
   const navLinks: NavLink[] = [
     ...(isAdmin
       ? [
@@ -111,6 +111,8 @@ export default function NavActions() {
             className="relative w-10 h-10 md:w-11 md:h-11 bg-white rounded-full flex items-center justify-center cursor-pointer hover:border-black hover:bg-black hover:text-white transition-all duration-300 border border-black/10 text-black group hover:scale-105"
           >
             <item.Icon size={18} strokeWidth={1.5} />
+
+            {/* Show badge if item count is greater than 0 */}
             {isMounted && item.hasBadge && totalItems > 0 && (
               <span className="absolute -top-1 -right-1 min-w-[16px] h-4 bg-[#b91c1c] text-white text-[10px] font-bold rounded-full border border-white flex items-center justify-center px-1 shadow-sm">
                 {totalItems}
@@ -153,12 +155,12 @@ export default function NavActions() {
               <User size={18} strokeWidth={1.5} />
             </Link>
           )}
-        </motion.div>
 
-        <ProfileDropdown
-          isOpen={isProfileOpen}
-          onClose={() => setIsProfileOpen(false)}
-        />
+          <ProfileDropdown
+            isOpen={isProfileOpen}
+            onClose={() => setIsProfileOpen(false)}
+          />
+        </motion.div>
       </div>
     </div>
   );

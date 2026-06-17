@@ -7,14 +7,14 @@ export interface CartItem {
   price: number;
   image: string;
   quantity: number;
-  // 1. فعلنا المقاس هنا
+  // Include item size
   size?: string;
 }
 
 interface CartState {
   items: CartItem[];
   addItem: (item: CartItem) => void;
-  // 2. خلينا دوال الحذف والتعديل تستقبل المقاس كمان
+  // Update remove and update functions to accept size
   removeItem: (id: string, size?: string) => void;
   updateQuantity: (id: string, quantity: number, size?: string) => void;
   clearCart: () => void;
@@ -29,7 +29,7 @@ export const useCartStore = create<CartState>()(
 
       addItem: (item) => {
         const currentItems = get().items;
-        // 3. بنطابق بالـ ID والمقاس مع بعض
+        // Check for existing item using ID and size
         const existingItem = currentItems.find(
           (i) => i.id === item.id && i.size === item.size,
         );
@@ -49,14 +49,14 @@ export const useCartStore = create<CartState>()(
 
       removeItem: (id, size) => {
         set({
-          // 4. بنحذف بناءً على الـ ID والمقاس مع بعض
+          // Remove item based on ID and size
           items: get().items.filter((i) => !(i.id === id && i.size === size)),
         });
       },
 
       updateQuantity: (id, quantity, size) => {
         set({
-          // 5. بنعدل الكمية بناءً على الـ ID والمقاس مع بعض
+          // Update quantity based on ID and size
           items: get().items.map((i) =>
             i.id === id && i.size === size ? { ...i, quantity } : i,
           ),

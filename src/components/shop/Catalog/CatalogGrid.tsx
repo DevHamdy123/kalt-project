@@ -1,6 +1,7 @@
 import ProductCard from "./ProductCard";
 import ProductCardSkeleton from "./ProductCardSkeleton";
 
+// Component Types
 interface Product {
   id: string;
   name: string;
@@ -16,6 +17,7 @@ interface CatalogGridProps {
 }
 
 export default function CatalogGrid({ products, isLoading }: CatalogGridProps) {
+  // Layout Configuration
   const getLayoutStyles = (index: number) => {
     const position = index % 4;
 
@@ -48,8 +50,10 @@ export default function CatalogGrid({ products, isLoading }: CatalogGridProps) {
     }
   };
 
+  // Main Grid Container
   return (
     <div className="grid grid-cols-12 gap-y-20 md:gap-y-32 gap-x-6 md:gap-x-10 w-full mt-10 relative">
+      {/* Loading Skeletons */}
       {isLoading ? (
         [...Array(4)].map((_, i) => {
           const { gridClass, imageAspect } = getLayoutStyles(i);
@@ -61,6 +65,7 @@ export default function CatalogGrid({ products, isLoading }: CatalogGridProps) {
         })
       ) : (
         <>
+          {/* Product List */}
           {products.map((product, index) => {
             const { gridClass, imageAspect } = getLayoutStyles(index);
 
@@ -79,6 +84,7 @@ export default function CatalogGrid({ products, isLoading }: CatalogGridProps) {
             );
           })}
 
+          {/* Empty State */}
           {products.length === 0 && (
             <div className="col-span-12 py-20 text-center text-black/40 font-bold uppercase tracking-widest text-sm">
               No items found in this archive.

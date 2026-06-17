@@ -2,50 +2,62 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import ProductForm from "@/components/admin/products/ProductForm";
 
+// ==========================================
+// Types
+// ==========================================
+
+interface Category {
+  id: string;
+  name: string;
+}
+
+interface FormattedProduct {
+  id: string;
+  name: string;
+  categoryId: string;
+  price: number;
+  stock: number;
+  sizes: string[];
+  colors: string[];
+  images: { url: string }[];
+}
+
+interface EditProductPageProps {
+  params: Promise<{ id: string }>;
+}
+
 export default async function EditProductPage({
   params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  // 1. استخراج الـ id الخاص بالمنتج من الرابط
-  const resolvedParams = await params;
-  const { id } = resolvedParams;
+}: EditProductPageProps) {
+  const { id } = await params;
 
-  // 2. جلب بيانات المنتج والأقسام مع بعض في نفس الوقت لتسريع الأداء
+  // Fetch product and categories concurrently
   const [product, categories] = await Promise.all([
     prisma.product.findUnique({
       where: { id },
       include: {
-        images: {
-          orderBy: { order: "asc" },
-        },
+        images: { orderBy: { order: "asc" } },
       },
     }),
     prisma.category.findMany({
-      select: {
-        id: true,
-        name: true,
-      },
-      orderBy: {
-        name: "asc",
-      },
-    }),
+      select: { id: true, name: true },
+      orderBy: { name: "asc" },
+    }) as Promise<Category[]>,
   ]);
 
-  // لو المنتج مش موجود، هنوجه المستخدم لصفحة 404
   if (!product) {
     notFound();
   }
 
-  // 3. تنسيق البيانات عشان تناسب الفورم ونتجنب إيرور الـ Decimal
-  const formattedProduct = {
+  // Formatting product data for the form
+  const formattedProduct: FormattedProduct = {
     id: product.id,
     name: product.name,
     categoryId: product.categoryId,
     price: Number(product.price),
     stock: product.stock,
-    sizes: product.sizes,
-    colors: product.colors,
+    sizes: product.sizes as string[],
+    colors: product.colors as string[],
     images: product.images.map((img) => ({ url: img.url })),
   };
 
@@ -60,7 +72,6 @@ export default async function EditProductPage({
         </p>
       </div>
 
-      {/* بنمرر الأقسام (categories) والبيانات المنسقة للفورم كـ initialData */}
       <ProductForm categories={categories} initialData={formattedProduct} />
     </div>
   );

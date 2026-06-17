@@ -1,17 +1,23 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
+import {
+  useForm,
+  Controller,
+  SubmitHandler,
+  useWatch,
+  Resolver,
+} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 
 import { productSchema, ProductFormValues } from "@/lib/validations/product";
-// استيراد دالة الإضافة ودالة التحديث مع بعض
 import { createProduct, updateProduct } from "@/actions/products";
 
 import ImageUpload from "../ImageUpload";
 
+// Constants for available options
 const AVAILABLE_SIZES = ["S", "M", "L", "XL", "2XL", "3XL"];
 const AVAILABLE_COLORS = [
   "Black",
@@ -23,17 +29,18 @@ const AVAILABLE_COLORS = [
   "Olive",
 ];
 
+interface Category {
+  id: string;
+  name: string;
+}
+
 interface ProductFormProps {
-  categories?: {
-    id: string;
-    name: string;
-  }[];
-  // 1. إضافة الـ Types الخاصة ببيانات التعديل
+  categories?: Category[];
   initialData?: (ProductFormValues & { id: string }) | null;
 }
 
 interface CustomSelectProps {
-  options: { id: string; name: string }[];
+  options: Category[];
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
@@ -51,6 +58,7 @@ function CustomSelect({
   const selectedLabel =
     options.find((o) => o.id === value)?.name || placeholder;
 
+  // Detect clicks outside to close the dropdown
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -82,7 +90,9 @@ function CustomSelect({
           {selectedLabel}
         </span>
         <ChevronDown
-          className={`w-4 h-4 text-[#7d8da1] dark:text-zinc-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
+          className={`w-4 h-4 text-[#7d8da1] dark:text-zinc-400 transition-transform ${
+            isOpen ? "rotate-180" : ""
+          }`}
         />
       </div>
 
@@ -106,7 +116,6 @@ function CustomSelect({
   );
 }
 
-// 2. استقبال initialData ضمن الـ Props
 export default function ProductForm({
   categories = [],
   initialData,
@@ -114,14 +123,15 @@ export default function ProductForm({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  // تحديد العنوان والنصوص بناءً على وجود بيانات سابقة
+  // Form state labels
   const title = initialData ? "Edit Product" : "Add New Product";
   const actionText = initialData ? "Update Product" : "Save Product";
   const loadingText = initialData ? "Updating..." : "Saving...";
 
-  // 3. ربط البيانات القديمة بالفورم
   const form = useForm<ProductFormValues>({
-    resolver: zodResolver(productSchema),
+    resolver: zodResolver(
+      productSchema,
+    ) as unknown as Resolver<ProductFormValues>,
     defaultValues: initialData || {
       name: "",
       price: 0,
@@ -133,11 +143,25 @@ export default function ProductForm({
     },
   });
 
-  const onSubmit = async (data: ProductFormValues) => {
+  // Extract watched images to satisfy React Compiler constraints
+  const watchedImages = (useWatch({
+    control: form.control,
+    name: "images",
+    defaultValue: initialData?.images || [],
+  }) || []) as { url: string }[];
+
+  // Handle form submission
+  const onSubmit: SubmitHandler<ProductFormValues> = async (data) => {
     try {
       setLoading(true);
-      const formattedData = {
-        ...data,
+
+      // Ensure arrays for sizes and colors
+      const formattedData: ProductFormValues = {
+        name: data.name,
+        price: data.price,
+        stock: data.stock,
+        categoryId: data.categoryId,
+        images: data.images,
         sizes: Array.isArray(data.sizes) ? data.sizes : [data.sizes],
         colors: Array.isArray(data.colors)
           ? data.colors
@@ -147,10 +171,10 @@ export default function ProductForm({
       };
 
       if (initialData) {
-        // تنفيذ عملية التحديث الفعلية
+        // Handle product update
         await updateProduct(initialData.id, formattedData);
       } else {
-        // تنفيذ عملية الإضافة
+        // Handle product creation
         await createProduct(formattedData);
       }
 
@@ -170,25 +194,28 @@ export default function ProductForm({
       </h2>
 
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        {/* Image Upload Section */}
         <div>
           <label className="block text-sm font-medium mb-2 text-[#7d8da1] dark:text-zinc-400">
             Product Images
           </label>
           <ImageUpload
             disabled={loading}
-            value={form.watch("images").map((image) => image.url)}
-            onChange={(url) => {
-              const currentImages = form.getValues("images");
+            value={watchedImages.map((image: { url: string }) => image.url)}
+            onChange={(url: string) => {
+              const currentImages = form.getValues("images") || [];
               form.setValue("images", [...currentImages, { url }], {
                 shouldValidate: true,
                 shouldDirty: true,
               });
             }}
-            onRemove={(url) => {
-              const currentImages = form.getValues("images");
+            onRemove={(url: string) => {
+              const currentImages = form.getValues("images") || [];
               form.setValue(
                 "images",
-                currentImages.filter((image) => image.url !== url),
+                currentImages.filter(
+                  (image: { url: string }) => image.url !== url,
+                ),
                 { shouldValidate: true, shouldDirty: true },
               );
             }}
@@ -200,6 +227,7 @@ export default function ProductForm({
           )}
         </div>
 
+        {/* Basic Information Inputs */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <label className="block text-sm font-medium mb-2 text-[#7d8da1] dark:text-zinc-400">
@@ -224,6 +252,7 @@ export default function ProductForm({
             </label>
             <input
               type="number"
+              step="any"
               disabled={loading}
               {...form.register("price", { valueAsNumber: true })}
               className="w-full p-2.5 border border-zinc-300 dark:border-[#313338] bg-white dark:bg-[#181a1e] text-[#363949] dark:text-[#edeffd] rounded-md focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-[#ff5c00] transition-colors placeholder:text-zinc-400 dark:placeholder:text-zinc-600"
@@ -277,6 +306,7 @@ export default function ProductForm({
           </div>
         </div>
 
+        {/* Variations Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-zinc-100 dark:border-[#313338]">
           <div>
             <label className="block text-sm font-medium mb-3 text-[#7d8da1] dark:text-zinc-400">
@@ -339,6 +369,7 @@ export default function ProductForm({
           </div>
         </div>
 
+        {/* Submit Action */}
         <button
           type="submit"
           disabled={loading}

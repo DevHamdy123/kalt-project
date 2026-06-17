@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   Trash2,
   Plus,
@@ -12,21 +12,19 @@ import {
   ArrowLeft,
   Loader2,
 } from "lucide-react";
-import { useCartStore } from "@/store/useCartStore";
 import { toast } from "sonner";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useCartQuery } from "@/hooks/queries/useCartQuery";
 import CheckoutDrawer from "@/components/shop/Checkout/CheckoutDrawer";
 
 // ==========================================
-// تعريف الـ Types (بدون أي استخدام لـ any)
+// Types
 // ==========================================
 
-// هذا هو الشكل المتوقع للبيانات القادمة من الـ API (Prisma response)
 interface DbProduct {
   id: string;
   name: string;
-  price: number | string; // Prisma Decimal قد يأتي كرقم أو نص
+  price: number | string;
   images: { url: string }[];
 }
 
@@ -38,12 +36,10 @@ interface DbCartItem {
 }
 
 interface DbCart {
-  id: string;
-  userId: string;
   items: DbCartItem[];
 }
 
-interface CartItemType {
+interface CartItemView {
   id: string;
   name: string;
   price: number;
@@ -53,7 +49,7 @@ interface CartItemType {
 }
 
 interface CartItemCardProps {
-  item: CartItemType;
+  item: CartItemView;
   updateQuantity: (id: string, quantity: number, size?: string) => void;
   removeItem: (id: string, size?: string) => void;
 }
@@ -63,8 +59,16 @@ interface OrderSummaryProps {
   onCheckoutClick: () => void;
 }
 
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
+
 // ==========================================
-// 1. مكون عرض المنتج في السلة (Cart Item)
+// Cart Item Card Component
 // ==========================================
 const CartItemCard = ({
   item,
@@ -154,7 +158,7 @@ const CartItemCard = ({
             }}
             className="text-black/60 hover:text-red-600 transition-colors flex items-center gap-2 text-xs font-bold uppercase tracking-widest"
           >
-            <Trash2 size={16} />
+            <Trash2 size={16} />{" "}
             <span className="hidden sm:inline">Remove</span>
           </button>
         </div>
@@ -164,7 +168,7 @@ const CartItemCard = ({
 };
 
 // ==========================================
-// 2. مكون ملخص الطلب
+// Order Summary Component
 // ==========================================
 const OrderSummary = ({ subtotal, onCheckoutClick }: OrderSummaryProps) => {
   return (
@@ -207,30 +211,40 @@ const OrderSummary = ({ subtotal, onCheckoutClick }: OrderSummaryProps) => {
 };
 
 // ==========================================
-// 3. المكون الرئيسي (Cart)
+// Main Cart Component
 // ==========================================
 export default function Cart() {
   const [isMounted, setIsMounted] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const queryClient = useQueryClient();
 
-  const { data: cart, isLoading } = useCartQuery();
+  const { data: cartData, isLoading } = useCartQuery();
+  const cart = cartData as DbCart | undefined;
 
-  const removeMutation = useMutation({
+  // Mutations
+  const removeMutation = useMutation<void, ApiError, string>({
     mutationFn: async (itemId: string) => {
       await fetch(`/api/cart?itemId=${itemId}`, { method: "DELETE" });
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["cart"] }),
+    onError: (err: ApiError) =>
+      toast.error(err.response?.data?.message || "Failed to remove item"),
   });
 
-  const updateMutation = useMutation({
-    mutationFn: async ({ id, quantity }: { id: string; quantity: number }) => {
+  const updateMutation = useMutation<
+    void,
+    ApiError,
+    { id: string; quantity: number }
+  >({
+    mutationFn: async (payload) => {
       await fetch(`/api/cart`, {
         method: "PATCH",
-        body: JSON.stringify({ id, quantity }),
+        body: JSON.stringify(payload),
       });
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["cart"] }),
+    onError: (err: ApiError) =>
+      toast.error(err.response?.data?.message || "Failed to update quantity"),
   });
 
   useEffect(() => {
@@ -245,9 +259,8 @@ export default function Cart() {
     );
   }
 
-  // تحويل بيانات الداتابيز (DbCart) إلى الشكل المطلوب (CartItemType)
-  const items: CartItemType[] =
-    (cart as DbCart)?.items.map((item: DbCartItem) => ({
+  const items: CartItemView[] =
+    cart?.items.map((item: DbCartItem) => ({
       id: item.id,
       name: item.product.name,
       price: Number(item.product.price),
@@ -267,7 +280,7 @@ export default function Cart() {
         </p>
         <Link
           href="/shop"
-          className="flex items-center gap-3 bg-black text-white px-8 py-4 text-xs lg:text-sm font-black uppercase tracking-[0.2em] hover:bg-neutral-800 transition-colors duration-300"
+          className="flex items-center gap-3 bg-black text-white px-8 py-4 text-xs lg:text-sm font-black uppercase tracking-[0.2em] hover:bg-neutral-800"
         >
           Explore Catalog <ArrowRight size={16} />
         </Link>
@@ -285,7 +298,7 @@ export default function Cart() {
       <div className="max-w-7xl mx-auto">
         <Link
           href="/shop"
-          className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-black/50 hover:text-black transition-colors mb-8 shrink-0"
+          className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-black/50 hover:text-black transition-colors mb-8"
         >
           <ArrowLeft size={16} /> Back to Catalog
         </Link>
@@ -301,8 +314,8 @@ export default function Cart() {
                 <CartItemCard
                   key={`${item.id}-${item.size}`}
                   item={item}
-                  updateQuantity={(id, q) =>
-                    updateMutation.mutate({ id, quantity: q })
+                  updateQuantity={(id, quantity) =>
+                    updateMutation.mutate({ id, quantity })
                   }
                   removeItem={(id) => removeMutation.mutate(id)}
                 />

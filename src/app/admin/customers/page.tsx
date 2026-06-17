@@ -1,8 +1,22 @@
 import { prisma } from "@/lib/prisma";
 import { Users, Mail, Phone, ShoppingBag, Calendar } from "lucide-react";
 
+// ==========================================
+// Types
+// ==========================================
+
+interface Customer {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  totalOrders: number;
+  totalSpent: number;
+  lastOrderDate: Date;
+}
+
 export default async function CustomersPage() {
-  // 1. جلب كل الطلبات مع بيانات المستخدمين المرتبطة بيها
+  // Fetch orders with user relation
   const orders = await prisma.order.findMany({
     include: {
       user: {
@@ -17,11 +31,10 @@ export default async function CustomersPage() {
     },
   });
 
-  // 2. تجميع البيانات لاستخراج قائمة العملاء (مسجلين أو زوار)
-  const customersMap = new Map();
+  // Aggregate customer data
+  const customersMap = new Map<string, Customer>();
 
   orders.forEach((order) => {
-    // المفتاح هيكون كود المستخدم لو مسجل، أو رقم التليفون لو زائر
     const customerKey = order.userId || order.phone;
 
     if (!customersMap.has(customerKey)) {
@@ -29,25 +42,23 @@ export default async function CustomersPage() {
         id: customerKey,
         name: order.user?.name || "Guest User",
         email: order.user?.email || "N/A",
-        phone: order.phone,
+        phone: order.phone ?? "N/A",
         totalOrders: 0,
         totalSpent: 0,
         lastOrderDate: order.createdAt,
       });
     }
 
-    // تحديث إحصائيات العميل مع كل طلب جديد له
-    const customer = customersMap.get(customerKey);
+    const customer = customersMap.get(customerKey)!;
     customer.totalOrders += 1;
     customer.totalSpent += Number(order.totalPrice);
   });
 
-  // تحويل الـ Map لمصفوفة عشان نقدر نعرضها في الجدول
   const customers = Array.from(customersMap.values());
 
   return (
     <div className="w-full pb-12 px-4 md:px-0 font-sans">
-      {/* هيدر الصفحة */}
+      {/* Page Header */}
       <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-[#363949] dark:text-[#edeffd] transition-colors flex items-center gap-3">
@@ -62,9 +73,7 @@ export default async function CustomersPage() {
         </div>
       </div>
 
-      {/* ========================================= */}
-      {/* 1. عرض الشاشات الكبيرة (الجدول القديم بتاعك) */}
-      {/* ========================================= */}
+      {/* Desktop Table View */}
       <div className="hidden md:block bg-white dark:bg-[#202528] rounded-[1.5rem] shadow-[0_2rem_3rem_rgba(132,139,200,0.18)] dark:shadow-[0_2rem_3rem_rgba(0,0,0,0.4)] transition-all overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
@@ -98,9 +107,9 @@ export default async function CustomersPage() {
                   </td>
                 </tr>
               ) : (
-                customers.map((customer, index) => (
+                customers.map((customer) => (
                   <tr
-                    key={index}
+                    key={customer.id}
                     className="hover:bg-zinc-50 dark:hover:bg-[#181a1e] transition-colors"
                   >
                     <td className="py-4 px-6">
@@ -134,7 +143,7 @@ export default async function CustomersPage() {
                     </td>
                     <td className="py-4 px-6">
                       <div className="flex items-center gap-2 font-bold text-[#363949] dark:text-[#edeffd]">
-                        <ShoppingBag className="w-4 h-4 text-[#7380ec]" />
+                        <ShoppingBag className="w-4 h-4 text-[#7380ec]" />{" "}
                         {customer.totalOrders}
                       </div>
                     </td>
@@ -154,21 +163,18 @@ export default async function CustomersPage() {
         </div>
       </div>
 
-      {/* ========================================= */}
-      {/* 2. عرض شاشات الموبايل (نظام البطاقات) */}
-      {/* ========================================= */}
+      {/* Mobile Card View */}
       <div className="md:hidden flex flex-col gap-4">
         {customers.length === 0 ? (
           <div className="bg-white dark:bg-[#202528] p-8 text-center rounded-[1.5rem] shadow-sm text-[#7d8da1]">
             No customers found yet.
           </div>
         ) : (
-          customers.map((customer, index) => (
+          customers.map((customer) => (
             <div
-              key={index}
+              key={customer.id}
               className="bg-white dark:bg-[#202528] rounded-[1.5rem] p-5 shadow-[0_2rem_3rem_rgba(132,139,200,0.18)] dark:shadow-[0_2rem_3rem_rgba(0,0,0,0.4)] transition-all"
             >
-              {/* رأس البطاقة: صورة واسم العميل */}
               <div className="flex items-center gap-4 mb-4 pb-4 border-b border-zinc-100 dark:border-zinc-800">
                 <div className="w-12 h-12 rounded-full bg-[#7380ec]/10 flex items-center justify-center text-[#7380ec] font-bold text-xl shrink-0">
                   {customer.name.charAt(0).toUpperCase()}
@@ -185,9 +191,7 @@ export default async function CustomersPage() {
                 </div>
               </div>
 
-              {/* محتوى البطاقة: التفاصيل */}
               <div className="space-y-4">
-                {/* بيانات التواصل */}
                 <div className="space-y-2">
                   <div className="flex items-center gap-3 text-sm text-[#7d8da1] dark:text-[#edeffd]">
                     <div className="p-2 rounded-lg bg-[#7380ec]/10 text-[#7380ec]">
@@ -205,10 +209,9 @@ export default async function CustomersPage() {
                   )}
                 </div>
 
-                {/* إحصائيات المبيعات */}
                 <div className="flex items-center justify-between pt-2">
                   <div className="flex items-center gap-2 font-bold text-[#363949] dark:text-[#edeffd]">
-                    <ShoppingBag className="w-5 h-5 text-[#ffbb55]" />
+                    <ShoppingBag className="w-5 h-5 text-[#ffbb55]" />{" "}
                     {customer.totalOrders} Orders
                   </div>
                   <div className="font-black text-[#41f1b6] text-xl">
@@ -216,10 +219,8 @@ export default async function CustomersPage() {
                   </div>
                 </div>
 
-                {/* تاريخ آخر طلب */}
                 <div className="flex items-center gap-2 text-xs font-medium text-[#7d8da1] dark:text-zinc-500 pt-3 border-t border-zinc-100 dark:border-zinc-800">
-                  <Calendar className="w-4 h-4" />
-                  Last Order:{" "}
+                  <Calendar className="w-4 h-4" /> Last Order:{" "}
                   {new Date(customer.lastOrderDate).toLocaleDateString()}
                 </div>
               </div>

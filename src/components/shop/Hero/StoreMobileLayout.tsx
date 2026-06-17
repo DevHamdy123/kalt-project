@@ -29,7 +29,9 @@ export default function StoreMobileLayout() {
 
   return (
     <div className="flex flex-col md:grid md:grid-cols-2 xl:hidden w-full h-full px-5 py-6 md:p-8 md:pb-0 gap-4 md:gap-6 min-h-0 relative">
+      {/* Content Column */}
       <div className="flex flex-col justify-center md:justify-between h-full order-1 z-10 w-full md:pb-6 min-h-0 gap-6 md:gap-0">
+        {/* Typography */}
         <div className="flex flex-col justify-start items-start">
           <motion.div
             custom={0.1}
@@ -57,6 +59,7 @@ export default function StoreMobileLayout() {
           </motion.div>
         </div>
 
+        {/* Promo Card */}
         <div className="flex flex-col justify-center items-center md:items-start w-full">
           <motion.div
             custom={0.5}
@@ -99,6 +102,7 @@ export default function StoreMobileLayout() {
         </div>
       </div>
 
+      {/* Hero Image */}
       <motion.div
         custom={0.3}
         initial="hidden"

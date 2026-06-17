@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 
+// Component Types
 interface CatalogPaginationProps {
   currentPage: number;
   totalPages: number;
@@ -13,6 +14,7 @@ export default function CatalogPagination({
   totalPages,
   onPageChange,
 }: CatalogPaginationProps) {
+  // Custom Styles
   const clipPathStyle = {
     clipPath:
       "polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)",
@@ -20,8 +22,10 @@ export default function CatalogPagination({
 
   if (totalPages <= 1) return null;
 
+  // Pagination Wrapper
   return (
     <div className="w-full flex justify-center items-center gap-4 mt-20 md:mt-32">
+      {/* Previous Button */}
       <button
         onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
         disabled={currentPage === 1}
@@ -30,6 +34,7 @@ export default function CatalogPagination({
         ← Prev
       </button>
 
+      {/* Page Numbers */}
       <div className="flex items-center gap-2">
         {Array.from({ length: totalPages }).map((_, i) => {
           const pageNum = i + 1;
@@ -55,6 +60,7 @@ export default function CatalogPagination({
         })}
       </div>
 
+      {/* Next Button */}
       <button
         onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
         disabled={currentPage === totalPages}

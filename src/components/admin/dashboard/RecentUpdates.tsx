@@ -1,6 +1,5 @@
 import Image from "next/image";
 
-// 1. تحديث الـ Types عشان تقرأ صورة المستخدم
 interface OrderItem {
   product: {
     name: string;
@@ -67,18 +66,16 @@ export function RecentUpdates({ recentOrders }: RecentUpdatesProps) {
           ) : (
             displayOrders.map((order) => {
               const customerName = order.user?.name || "Guest";
-              const customerImage = order.user?.image; // سحب الصورة
+              const customerImage = order.user?.image;
               const productName =
                 order.orderItems?.[0]?.product?.name || "Product";
               const actionText = getActionText(order.status);
               const timeAgo = getRelativeTime(order.createdAt);
 
-              // أول حرف من الاسم عشان لو مفيش صورة
               const initial = customerName.charAt(0).toUpperCase();
 
               return (
                 <div key={order.id} className="flex gap-4 items-start">
-                  {/* الحاوية الخاصة بالصورة أو الحرف */}
                   <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 bg-[#7380ec]/10 flex items-center justify-center transition-colors">
                     {customerImage ? (
                       <Image

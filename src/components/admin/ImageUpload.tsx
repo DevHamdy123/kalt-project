@@ -21,13 +21,11 @@ export default function ImageUpload({
   value,
 }: ImageUploadProps) {
   const onUploadSuccess = (result: CloudinaryUploadWidgetResults) => {
-    // التأكد من أن البيانات راجعة ككائن وتحتوي على الرابط
     if (
       typeof result.info === "object" &&
       result.info !== null &&
       "secure_url" in result.info
     ) {
-      // التعديل هنا: بنبعت الرابط الجديد فوراً لـ onChange عشان يروح للفورم
       onChange(result.info.secure_url as string);
     }
   };
@@ -35,7 +33,6 @@ export default function ImageUpload({
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center gap-4">
-        {/* التعديل هنا: بنعمل Map مباشرة على الـ Props "value" */}
         {value.map((url) => (
           <div
             key={url}
@@ -61,7 +58,6 @@ export default function ImageUpload({
         ))}
       </div>
 
-      {/* التعديل هنا: بنستخدم onSuccess بدل onUpload عشان الـ Widget الجديد */}
       <CldUploadWidget onSuccess={onUploadSuccess} uploadPreset="kalt_store">
         {({ open }) => {
           return (

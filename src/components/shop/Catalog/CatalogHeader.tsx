@@ -2,12 +2,13 @@
 
 import { motion, Variants } from "framer-motion";
 
+// Component Types
 interface CatalogHeaderProps {
   activeCategory: string;
   setCategory: (category: string) => void;
 }
 
-// 1. إضافة كل الأقسام الخاصة بالهوديز
+// Constants
 const CATEGORIES = [
   "ALL ARCHIVE",
   "STATEMENT PIECES",
@@ -16,6 +17,7 @@ const CATEGORIES = [
   "SEASONAL COLLECTIONS",
 ];
 
+// Animation Config
 const fadeUpVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
@@ -29,13 +31,16 @@ export default function CatalogHeader({
   activeCategory,
   setCategory,
 }: CatalogHeaderProps) {
+  // Derived State
   const formattedActive =
     activeCategory === "ALL ARCHIVE"
       ? "ALL ARCHIVE"
       : activeCategory.replace(/-/g, " ").toUpperCase();
 
+  // Header Wrapper
   return (
     <div className="mb-16 md:mb-24 w-full flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
+      {/* Title & Description */}
       <div className="max-w-xl">
         <motion.h2
           initial="hidden"
@@ -57,6 +62,7 @@ export default function CatalogHeader({
         </motion.p>
       </div>
 
+      {/* Category Filters */}
       <div className="flex flex-wrap gap-x-6 gap-y-3 border-t border-black/10 lg:border-t-0 pt-4 lg:pt-0">
         {CATEGORIES.map((cat) => {
           const isActive = formattedActive === cat;

@@ -4,9 +4,31 @@ import { RecentOrders } from "@/components/admin/dashboard/RecentOrders";
 import { RecentUpdates } from "@/components/admin/dashboard/RecentUpdates";
 import { SalesAnalytics } from "@/components/admin/dashboard/SalesAnalytics";
 
+// ==========================================
+// Types
+// ==========================================
+
+interface OrderItem {
+  id: string;
+  product: {
+    name: string;
+  };
+}
+
+interface DashboardOrder {
+  id: string;
+  totalPrice: number;
+  userId: string | null;
+  phone: string;
+  createdAt: Date;
+  status: string;
+  user: { name: string | null } | null;
+  orderItems: OrderItem[];
+}
+
 export default async function AdminDashboardPage() {
-  // 1. جلب كل الطلبات من الداتا بيز مترتبة من الأحدث للأقدم
-  const allOrders = await prisma.order.findMany({
+  // 1. Fetch raw data from Prisma
+  const rawOrders = await prisma.order.findMany({
     include: {
       user: true,
       orderItems: {
@@ -20,23 +42,36 @@ export default async function AdminDashboardPage() {
     },
   });
 
-  // 2. حساب الإحصائيات الأساسية
+  // 2. Map and format data to match our DashboardOrder interface
+  const allOrders: DashboardOrder[] = rawOrders.map((order) => ({
+    id: order.id,
+    totalPrice: Number(order.totalPrice),
+    userId: order.userId,
+    phone: order.phone,
+    createdAt: order.createdAt,
+    status: order.status,
+    user: order.user ? { name: order.user.name } : null,
+    orderItems: order.orderItems.map((item) => ({
+      id: item.id,
+      product: { name: item.product.name },
+    })),
+  }));
+
+  // Calculate dashboard statistics
   const totalRevenue = allOrders.reduce(
-    (sum, order) => sum + Number(order.totalPrice),
+    (sum, order) => sum + order.totalPrice,
     0,
   );
+
   const totalOrdersCount = allOrders.length;
 
-  // حساب عدد العملاء الفريدين (باستخدام رقم التليفون أو كود المستخدم)
   const uniqueCustomers = new Set(
     allOrders.map((order) => order.userId || order.phone),
   );
   const totalCustomersCount = uniqueCustomers.size;
 
-  // أحدث 5 طلبات للجدول
   const recentOrdersData = allOrders.slice(0, 5);
 
-  // دالة صغيرة بتجيب تاريخ النهاردة وتنسقه بشكل شيك
   const currentDate = new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
@@ -56,7 +91,6 @@ export default async function AdminDashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* الجزء الأيسر */}
         <div className="lg:col-span-2 space-y-8">
           <StatCards
             revenue={totalRevenue}
@@ -66,9 +100,7 @@ export default async function AdminDashboardPage() {
           <RecentOrders orders={recentOrdersData} />
         </div>
 
-        {/* الجزء الأيمن */}
         <div className="lg:col-span-1">
-          {/* هنمرر أحدث الطلبات عشان ناخد منها أسماء العملاء للتحديثات */}
           <RecentUpdates recentOrders={recentOrdersData} />
           <SalesAnalytics
             revenue={totalRevenue}

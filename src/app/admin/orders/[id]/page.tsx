@@ -11,45 +11,81 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 
+// ==========================================
+// Types
+// ==========================================
+
+interface ProductImage {
+  url: string;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  price: number | string;
+  images: ProductImage[];
+}
+
+interface OrderItem {
+  id: string;
+  quantity: number;
+  size: string | null;
+  product: Product;
+}
+
+interface OrderUser {
+  name: string | null;
+  email: string | null;
+}
+
+interface Order {
+  id: string;
+  status: string;
+  totalPrice: number | string;
+  phone: string;
+  address: string;
+  createdAt: Date;
+  user: OrderUser | null;
+  orderItems: OrderItem[];
+}
+
+interface OrderDetailsPageProps {
+  params: Promise<{ id: string }>;
+}
+
+// ==========================================
+// Component
+// ==========================================
+
 export default async function OrderDetailsPage({
   params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  // 1. استخراج الـ id الخاص بالطلب وانتظار الـ Promise
-  const resolvedParams = await params;
-  const { id } = resolvedParams;
+}: OrderDetailsPageProps) {
+  const { id } = await params;
 
-  // 2. جلب بيانات الطلب بالتفصيل مع المستخدم والمنتجات وصورها
-  const order = await prisma.order.findUnique({
+  // Fetch order with nested relations
+  const order = (await prisma.order.findUnique({
     where: { id },
     include: {
       user: {
-        select: {
-          name: true,
-          email: true,
-        },
+        select: { name: true, email: true },
       },
       orderItems: {
         include: {
           product: {
             include: {
-              images: {
-                take: 1,
-              },
+              images: { take: 1 },
             },
           },
         },
       },
     },
-  });
+  })) as Order | null;
 
-  // لو الطلب مش موجود في الداتا بيز
   if (!order) {
     notFound();
   }
 
-  // دالة لتحديد لون بادج الحالة
+  // Get status color styling
   const getStatusColor = (status: string) => {
     switch (status) {
       case "PENDING":
@@ -69,7 +105,7 @@ export default async function OrderDetailsPage({
 
   return (
     <div className="w-full pb-12 px-4 md:px-0 font-sans">
-      {/* زرار الرجوع والخلفية */}
+      {/* Navigation Header */}
       <div className="mb-8">
         <Link
           href="/admin/orders"
@@ -95,7 +131,7 @@ export default async function OrderDetailsPage({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* العمود الأيسر: محتويات الطلب (المنتجات) */}
+        {/* Left Column: Order Items */}
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-white dark:bg-[#202528] rounded-[1.5rem] p-6 shadow-[0_2rem_3rem_rgba(132,139,200,0.18)] dark:shadow-[0_2rem_3rem_rgba(0,0,0,0.4)] transition-all">
             <h3 className="text-lg font-bold text-[#363949] dark:text-[#edeffd] mb-6 flex items-center gap-2">
@@ -125,7 +161,6 @@ export default async function OrderDetailsPage({
                     <h4 className="font-semibold text-[#363949] dark:text-[#edeffd] truncate">
                       {item.product.name}
                     </h4>
-                    {/* التعديل هنا: عرض المقاس بجانب الكمية */}
                     <p className="text-xs text-[#7d8da1] dark:text-zinc-400 mt-1 flex items-center gap-2">
                       <span>Qty: {item.quantity}</span>
                       {item.size && (
@@ -149,7 +184,7 @@ export default async function OrderDetailsPage({
               ))}
             </div>
 
-            {/* الحساب الإجمالي للفاتورة */}
+            {/* Order Total */}
             <div className="border-t border-zinc-100 dark:border-zinc-800 mt-6 pt-6 flex justify-between items-center">
               <span className="font-bold text-[#363949] dark:text-[#edeffd]">
                 Total Amount
@@ -161,7 +196,7 @@ export default async function OrderDetailsPage({
           </div>
         </div>
 
-        {/* العمود الأيمن: بيانات العميل والشحن */}
+        {/* Right Column: Customer & Shipping */}
         <div className="space-y-6">
           <div className="bg-white dark:bg-[#202528] rounded-[1.5rem] p-6 shadow-[0_2rem_3rem_rgba(132,139,200,0.18)] dark:shadow-[0_2rem_3rem_rgba(0,0,0,0.4)] transition-all">
             <h3 className="text-lg font-bold text-[#363949] dark:text-[#edeffd] mb-6 flex items-center gap-2">
@@ -181,7 +216,7 @@ export default async function OrderDetailsPage({
                   Email
                 </span>
                 <span className="text-sm text-[#363949] dark:text-[#edeffd] break-all">
-                  {order.user?.email || "No Email Provided"}
+                  {order.user?.email || "N/A"}
                 </span>
               </div>
             </div>
@@ -221,11 +256,7 @@ export default async function OrderDetailsPage({
                     Order Date
                   </span>
                   <span className="text-sm text-[#363949] dark:text-[#edeffd]">
-                    {new Date(order.createdAt).toLocaleDateString()}{" "}
-                    {new Date(order.createdAt).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
+                    {new Date(order.createdAt).toLocaleDateString()}
                   </span>
                 </div>
               </div>

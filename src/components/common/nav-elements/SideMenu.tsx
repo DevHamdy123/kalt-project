@@ -7,12 +7,12 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import AuthButton from "./AuthButton";
 import { useSession } from "next-auth/react";
-// 1. بنستورد النوع الافتراضي بتاع الجلسة من المكتبة
 import type { DefaultSession } from "next-auth";
-// 2. بنعمل Interface مخصص بيورث خصائص اليوزر العادي وبنضيف عليه الـ role
+
 type CustomUser = DefaultSession["user"] & {
   role?: string;
 };
+
 interface SideMenuProps {
   isOpen: boolean;
   onClose: () => void;
@@ -45,10 +45,8 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
   const [mounted, setMounted] = useState(false);
   const { data: session } = useSession();
 
-  // 3. بنحول اليوزر للنوع المخصص بتاعنا بشكل صريح وآمن (Type Casting)
   const user = session?.user as CustomUser | undefined;
 
-  // 4. التايب سكريبت دلوقتي عارف إن فيه حاجة اسمها role وإنت في السليم
   const isAdmin = user?.role === "ADMIN";
 
   const activeLinks = isAdmin
@@ -66,12 +64,20 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
     if (isOpen) {
       document.body.style.overflow = "hidden";
       document.body.style.paddingRight = `${scrollBarWidth}px`;
+      document.documentElement.style.setProperty(
+        "--scrollbar-width",
+        `${scrollBarWidth}px`,
+      );
     } else {
       document.body.style.overflow = "unset";
+      document.body.style.paddingRight = "0px";
+      document.documentElement.style.setProperty("--scrollbar-width", "0px");
     }
+
     return () => {
       document.body.style.overflow = "unset";
       document.body.style.paddingRight = "0px";
+      document.documentElement.style.setProperty("--scrollbar-width", "0px");
     };
   }, [isOpen]);
 

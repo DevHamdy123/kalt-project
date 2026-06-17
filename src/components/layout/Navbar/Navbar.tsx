@@ -2,13 +2,32 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Menu, Store, User, LayoutDashboard, ShoppingCart } from "lucide-react";
+import {
+  Menu,
+  Store,
+  User,
+  LayoutDashboard,
+  ShoppingCart,
+  LucideIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import SideMenu from "@/components/common/nav-elements/SideMenu";
 import ProfileDropdown from "@/components/common/nav-elements/ProfileDropdown";
-import { useCartStore } from "@/store/useCartStore";
+import { useCartQuery } from "@/hooks/queries/useCartQuery";
+
+interface ActionIcon {
+  name: string;
+  Icon: LucideIcon;
+  href: string;
+  delay: number;
+  hasBadge: boolean;
+}
+
+interface CartItem {
+  quantity: number;
+}
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,23 +36,23 @@ export default function Navbar() {
 
   const { data: session, status } = useSession();
   const isLoggedIn = status === "authenticated";
-
-  // التحقق هل اليوزر ده أدمن ولا لأ
   const isAdmin = (session?.user as { role?: string })?.role === "ADMIN";
 
-  // لوجيك سلة المشتريات
-  const items = useCartStore((state) => state.items);
-  const totalItems = items.reduce((total, item) => total + item.quantity, 0);
+  const { data: cartData } = useCartQuery();
+
+  const totalItems =
+    cartData?.items?.reduce(
+      (total: number, item: CartItem) => total + item.quantity,
+      0,
+    ) || 0;
 
   const customEase = [0.22, 1, 0.36, 1] as const;
 
-  // حل مشكلة الـ Hydration للعداد بتاع السلة
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  // بناء الأيقونات ديناميكياً
-  const actionIcons = [];
+  const actionIcons: ActionIcon[] = [];
 
   if (isAdmin) {
     actionIcons.push({
@@ -45,7 +64,6 @@ export default function Navbar() {
     });
   }
 
-  // التعديل الوحيد هنا: ضفنا السلة الأول
   actionIcons.push({
     name: "cart",
     Icon: ShoppingCart,
@@ -54,7 +72,6 @@ export default function Navbar() {
     hasBadge: true,
   });
 
-  // وبعدين المتجر
   actionIcons.push({
     name: "shop",
     Icon: Store,
@@ -68,7 +85,6 @@ export default function Navbar() {
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
       <header className="w-full flex items-center justify-between relative z-20 pt-4">
-        {/* زرار القائمة (Menu) */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -83,7 +99,6 @@ export default function Navbar() {
           </button>
         </motion.div>
 
-        {/* لوجو KALT */}
         <motion.div
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -95,7 +110,6 @@ export default function Navbar() {
           </h2>
         </motion.div>
 
-        {/* الأيقونات اليمين (المتجر، السلة، البروفايل) */}
         <div className="flex-1 flex justify-end gap-2 md:gap-3">
           {actionIcons.map((item) => (
             <motion.div
@@ -114,7 +128,7 @@ export default function Navbar() {
               >
                 <item.Icon size={18} strokeWidth={1.5} />
 
-                {/* عداد السلة بيظهر بس لو العنصر ليه Badge وفي عناصر في السلة */}
+                {/* Conditional badge based on server-side cart items count */}
                 {isMounted && item.hasBadge && totalItems > 0 && (
                   <span className="absolute -top-1 -right-1 min-w-[16px] h-4 bg-[#b91c1c] text-white text-[10px] font-bold rounded-full border border-white flex items-center justify-center px-1 shadow-sm">
                     {totalItems}
@@ -124,7 +138,6 @@ export default function Navbar() {
             </motion.div>
           ))}
 
-          {/* البروفايل أو تسجيل الدخول */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}

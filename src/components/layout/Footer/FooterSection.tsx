@@ -134,7 +134,6 @@ const BrandSignature = () => (
   </div>
 );
 
-// التعديل هنا: الفوتر يعتمد على نفسه لتحديد ظهوره
 export default function FooterSection() {
   const [holdVisible, setHoldVisible] = useState(false);
   const footerRef = useRef<HTMLElement>(null);
@@ -144,10 +143,10 @@ export default function FooterSection() {
       ([entry]) => {
         if (entry.isIntersecting) {
           setHoldVisible(true);
-          observer.disconnect(); // إيقاف المراقبة بعد أول ظهور لتوفير الموارد
+          observer.disconnect();
         }
       },
-      { threshold: 0.1 }, // يبدأ الأنيميشن عند ظهور 10% من الفوتر
+      { threshold: 0.1 },
     );
 
     if (footerRef.current) {

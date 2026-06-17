@@ -4,8 +4,8 @@ import { prisma } from "@/lib/prisma";
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const page = parseInt(searchParams.get("page") || "1");
-  const limit = parseInt(searchParams.get("limit") || "4"); // عدد الكروت في الصفحة
-  const categorySlug = searchParams.get("category"); // هنفلتر بالـ Slug
+  const limit = parseInt(searchParams.get("limit") || "4");
+  const categorySlug = searchParams.get("category");
 
   const skip = (page - 1) * limit;
 

@@ -6,7 +6,7 @@ import { OrderStatus } from "@prisma/client";
 import { Eye, Package } from "lucide-react";
 import Link from "next/link";
 
-// تعريف شكل البيانات بعد تنسيقها
+// Define the structured shape of the order data
 export type FormattedOrderType = {
   id: string;
   status: OrderStatus;
@@ -16,7 +16,7 @@ export type FormattedOrderType = {
   address: string;
   createdAt: string;
   user: { name: string | null; email: string | null } | null;
-  orderItems: any[];
+  orderItems: Record<string, unknown>[];
 };
 
 export default function OrdersList({
@@ -26,7 +26,7 @@ export default function OrdersList({
 }) {
   const [isPending, startTransition] = useTransition();
 
-  // دالة تغيير حالة الطلب
+  // Handle order status updates
   const handleStatusChange = (id: string, newStatus: string) => {
     startTransition(async () => {
       try {
@@ -38,7 +38,7 @@ export default function OrdersList({
     });
   };
 
-  // دالة لتحديد لون البادج حسب حالة الطلب
+  // Determine badge styling based on order status
   const getStatusBadge = (status: OrderStatus) => {
     switch (status) {
       case "PENDING":
@@ -70,7 +70,7 @@ export default function OrdersList({
       </div>
 
       <div className="bg-white dark:bg-[#202528] rounded-[1.5rem] shadow-[0_2rem_3rem_rgba(132,139,200,0.18)] dark:shadow-[0_2rem_3rem_rgba(0,0,0,0.4)] transition-all duration-300 overflow-hidden">
-        {/* تصميم الموبايل - بطاقات */}
+        {/* Mobile View - Card Layout */}
         <div className="block md:hidden p-4 space-y-4">
           {orders.length === 0 ? (
             <div className="text-center py-8 text-[#7d8da1] dark:text-zinc-400">
@@ -117,7 +117,9 @@ export default function OrdersList({
                     onChange={(e) =>
                       handleStatusChange(order.id, e.target.value)
                     }
-                    className={`px-3 py-1 text-[11px] font-bold rounded-full cursor-pointer border-none outline-none appearance-none text-center ${getStatusBadge(order.status)}`}
+                    className={`px-3 py-1 text-[11px] font-bold rounded-full cursor-pointer border-none outline-none appearance-none text-center ${getStatusBadge(
+                      order.status,
+                    )}`}
                   >
                     <option value="PENDING">PENDING</option>
                     <option value="PROCESSING">PROCESSING</option>
@@ -128,7 +130,7 @@ export default function OrdersList({
                 </div>
 
                 <div className="flex justify-end gap-3 pt-4 border-t border-zinc-200 dark:border-zinc-800">
-                  {/* زرار لعرض تفاصيل الطلب مستقبلاً */}
+                  {/* Button to view full order details */}
                   <Link
                     href={`/admin/orders/${order.id}`}
                     className="p-2.5 rounded-lg text-[#7d8da1] hover:text-[#7380ec] bg-white dark:bg-[#202528] hover:bg-[#7380ec]/10 transition-colors border border-zinc-100 dark:border-[#313338] flex items-center justify-center w-full"
@@ -142,7 +144,7 @@ export default function OrdersList({
           )}
         </div>
 
-        {/* تصميم الشاشات الكبيرة - جدول */}
+        {/* Desktop View - Table Layout */}
         <div className="hidden md:block overflow-x-auto p-6">
           <table className="w-full text-left border-collapse min-w-[800px]">
             <thead>
@@ -197,7 +199,9 @@ export default function OrdersList({
                         onChange={(e) =>
                           handleStatusChange(order.id, e.target.value)
                         }
-                        className={`px-3 py-1.5 text-xs font-bold rounded-full cursor-pointer border-none outline-none ${getStatusBadge(order.status)}`}
+                        className={`px-3 py-1.5 text-xs font-bold rounded-full cursor-pointer border-none outline-none ${getStatusBadge(
+                          order.status,
+                        )}`}
                       >
                         <option value="PENDING" className="text-black">
                           PENDING

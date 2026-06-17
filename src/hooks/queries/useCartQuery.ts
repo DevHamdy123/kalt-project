@@ -1,8 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
 
 // ==========================================
-// 1. هوك جلب بيانات السلة
+// 1. Fetch Cart Hook
 // ==========================================
 export const useCartQuery = () => {
   return useQuery({
@@ -10,7 +9,8 @@ export const useCartQuery = () => {
     queryFn: async () => {
       const res = await fetch("/api/cart");
       if (!res.ok) {
-        if (res.status === 401) return null; // لو العميل مش مسجل دخول
+        // Return null if user is unauthorized
+        if (res.status === 401) return null;
         throw new Error("Failed to fetch cart");
       }
       return res.json();
@@ -19,7 +19,7 @@ export const useCartQuery = () => {
 };
 
 // ==========================================
-// 2. هوك إضافة المنتجات للسلة
+// 2. Add To Cart Mutation Hook
 // ==========================================
 export const useAddToCartMutation = () => {
   const queryClient = useQueryClient();
@@ -40,14 +40,8 @@ export const useAddToCartMutation = () => {
       return res.json();
     },
     onSuccess: () => {
-      // إجبار المتجر على إعادة جلب بيانات السلة فوراً بعد الإضافة
+      // Invalidate cart query to trigger a refetch of fresh cart data
       queryClient.invalidateQueries({ queryKey: ["cart"] });
-      toast.success("ADDED TO ARCHIVE", {
-        style: { background: "black", color: "white", border: "none" },
-      });
-    },
-    onError: () => {
-      toast.error("FAILED TO ADD ITEM. PLEASE TRY AGAIN.");
     },
   });
 };

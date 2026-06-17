@@ -1,8 +1,23 @@
-import ProductsList from "@/components/admin/products/ProductsList";
 import { prisma } from "@/lib/prisma";
+import ProductsList from "@/components/admin/products/ProductsList";
+
+// ==========================================
+// Types
+// ==========================================
+
+interface FormattedProduct {
+  id: string;
+  name: string;
+  category: string;
+  price: number;
+  stock: number;
+  image: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export default async function AdminProductsPage() {
-  // جلب المنتجات من الداتا بيز مع الأقسام والصور
+  // Fetch products with category and first image
   const products = await prisma.product.findMany({
     include: {
       category: true,
@@ -16,8 +31,8 @@ export default async function AdminProductsPage() {
     },
   });
 
-  // تنسيق البيانات (تحويل Decimal لـ Number والتاريخ لـ String)
-  const formattedProducts = products.map((product) => ({
+  // Format data for Client Component
+  const formattedProducts: FormattedProduct[] = products.map((product) => ({
     id: product.id,
     name: product.name,
     category: product.category.name,
@@ -30,12 +45,9 @@ export default async function AdminProductsPage() {
     updatedAt: product.updatedAt.toISOString(),
   }));
 
-  // الخطوة الأمنية الأخيرة لمنع تداخل كائنات الـ Decimal المعقدة
-  const safeProducts = JSON.parse(JSON.stringify(formattedProducts));
-
   return (
     <div className="w-full">
-      <ProductsList products={safeProducts} />
+      <ProductsList products={formattedProducts} />
     </div>
   );
 }

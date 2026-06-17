@@ -9,7 +9,6 @@ export default function AdminLayout({
 }) {
   return (
     <SidebarProvider>
-      {/* ضفنا admin-wrapper وكلاسات الدارك مود والخلفية */}
       <div className="admin-wrapper flex min-h-screen bg-[#f6f6f9] dark:bg-[#181a1e] text-[#363949] dark:text-[#edeffd] overflow-x-hidden transition-colors duration-300">
         <AdminSidebar />
 

@@ -6,7 +6,6 @@ import { Plus, Edit, Trash2, AlertTriangle, X } from "lucide-react";
 import { useState, useTransition } from "react";
 import { deleteProduct } from "@/actions/products";
 
-// تعريف شكل البيانات اللي جاية من الداتا بيز
 type ProductType = {
   id: string;
   name: string;
@@ -23,38 +22,39 @@ export default function ProductsList({
 }) {
   const [isPending, startTransition] = useTransition();
 
-  // حالات للتحكم في النافذة المنبثقة (Modal)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<string | null>(null);
 
-  // دالة فتح النافذة
+  // Open delete confirmation modal
   const openDeleteModal = (id: string) => {
     setProductToDelete(id);
     setIsModalOpen(true);
   };
 
-  // دالة إغلاق النافذة
+  // Close delete confirmation modal
   const closeDeleteModal = () => {
     setIsModalOpen(false);
     setProductToDelete(null);
   };
 
-  // دالة الحذف الفعلية اللي بتشتغل لما ندوس تأكيد من النافذة
+  // Execute the actual deletion after confirmation
   const confirmDelete = () => {
     if (!productToDelete) return;
 
     startTransition(async () => {
       try {
         await deleteProduct(productToDelete);
-        closeDeleteModal(); // نقفل النافذة بعد الحذف بنجاح
+        // Close modal upon successful deletion
+        closeDeleteModal();
       } catch (error) {
         console.error(error);
-        alert("Failed to delete the product"); // رسالة خطأ احتياطية لو حصلت مشكلة في السيرفر
+        // Fallback error alert if server deletion fails
+        alert("Failed to delete the product");
       }
     });
   };
 
-  // دالة لتحديد حالة المخزون ولون البادج أوتوماتيك
+  // Helper function to set stock status text and badge color
   const getStockStatus = (stock: number) => {
     if (stock === 0)
       return {
@@ -68,7 +68,7 @@ export default function ProductsList({
 
   return (
     <div className="pb-12 px-4 md:px-0">
-      {/* ---------- بداية كود النافذة المنبثقة (Modal) ---------- */}
+      {/* ---------- Delete Confirmation Modal Start ---------- */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-all">
           <div className="bg-white dark:bg-[#202528] rounded-2xl w-full max-w-md shadow-2xl overflow-hidden border border-zinc-100 dark:border-[#313338] animate-in fade-in zoom-in duration-200">
@@ -112,7 +112,7 @@ export default function ProductsList({
           </div>
         </div>
       )}
-      {/* ---------- نهاية كود النافذة المنبثقة ---------- */}
+      {/* ---------- Delete Confirmation Modal End ---------- */}
 
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div>
@@ -133,7 +133,7 @@ export default function ProductsList({
       </div>
 
       <div className="bg-white dark:bg-[#202528] rounded-[1.5rem] shadow-[0_2rem_3rem_rgba(132,139,200,0.18)] dark:shadow-[0_2rem_3rem_rgba(0,0,0,0.4)] hover:shadow-none transition-all duration-300 overflow-hidden">
-        {/* تصميم الموبايل - بطاقات */}
+        {/* Mobile View - Cards Layout */}
         <div className="block md:hidden p-4 space-y-4">
           {products.length === 0 ? (
             <div className="text-center py-8 text-[#7d8da1] dark:text-zinc-400">
@@ -212,7 +212,7 @@ export default function ProductsList({
           )}
         </div>
 
-        {/* تصميم الشاشات الكبيرة - جدول */}
+        {/* Desktop View - Table Layout */}
         <div className="hidden md:block overflow-x-auto p-6">
           <table className="w-full text-left border-collapse min-w-[800px]">
             <thead>

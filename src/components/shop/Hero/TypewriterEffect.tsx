@@ -6,6 +6,7 @@ export default function TypewriterEffect() {
   const [displayText, setDisplayText] = useState("KALT..");
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Typewriter Animation Logic
   useEffect(() => {
     const fullText = "KALT..";
     const timeout = setTimeout(

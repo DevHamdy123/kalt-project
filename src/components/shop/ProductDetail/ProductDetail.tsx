@@ -12,7 +12,7 @@ import {
   useCartQuery,
 } from "@/hooks/queries/useCartQuery";
 
-// --- تعريف التايبس ---
+// Component Types
 interface ProductImage {
   url: string;
 }
@@ -26,23 +26,52 @@ interface Product {
   description?: string;
 }
 
+interface CartItem {
+  productId: string;
+  quantity: number;
+}
+
+interface CartData {
+  items: CartItem[];
+}
+
 interface ProductDetailProps {
   productId: string;
 }
 
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
+
 export default function ProductDetail({ productId }: ProductDetailProps) {
+  // Local State
   const [selectedSize, setSelectedSize] = useState("L");
   const [quantity, setQuantity] = useState<number | string>(1);
   const sizes = ["S", "M", "L", "XL", "XXL"];
 
+  // Queries & Mutations
   const { mutate: addToCart, isPending } = useAddToCartMutation();
-  const { data: product, isLoading, isError } = useProduct(productId);
-  const { data: cartData, refetch } = useCartQuery();
+  const {
+    data: product,
+    isLoading,
+    isError,
+  } = useProduct(productId) as {
+    data: Product | undefined;
+    isLoading: boolean;
+    isError: boolean;
+  };
+  const { refetch } = useCartQuery();
 
+  // Effects
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [productId]);
 
+  // Loading State
   if (isLoading) {
     return (
       <div className="h-[calc(100vh)] bg-white pt-24 flex items-center justify-center">
@@ -53,6 +82,7 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
     );
   }
 
+  // Error State
   if (isError || !product) {
     return (
       <div className="h-[calc(100vh)] bg-white pt-24 flex flex-col items-center justify-center gap-4">
@@ -69,24 +99,27 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
     );
   }
 
+  // Derived State
   const validQuantity = Number(quantity) || 1;
   const displayPrice = (product.price * validQuantity).toFixed(2);
   const isOutOfStock = product.stock <= 0;
 
+  // Handlers
   const handleAddToCart = async () => {
     if (isOutOfStock || isPending) return;
 
-    // تحديث بيانات السلة فوراً قبل الحساب
-    const { data: freshCartData } = await refetch();
+    // Fetch fresh cart data
+    const result = await refetch();
+    const freshCartData = result.data as CartData | undefined;
 
-    // 1. حساب الكمية الموجودة في السلة حالياً
+    // Calculate current quantity in cart
     const existingItem = freshCartData?.items?.find(
-      (item: any) => item.productId === product.id,
+      (item: CartItem) => item.productId === product.id,
     );
     const quantityInCart = existingItem ? existingItem.quantity : 0;
     const totalRequested = quantityInCart + validQuantity;
 
-    // 2. فحص المخزون (Guard)
+    // Stock validation guard
     if (totalRequested > product.stock) {
       toast.error(
         `Cannot add to cart. You have ${quantityInCart} in your cart, and only ${product.stock} available in total.`,
@@ -94,7 +127,7 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
       return;
     }
 
-    // 3. إرسال الطلب للسيرفر
+    // Submit to server
     addToCart(
       {
         productId: product.id,
@@ -108,18 +141,22 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
           );
           setQuantity(1);
         },
-        onError: (error: any) => {
+        onError: (error: unknown) => {
+          // Type casting the error safely
+          const apiError = error as ApiError;
           const errorMessage =
-            error?.response?.data?.message || "Failed to add item to cart.";
+            apiError?.response?.data?.message || "Failed to add item to cart.";
           toast.error(errorMessage);
         },
       },
     );
   };
 
+  // Section Wrapper
   return (
     <section className="lg:h-[calc(100vh)] min-h-screen bg-white pt-24 pb-8 px-5 md:px-10 lg:px-20 font-sans flex flex-col lg:overflow-hidden">
       <div className="max-w-7xl mx-auto w-full h-full flex flex-col">
+        {/* Back Button */}
         <Link
           href="/shop"
           className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-black/50 hover:text-black transition-colors mb-6 shrink-0"
@@ -127,7 +164,9 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
           <ArrowLeft size={16} /> Back to Catalog
         </Link>
 
+        {/* Product Layout */}
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 flex-1 min-h-0">
+          {/* Product Image */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -144,12 +183,14 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
             />
           </motion.div>
 
+          {/* Product Info */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             className="flex-1 flex flex-col justify-center overflow-y-auto pr-2"
           >
+            {/* Header Details */}
             <div className="mb-6">
               <span className="text-black/40 font-mono text-xs font-bold uppercase tracking-[0.3em] mb-3 block">
                 ID // {product.id.slice(-6)}
@@ -168,6 +209,7 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
             </p>
 
             <div className="flex flex-col xl:flex-row xl:items-end gap-6 mb-8">
+              {/* Size Selector */}
               <div className="flex-1">
                 <div className="flex justify-between items-end mb-3">
                   <span className="text-xs font-bold uppercase tracking-widest text-black">
@@ -191,8 +233,8 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
                 </div>
               </div>
 
+              {/* Quantity Selector */}
               <div>
-                {/* هنا التعديل يا هندسة */}
                 <span className="text-xs font-bold uppercase tracking-widest text-black block mb-3">
                   Quantity ({product.stock} available)
                 </span>
@@ -240,6 +282,7 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
               </div>
             </div>
 
+            {/* Add to Cart Button */}
             <button
               onClick={handleAddToCart}
               disabled={isOutOfStock || isPending}

@@ -13,10 +13,10 @@ export function AdminNavbar() {
   const [mounted, setMounted] = useState(false);
   const { toggle } = useSidebar();
 
-  // حالة التحكم في القائمة المنسدلة
+  // Dropdown menu state
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  // جلب بيانات المستخدم الحالي
+  // Fetch current user session data
   const { data: session } = useSession();
 
   useEffect(() => {
@@ -25,14 +25,14 @@ export function AdminNavbar() {
 
   if (!mounted) return <div className="h-20 w-full"></div>;
 
-  // استخراج البيانات وتجهيز الحرف الأول كبديل للصورة
+  // Extract user data and prepare initial letter for avatar fallback
   const userName = session?.user?.name || "Admin";
   const userImage = session?.user?.image;
   const initial = userName.charAt(0).toUpperCase();
 
   return (
     <div className="h-20 w-full flex items-center justify-between lg:justify-end px-4 md:px-8 gap-6">
-      {/* زرار القائمة الجانبية */}
+      {/* Mobile sidebar toggle button */}
       <button
         onClick={toggle}
         className="lg:hidden p-2 bg-white dark:bg-[#202528] rounded-lg border border-zinc-200 dark:border-[#313338] text-[#363949] dark:text-[#edeffd] hover:bg-zinc-50 dark:hover:bg-[#181a1e] transition-colors"
@@ -40,9 +40,9 @@ export function AdminNavbar() {
         <Menu className="w-6 h-6" />
       </button>
 
-      {/* مجمع الثيم والبروفايل */}
+      {/* Theme and profile section container */}
       <div className="flex items-center gap-4 md:gap-6">
-        {/* زر تغيير الثيم */}
+        {/* Theme switcher toggle */}
         <div
           className="bg-white dark:bg-[#202528] w-16 h-8 rounded-xl flex items-center justify-between px-1 cursor-pointer shadow-sm border border-zinc-200 dark:border-[#313338] transition-colors"
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
@@ -67,7 +67,7 @@ export function AdminNavbar() {
           </div>
         </div>
 
-        {/* قسم البروفايل مع القائمة المنسدلة */}
+        {/* Profile section with dropdown */}
         <div className="relative">
           <div
             className="flex items-center gap-4 cursor-pointer group"
@@ -99,7 +99,7 @@ export function AdminNavbar() {
             </div>
           </div>
 
-          {/* استدعاء مكون القائمة المنسدلة */}
+          {/* Profile dropdown component */}
           <ProfileDropdown
             isOpen={isDropdownOpen}
             onClose={() => setIsDropdownOpen(false)}

@@ -3,10 +3,9 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
-// إجبار الخادم على جلب بيانات جديدة دائماً
 export const dynamic = "force-dynamic";
 
-// --- تعريف الأنواع (Types) للطلب ---
+// --- Request Types ---
 
 interface AddToCartRequest {
   productId: string;
@@ -15,12 +14,12 @@ interface AddToCartRequest {
 }
 
 interface UpdateCartRequest {
-  id: string; // هذا هو معرف العنصر داخل السلة (CartItem ID)
+  id: string; // The cart item ID
   quantity: number;
 }
 
 // ==========================================
-// 1. جلب بيانات السلة (GET)
+// 1. Fetch Cart Data (GET)
 // ==========================================
 export async function GET() {
   try {
@@ -66,7 +65,7 @@ export async function GET() {
 }
 
 // ==========================================
-// 2. إضافة منتج للسلة (POST)
+// 2. Add Product to Cart (POST)
 // ==========================================
 export async function POST(request: Request) {
   try {
@@ -114,6 +113,7 @@ export async function POST(request: Request) {
 
     const currentQty = existingItem ? existingItem.quantity : 0;
 
+    // Check stock availability
     if (currentQty + quantity > product.stock) {
       return NextResponse.json(
         {
@@ -153,7 +153,7 @@ export async function POST(request: Request) {
 }
 
 // ==========================================
-// 3. تعديل كمية منتج في السلة (PATCH) - مُعدل للحماية
+// 3. Update Cart Item Quantity (PATCH)
 // ==========================================
 export async function PATCH(request: Request) {
   try {
@@ -169,13 +169,13 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ message: "Invalid data" }, { status: 400 });
     }
 
-    // إذا كان التحديث هو حذف (quantity = 0)، لا نحتاج فحص المخزون
+    // Delete item if quantity is set to 0
     if (quantity === 0) {
       await prisma.cartItem.delete({ where: { id } });
       return NextResponse.json({ message: "Item removed" }, { status: 200 });
     }
 
-    // جلب المنتج المرتبط بالعنصر للتحقق من المخزون قبل التحديث
+    // Validate stock before updating quantity
     const item = await prisma.cartItem.findUnique({
       where: { id },
       include: { product: { select: { stock: true } } },
@@ -185,7 +185,7 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ message: "Item not found" }, { status: 404 });
     }
 
-    // التحقق الأمني: هل الكمية الجديدة المطلوبة أكبر من المخزون المتاح؟
+    // Security check: ensure quantity doesn't exceed stock
     if (quantity > item.product.stock) {
       return NextResponse.json(
         { message: `Only ${item.product.stock} items available.` },
@@ -209,7 +209,7 @@ export async function PATCH(request: Request) {
 }
 
 // ==========================================
-// 4. حذف منتج من السلة (DELETE)
+// 4. Delete Cart Item (DELETE)
 // ==========================================
 export async function DELETE(request: Request) {
   try {

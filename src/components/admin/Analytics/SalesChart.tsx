@@ -1,5 +1,7 @@
 "use client";
 
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -10,18 +12,47 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-// 1. تعريف واجهة البيانات
 export interface SalesData {
   date: string;
   revenue: number;
 }
 
-// 2. تعريف واجهة الخصائص
 interface SalesChartProps {
   data: SalesData[];
 }
 
 export default function SalesChart({ data }: SalesChartProps) {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Prevent hydration mismatch by waiting for component to mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div className="h-[400px] w-full mt-6 animate-pulse bg-zinc-100 dark:bg-zinc-800/50 rounded-xl"></div>
+    );
+  }
+
+  // Handle empty state gracefully
+  if (!data || data.length === 0) {
+    return (
+      <div className="h-[400px] w-full mt-6 flex items-center justify-center bg-zinc-50 dark:bg-[#181a1e] rounded-xl border border-zinc-200 dark:border-[#313338]">
+        <p className="text-[#7d8da1] dark:text-zinc-400 font-medium">
+          No sales data available yet.
+        </p>
+      </div>
+    );
+  }
+
+  // Dynamic colors based on the active theme
+  const isDark = resolvedTheme === "dark";
+  const tooltipBg = isDark ? "#202528" : "#ffffff";
+  const tooltipText = isDark ? "#ffffff" : "#363949";
+  const gridColor = isDark ? "#313338" : "#f0f0f0";
+
   return (
     <div className="h-[400px] w-full mt-6">
       <ResponsiveContainer width="100%" height="100%">
@@ -31,7 +62,7 @@ export default function SalesChart({ data }: SalesChartProps) {
         >
           <CartesianGrid
             strokeDasharray="3 3"
-            stroke="#f0f0f0"
+            stroke={gridColor}
             vertical={false}
           />
           <XAxis
@@ -52,21 +83,21 @@ export default function SalesChart({ data }: SalesChartProps) {
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: "#202528",
+              backgroundColor: tooltipBg,
               borderRadius: "10px",
-              border: "none",
-              color: "#fff",
+              border: `1px solid ${gridColor}`,
+              color: tooltipText,
               boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
             }}
-            itemStyle={{ color: "#41f1b6", fontWeight: "bold" }}
+            itemStyle={{ color: "#ff5c00", fontWeight: "bold" }}
           />
           <Line
             type="monotone"
             dataKey="revenue"
-            stroke="#7380ec"
+            stroke="#ff5c00"
             strokeWidth={4}
-            dot={{ r: 4, fill: "#7380ec", strokeWidth: 2, stroke: "#fff" }}
-            activeDot={{ r: 6, fill: "#41f1b6", stroke: "#fff" }}
+            dot={{ r: 4, fill: "#ff5c00", strokeWidth: 2, stroke: tooltipBg }}
+            activeDot={{ r: 6, fill: "#363949", stroke: "#ff5c00" }}
           />
         </LineChart>
       </ResponsiveContainer>

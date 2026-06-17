@@ -6,6 +6,7 @@ import { ArrowDown } from "lucide-react";
 import { useLenis } from "lenis/react";
 import TypewriterEffect from "./TypewriterEffect";
 
+// Animation Config
 const customEase = [0.22, 1, 0.36, 1] as const;
 
 const fadeUpVariants: Variants = {
@@ -20,6 +21,7 @@ const fadeUpVariants: Variants = {
 export default function StoreDesktopLayout() {
   const lenis = useLenis();
 
+  // Scroll Handler
   const scrollToCatalog = (): void => {
     lenis?.scrollTo("#shop-catalog", {
       offset: -100,
@@ -30,6 +32,7 @@ export default function StoreDesktopLayout() {
 
   return (
     <div className="hidden xl:grid xl:grid-cols-[1fr_1.4fr_1fr] 2xl:grid-cols-[1fr_1.2fr_1fr] w-full h-full justify-between gap-4 px-[clamp(2rem,4vw,4rem)] pt-4 2xl:pt-12 pb-0 min-h-0 relative">
+      {/* Left Column: Typography */}
       <div className="flex flex-col justify-center z-10 pb-4 2xl:pb-12 min-h-0">
         <motion.div
           custom={0.2}
@@ -60,6 +63,7 @@ export default function StoreDesktopLayout() {
         </motion.div>
       </div>
 
+      {/* Center Column: Hero Image */}
       <motion.div
         custom={0.1}
         initial="hidden"
@@ -79,6 +83,7 @@ export default function StoreDesktopLayout() {
         </div>
       </motion.div>
 
+      {/* Right Column: Promo Card */}
       <div className="flex flex-col justify-center items-end z-10 w-full pb-4 2xl:pb-12 min-h-0">
         <motion.div
           custom={0.5}
@@ -116,6 +121,7 @@ export default function StoreDesktopLayout() {
         </motion.div>
       </div>
 
+      {/* Scroll Indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

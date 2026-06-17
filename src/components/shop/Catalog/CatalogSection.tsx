@@ -8,7 +8,7 @@ import CatalogPagination from "./CatalogPagination";
 import { useProducts } from "@/hooks/queries/useProducts";
 import { useLenis } from "lenis/react";
 
-// تعريف التايبس للـ Product المتوقع استخدامه في الـ Grid
+// Component Types
 interface Product {
   id: string;
   name: string;
@@ -19,6 +19,7 @@ interface Product {
 }
 
 export default function CatalogSection() {
+  // Routing & State
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -26,9 +27,11 @@ export default function CatalogSection() {
   const activeCategory = searchParams.get("category") || undefined;
   const [currentPage, setCurrentPage] = useState<number>(1);
 
+  // Queries & Hooks
   const { data, isLoading, isError } = useProducts(activeCategory, currentPage);
   const lenis = useLenis();
 
+  // Effects
   useEffect(() => {
     setCurrentPage(1);
 
@@ -46,6 +49,7 @@ export default function CatalogSection() {
     }
   }, [activeCategory, lenis]);
 
+  // Handlers
   const handlePageChange = (newPage: number) => {
     if (newPage === currentPage) return;
     setCurrentPage(newPage);
@@ -85,27 +89,32 @@ export default function CatalogSection() {
     }
   };
 
-  // التأكد من أن البيانات الممررة تحتوي على الـ stock ليعمل الـ ProductCard
+  // Derived State
   const products: Product[] = data?.products || [];
   const totalPages = data?.totalPages || 1;
 
+  // Section Wrapper
   return (
     <section
       id="shop-catalog"
-      className="relative w-full min-h-screen px-4 md:px-8 lg:px-12 pt-24 pb-12 md:pt-32 md:pb-16 overflow-hidden"
+      className="relative w-full min-h-screen px-6 md:px-12 lg:px-20 pt-12 pb-12 md:pt-16 md:pb-16 overflow-hidden"
       style={{
         background:
           "linear-gradient(180deg, #E5E5E5 0%, #D4D4D4 50%, #9CA3AF 100%)",
       }}
     >
+      {/* Background Texture */}
       <div className="absolute inset-0 opacity-[0.04] pointer-events-none mix-blend-overlay" />
 
-      <div className="max-w-7xl mx-auto w-full relative z-10">
+      {/* Main Container */}
+      <div className="max-w-375 mx-auto w-full relative z-10">
+        {/* Header Section */}
         <CatalogHeader
           activeCategory={activeCategory || "ALL ARCHIVE"}
           setCategory={handleCategoryChange}
         />
 
+        {/* Grid & States */}
         {isError ? (
           <div className="w-full py-20 text-center font-bold uppercase text-red-500">
             Error Loading Archive
@@ -114,6 +123,7 @@ export default function CatalogSection() {
           <CatalogGrid products={products} isLoading={isLoading} />
         )}
 
+        {/* Pagination */}
         {totalPages > 1 && (
           <CatalogPagination
             currentPage={currentPage}

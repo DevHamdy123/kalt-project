@@ -10,29 +10,19 @@ import ShopTheLookSkeleton from "./ShopTheLookSkeleton";
 import { useProduct } from "@/hooks/queries/useProducts";
 import { useAddToCartMutation } from "@/hooks/queries/useCartQuery";
 
+// Constants
 const PRODUCT_ID = "cmpm4qr9y000k1oujdr5hs7x3";
 
-// --- تعريف التايبس لضمان الـ Type Safety ---
-interface ProductImage {
-  url: string;
-}
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  description: string;
-  images: ProductImage[];
-}
-
 export default function ShopTheLook() {
+  // Local State
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // استخدام الـ Mutation الجديد بدل Zustand
+  // Queries & Mutations
   const { mutate: addToCart, isPending } = useAddToCartMutation();
   const { data: product, isLoading } = useProduct(PRODUCT_ID);
 
+  // Handlers
   const handleAddToCart = () => {
     if (!product) return;
 
@@ -50,6 +40,7 @@ export default function ShopTheLook() {
     );
   };
 
+  // Effects
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -64,12 +55,14 @@ export default function ShopTheLook() {
   }, []);
 
   if (isLoading) return <ShopTheLookSkeleton />;
-
   if (!product) return null;
 
+  // Section Wrapper
   return (
     <section className="w-full bg-[#fdfdfd] py-20 px-6 md:px-12 lg:px-20">
+      {/* Main Grid Layout */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-y-10 items-center min-h-[80vh]">
+        {/* Typography Column */}
         <div className="lg:col-span-6 flex flex-col justify-start">
           <motion.h2
             initial={{ opacity: 0, x: -30 }}
@@ -84,6 +77,7 @@ export default function ShopTheLook() {
           </p>
         </div>
 
+        {/* Visuals Column */}
         <div className="lg:col-span-6 flex justify-center w-full">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -91,6 +85,7 @@ export default function ShopTheLook() {
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
             className="relative w-full max-w-lg aspect-3/4 bg-neutral-200 rounded-lg overflow-hidden shadow-2xl border border-black/5"
           >
+            {/* Product Image Link */}
             <Link
               href={`/shop/${product.id}`}
               className="relative block w-full h-full"
@@ -104,10 +99,12 @@ export default function ShopTheLook() {
               />
             </Link>
 
+            {/* Quick Add Popover */}
             <div
               ref={containerRef}
               className="absolute top-1/2 right-4 z-30 -translate-y-1/2"
             >
+              {/* Toggle Button */}
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="relative w-12 h-12 group cursor-pointer flex items-center justify-center"
@@ -122,6 +119,7 @@ export default function ShopTheLook() {
                 </div>
               </button>
 
+              {/* Popover Content */}
               <AnimatePresence>
                 {isOpen && (
                   <motion.div
@@ -131,6 +129,7 @@ export default function ShopTheLook() {
                     className="absolute top-full mt-4 right-0 w-64 bg-white border-2 border-black p-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] z-50"
                   >
                     <div className="flex gap-4">
+                      {/* Thumbnail */}
                       <div className="w-20 h-20 bg-zinc-100 relative shrink-0">
                         <Image
                           src={product.images?.[0]?.url || "/images/img17.webp"}
@@ -140,6 +139,8 @@ export default function ShopTheLook() {
                           className="object-cover"
                         />
                       </div>
+
+                      {/* Details & Action */}
                       <div className="flex flex-col justify-between w-full">
                         <div>
                           <p className="font-black text-sm uppercase leading-tight">
@@ -165,6 +166,7 @@ export default function ShopTheLook() {
           </motion.div>
         </div>
 
+        {/* Call to Action */}
         <div className="lg:col-span-12 flex justify-end">
           <motion.button
             onClick={handleAddToCart}

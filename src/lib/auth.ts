@@ -6,13 +6,13 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import type { Adapter } from "next-auth/adapters";
 import bcrypt from "bcrypt";
 
-// استدعاء ملف الأنواع ليتعرف عليه المحرر
+// Import type definitions for editor intellisense
 import "@/types/auth";
 import { ExtendedUser } from "@/types/auth";
 import { prisma } from "@/lib/prisma";
 
 export const authOptions: NextAuthOptions = {
-  // ربط قاعدة البيانات عشان يحفظ اليوزر تلقائي لما يسجل بجوجل أو جيت هاب
+  // Database adapter to automatically persist users during social logins
   adapter: PrismaAdapter(prisma) as Adapter,
 
   session: {
@@ -24,19 +24,19 @@ export const authOptions: NextAuthOptions = {
   },
 
   providers: [
-    // 1. مزود خدمة جوجل
+    // 1. Google Provider
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
 
-    // 2. مزود خدمة جيت هاب
+    // 2. GitHub Provider
     GithubProvider({
       clientId: process.env.GITHUB_ID as string,
       clientSecret: process.env.GITHUB_SECRET as string,
     }),
 
-    // 3. مزود الدخول اليدوي (الإيميل والباسورد)
+    // 3. Credentials Provider (Email & Password)
     CredentialsProvider({
       name: "credentials",
       credentials: {
@@ -75,7 +75,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         const u = user as unknown as ExtendedUser;
         token.id = u.id;
-        // أضفنا القيمة الافتراضية هنا كنوع من الحماية الإضافية
+        // Add default role as a fallback security measure
         token.role = u.role || "USER";
       }
       return token;

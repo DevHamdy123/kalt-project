@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-// تعريف أنواع البيانات لتجنب أي أخطاء Types
 interface OrderItem {
   product: {
     name: string;
@@ -19,7 +18,6 @@ interface RecentOrdersProps {
 }
 
 export function RecentOrders({ orders }: RecentOrdersProps) {
-  // دالة لتحديد لون الحالة ديناميكياً
   const getStatusColor = (status: string) => {
     switch (status.toUpperCase()) {
       case "PENDING":
@@ -30,7 +28,7 @@ export function RecentOrders({ orders }: RecentOrdersProps) {
       case "CANCELLED":
         return "text-[#ff7782]";
       default:
-        return "text-[#7380ec]"; // لون افتراضي للحالات الأخرى زي SHIPPED
+        return "text-[#7380ec]";
     }
   };
 
@@ -61,7 +59,6 @@ export function RecentOrders({ orders }: RecentOrdersProps) {
                 </tr>
               ) : (
                 orders.map((order) => {
-                  // استخراج اسم أول منتج في الطلب
                   const productName =
                     order.orderItems?.[0]?.product?.name || "Unknown Product";
                   const extraItems =

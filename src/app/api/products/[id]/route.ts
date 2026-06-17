@@ -7,10 +7,8 @@ interface RouteParams {
 
 export async function GET(request: Request, { params }: RouteParams) {
   try {
-    // فك الـ Promise الخاص بالـ params بشكل مباشر وآمن
     const { id } = await params;
 
-    // البحث عن المنتج في قاعدة البيانات باستخدام الـ id
     const product = await prisma.product.findUnique({
       where: {
         id: id,
@@ -25,7 +23,6 @@ export async function GET(request: Request, { params }: RouteParams) {
       },
     });
 
-    // التحقق من وجود المنتج في قاعدة البيانات
     if (!product) {
       return NextResponse.json(
         { message: "Product not found" },
@@ -33,7 +30,6 @@ export async function GET(request: Request, { params }: RouteParams) {
       );
     }
 
-    // إرجاع بيانات المنتج بنجاح
     return NextResponse.json(product, { status: 200 });
   } catch (error) {
     console.error("Error fetching product:", error);

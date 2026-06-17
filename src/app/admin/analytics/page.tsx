@@ -2,19 +2,22 @@ import { prisma } from "@/lib/prisma";
 import { TrendingUp, Activity } from "lucide-react";
 import SalesChart from "@/components/admin/Analytics/SalesChart";
 
+// Types definition
+interface ChartDataPoint {
+  date: string;
+  revenue: number;
+}
+
 export default async function AnalyticsPage() {
-  // 1. جلب كل الطلبات لترتيبها حسب التاريخ
+  // Fetching data
   const orders = await prisma.order.findMany({
-    orderBy: {
-      createdAt: "asc",
-    },
+    orderBy: { createdAt: "asc" },
   });
 
-  // 2. تجميع إجمالي المبيعات لكل يوم
-  const salesDataMap = new Map();
+  // Aggregating sales by date
+  const salesDataMap = new Map<string, number>();
 
   orders.forEach((order) => {
-    // استخراج اليوم والشهر فقط
     const date = new Date(order.createdAt).toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
@@ -24,17 +27,21 @@ export default async function AnalyticsPage() {
     salesDataMap.set(date, currentRevenue + Number(order.totalPrice));
   });
 
-  // 3. تحويل البيانات لشكل يقبله الرسم البياني
-  const chartData = Array.from(salesDataMap, ([date, revenue]) => ({
-    date,
-    revenue,
-  }));
+  // Mapping to Chart Format
+  const chartData: ChartDataPoint[] = Array.from(
+    salesDataMap,
+    ([date, revenue]) => ({
+      date,
+      revenue,
+    }),
+  );
 
-  // حساب إجمالي أرباح المتجر
+  // Calculating total
   const totalRevenue = chartData.reduce((sum, item) => sum + item.revenue, 0);
 
   return (
     <div className="w-full pb-12 px-4 md:px-0 font-sans">
+      {/* Header */}
       <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-[#363949] dark:text-[#edeffd] transition-colors flex items-center gap-3">
@@ -46,6 +53,7 @@ export default async function AnalyticsPage() {
         </div>
       </div>
 
+      {/* Analytics Grid */}
       <div className="grid grid-cols-1 gap-8">
         <div className="bg-white dark:bg-[#202528] rounded-[1.5rem] p-6 shadow-[0_2rem_3rem_rgba(132,139,200,0.18)] dark:shadow-[0_2rem_3rem_rgba(0,0,0,0.4)] transition-all">
           <div className="flex justify-between items-center mb-4">
@@ -62,7 +70,7 @@ export default async function AnalyticsPage() {
             </div>
           </div>
 
-          {/* استدعاء الرسم البياني وتمرير البيانات إليه */}
+          {/* Chart Section */}
           {chartData.length > 0 ? (
             <SalesChart data={chartData} />
           ) : (

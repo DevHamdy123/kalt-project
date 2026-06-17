@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { useAddToCartMutation } from "@/hooks/queries/useCartQuery";
 
+// Component Types
 interface ProductCardProps {
   id: string;
   name: string;
@@ -26,20 +27,23 @@ export default function ProductCard({
   imageAspect = "aspect-[4/5]",
   stock,
 }: ProductCardProps) {
+  // Local State
   const [qty, setQty] = useState<number | string>(1);
 
+  // Mutations
   const { mutate: addToCart, isPending } = useAddToCartMutation();
 
+  // Constants
   const CARD_CLIP_PATH =
     "polygon(24px 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%, 0 24px)";
 
+  // Derived State
   const validQty = Number(qty) || 1;
   const displayPrice = (price * validQty).toFixed(2);
-
-  // تحديث الشرط ليكون أكثر دقة
   const isOutOfStock = stock <= 0;
   const isLowStock = stock > 0 && stock <= 10;
 
+  // Render Helpers
   const renderStockStatus = () => {
     if (isOutOfStock) {
       return (
@@ -65,6 +69,7 @@ export default function ProductCard({
     );
   };
 
+  // Handlers
   const handleAddToCart = () => {
     if (isOutOfStock || isPending) return;
 
@@ -76,6 +81,7 @@ export default function ProductCard({
     setQty(1);
   };
 
+  // Card Wrapper
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -85,12 +91,14 @@ export default function ProductCard({
       whileHover={{ y: -5 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
+      {/* Inner Container */}
       <div
         className={`flex flex-col w-full bg-white/30 backdrop-blur-xl border-2 border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.15)] overflow-hidden transition-all duration-500 relative ${
           isOutOfStock ? "grayscale-[50%] opacity-80" : ""
         }`}
         style={{ clipPath: CARD_CLIP_PATH, WebkitClipPath: CARD_CLIP_PATH }}
       >
+        {/* Product Image */}
         <Link
           href={`/shop/${id}`}
           className={`relative w-full block overflow-hidden ${imageAspect} ${
@@ -106,7 +114,9 @@ export default function ProductCard({
           />
         </Link>
 
+        {/* Content Section */}
         <div className="flex flex-col p-6 bg-white/20 border-t-2 border-white/40">
+          {/* Header & Title */}
           <div className="flex flex-col mb-6">
             <div className="flex justify-between items-start mb-2">
               <span className="text-[10px] font-bold text-black/50 uppercase tracking-[0.2em]">
@@ -120,12 +130,15 @@ export default function ProductCard({
             </h3>
           </div>
 
+          {/* Price & Actions */}
           <div className="flex items-end justify-between">
             <span className="font-bold text-lg text-black">
               ${displayPrice}
             </span>
 
+            {/* Controls */}
             <div className="flex flex-col items-end gap-3">
+              {/* Quantity Input */}
               <div
                 className={`flex items-center gap-1 p-1 backdrop-blur-sm border transition-colors ${
                   isOutOfStock
@@ -165,6 +178,7 @@ export default function ProductCard({
                 </button>
               </div>
 
+              {/* Add to Cart Button */}
               <button
                 onClick={handleAddToCart}
                 disabled={isOutOfStock || isPending}
