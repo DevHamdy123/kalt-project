@@ -1,6 +1,7 @@
 "use client";
+
 import { useRef, useState } from "react";
-import { useRouter } from "next/navigation"; // 1. استيراد الـ Router
+import { useRouter } from "next/navigation";
 import {
   motion,
   AnimatePresence,
@@ -16,7 +17,8 @@ const TOTAL_STEPS = MOCK_COLLECTION.length;
 const CollectionSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [startIndex, setStartIndex] = useState(0);
-  const router = useRouter(); // 2. تفعيل الـ Router داخل الكومبوننت
+  // Initialize router
+  const router = useRouter();
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -47,6 +49,7 @@ const CollectionSection = () => {
     <section ref={containerRef} className="w-full h-[350vh] relative">
       <div className="sticky top-0 w-full h-dvh bg-[#FDFDFD] flex flex-col overflow-hidden">
         <div className=" flex-1 flex flex-col w-full px-5 md:px-[clamp(20px,5vw,80px)] py-4 justify-between min-h-0">
+          {/* Section title header */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -54,12 +57,13 @@ const CollectionSection = () => {
             transition={{ duration: 0.8, ease: customEase }}
             className="shrink-0 lg:absolute lg:top-10 lg:left-20 z-30"
           >
-            <h2 className="text-[clamp(2rem,4vw,3.5rem)] uppercase tracking-tighter leading-none text-black wrap-break-word mb-3 lg:mb-0  font-light">
+            <h2 className="text-[clamp(2rem,4vw,3.5rem)] uppercase tracking-tighter leading-none text-black wrap-break-word mb-3 lg:mb-0 font-light">
               <span className="font-light opacity-90">New</span>
               <span className="font-bold">_Collection</span>
             </h2>
           </motion.div>
 
+          {/* Cards grid section */}
           <div className="flex-1 min-h-0 w-full flex items-center justify-center my-2 lg:my-0">
             <div className="w-full max-w-125 lg:max-w-full grid grid-cols-2 lg:flex lg:flex-row justify-items-center lg:justify-between items-center gap-4 lg:gap-0 h-full max-h-full">
               <AnimatePresence mode="popLayout">
@@ -85,6 +89,7 @@ const CollectionSection = () => {
             </div>
           </div>
 
+          {/* Bottom navigation area */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -95,7 +100,7 @@ const CollectionSection = () => {
             <span className="text-[clamp(1.2rem,4vw,2.5rem)] font-bold uppercase tracking-tighter leading-none">
               FOR_MORE
             </span>
-            {/* 3. التعديل هنا: إضافة onClick للتوجيه البرمجي المباشر */}
+            {/* Button to handle programmatic navigation to shop */}
             <button
               onClick={() => router.push("/shop")}
               className="flex shrink-0 items-center justify-center w-[clamp(32px,4vw,48px)] h-[clamp(32px,4vw,48px)] rounded-full border border-black hover:bg-black hover:text-white transition-all duration-500 cursor-pointer group"
@@ -107,6 +112,7 @@ const CollectionSection = () => {
           </motion.div>
         </div>
 
+        {/* Footer slider component */}
         <Slider theme="light" />
       </div>
     </section>

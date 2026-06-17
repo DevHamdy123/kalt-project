@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import {
   useScroll,
   motion,
@@ -72,7 +72,6 @@ export default function AnatomySection() {
         {/* ========================================= */}
         {/* Mobile & Tablet Info Card */}
         {/* ========================================= */}
-        {/* التعديل هنا: lg:hidden بدلاً من md:hidden */}
         <div className="lg:hidden absolute bottom-[80px] left-0 w-full px-4 z-50 pointer-events-none">
           <AnimatePresence mode="wait">
             {activeStepData && (

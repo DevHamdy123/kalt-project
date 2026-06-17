@@ -16,7 +16,6 @@ export default function BridgeSection() {
     <>
       <section className="w-full min-h-[calc(100vh-60px)] bg-bg-inner px-5 md:px-12 lg:px-16 xl:px-24 flex flex-col lg:flex-row items-center justify-center overflow-hidden gap-0 lg:gap-10 xl:gap-20">
         <div className="w-full flex-1 flex flex-col items-center lg:items-start justify-center pt-10 lg:pt-0 gap-3 lg:gap-8 relative shrink-0">
-          {/* التعديل هنا: حاوية بتضم العنوان والباراجراف بنفس ستايل باقي الموقع */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -33,7 +32,6 @@ export default function BridgeSection() {
             </p>
           </motion.div>
 
-          {/* التعديل الأول: شيلنا opacity: 0 و delay من الأب عشان ميخفيش الصورة اللي جواه */}
           <motion.div
             initial={{ scale: 0.95, y: 15 }}
             whileInView={{ scale: 1, y: 0 }}
@@ -55,11 +53,9 @@ export default function BridgeSection() {
                   "polygon(20% 0%, 100% 0%, 100% 80%, 80% 100%, 0% 100%, 0% 20%)",
               }}
             >
-              {/* التعديل التاني: إضافة initial={false} ضرورية جداً هنا */}
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
                   key={activeCollection.id}
-                  /* رجعنا الـ opacity: 0 هنا عشان التقليب بين الكروت يفضل ناعم، بس initial={false} فوق هتلغيها لأول صورة بس */
                   initial={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
                   animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
                   exit={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}

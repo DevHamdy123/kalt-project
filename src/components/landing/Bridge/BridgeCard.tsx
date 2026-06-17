@@ -27,7 +27,6 @@ export default function BridgeCard({ collection, isOpen, onClick }: Props) {
           transition: { duration: 0.8, ease: customEase },
         },
       }}
-      // التعديلات كلها هنا: لغينا الهوفر واعتمدنا على الفوكس والكليك
       onClick={() => onClick(collection.id)}
       onFocus={() => onClick(collection.id)}
       tabIndex={0}
@@ -67,7 +66,7 @@ export default function BridgeCard({ collection, isOpen, onClick }: Props) {
 
                 <Link
                   href={`/shop?category=${categorySlug}#shop-catalog`}
-                  className="mt-3 lg:mt-5 border border-black px-4 lg:px-5 py-1.5 lg:py-2 rounded-full text-[10px] lg:text-xs tracking-wider uppercase font-bold flex items-center gap-2 hover:bg-black hover:text-white transition-all w-fit group/btn select-none"
+                  className="mt-3 lg:mt-5 border border-black bg-black text-white px-4 lg:px-5 py-1.5 lg:py-2 rounded-full text-[10px] lg:text-xs tracking-wider uppercase font-bold flex items-center gap-2 hover:bg-neutral-800 transition-all w-fit group/btn select-none"
                 >
                   GET STARTED{" "}
                   <span className="group-hover/btn:translate-x-1 transition-transform">

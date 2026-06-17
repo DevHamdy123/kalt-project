@@ -52,7 +52,6 @@ export default function Annotation({ step, progress }: AnnotationProps) {
       {/* ========================================= */}
       <motion.div
         style={{ opacity, top: step.position.top }}
-        // التعديل هنا: hidden lg:flex بدلاً من hidden md:flex
         className={`hidden lg:flex absolute z-50 flex-col gap-1 w-27.5 sm:w-40 md:w-44 lg:w-50 xl:w-70 -translate-y-1/2  ${
           isRight
             ? "right-[1%] sm:right-[3%] md:right-[12%] lg:right-[8%] xl:right-[10%]"
@@ -105,7 +104,6 @@ export default function Annotation({ step, progress }: AnnotationProps) {
       {/* ========================================= */}
       <motion.div
         style={{ opacity, top: step.position.top }}
-        // التعديل هنا: lg:hidden بدلاً من md:hidden
         className={`lg:hidden absolute z-50 flex items-center justify-center -translate-y-1/2 ${
           isRight ? "right-[20%]" : "left-[20%]"
         }`}

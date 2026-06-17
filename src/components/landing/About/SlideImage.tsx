@@ -15,7 +15,6 @@ export default function SlideImage({ currentSlide }: SlideImageProps) {
       <AnimatePresence mode="wait">
         <motion.div
           key={currentSlide.id}
-          // التعديل هنا: غيرنا opacity لـ 1 عشان المتصفح يشوفها من أول لحظة ويحسبها LCP
           initial={{ opacity: 1, scale: 0.95, x: 40, filter: "blur(8px)" }}
           animate={{ opacity: 1, scale: 1, x: 0, filter: "blur(0px)" }}
           exit={{ opacity: 0, scale: 1.02, x: -40, filter: "blur(8px)" }}

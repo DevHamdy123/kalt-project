@@ -1,4 +1,5 @@
 "use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -7,8 +8,10 @@ const CUSTOM_EASE = [0.22, 1, 0.36, 1] as const;
 
 const RenderDesktopLayout = () => {
   return (
+    // Main wrapper for desktop layout
     <div className="hidden md:flex flex-1 w-full items-end justify-center relative z-20">
       <div className="relative z-20 flex items-end h-[70vh] lg:h-[80vh] w-[clamp(28%,40vw,60%)]">
+        {/* Left branding section */}
         <motion.div
           initial={{ opacity: 0, x: -40 }}
           animate={{ opacity: 1, x: 0 }}
@@ -26,11 +29,12 @@ const RenderDesktopLayout = () => {
           </p>
         </motion.div>
 
+        {/* Hero image container */}
         <div
           className="relative w-full h-full overflow-hidden"
           style={{ contain: "layout paint" }}
         >
-          {/* التعديل تم هنا: إضافة كلاسات التسريع لكارت الشاشة */}
+          {/* Hardware-accelerated image container */}
           <motion.div
             initial={{ y: "20%", opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -50,6 +54,7 @@ const RenderDesktopLayout = () => {
           </motion.div>
         </div>
 
+        {/* Right CTA and branding section */}
         <motion.div
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
@@ -60,6 +65,7 @@ const RenderDesktopLayout = () => {
             lives <br /> - now
           </h2>
 
+          {/* Shop collection CTA button */}
           <Link
             href="/shop"
             className="mt-8 group relative flex items-center justify-center"

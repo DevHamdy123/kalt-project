@@ -13,7 +13,6 @@ export default function CategoryShowcase() {
 
   return (
     <section className="relative w-full h-dvh bg-white flex flex-col lg:flex-row items-center justify-between px-5 md:px-10 lg:px-20 pt-20 pb-8 lg:py-0 overflow-hidden">
-      {/* الخلفية */}
       <motion.div
         animate={{
           background: `radial-gradient(circle at 50% 50%, ${activeCat.color}99 0%, rgba(255,255,255,1) 85%)`,

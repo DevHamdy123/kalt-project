@@ -35,7 +35,6 @@ export default function SlideTypography({
       <AnimatePresence mode="wait">
         <motion.h2
           key={currentSlide.id}
-          // التعديل هنا: شيلنا opacity: 0 واستخدمنا blur
           initial={{ x: 50, opacity: 1 }}
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: -50, opacity: 0 }}
@@ -51,7 +50,6 @@ export default function SlideTypography({
       <AnimatePresence mode="wait">
         <motion.p
           key={currentSlide.id}
-          // التعديل هنا: شيلنا opacity: 0 واستخدمنا blur
           initial={{ y: 30, opacity: 1 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 30, opacity: 0 }}

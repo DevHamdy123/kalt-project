@@ -34,7 +34,6 @@ export default function HoodieFrame({
     clamp: true,
   });
 
-  // تحديد أقصى تكبير بناءً على عرض الشاشة لمنع التداخل
   const maxScale =
     screenWidth >= 1536
       ? 2.4
@@ -43,8 +42,8 @@ export default function HoodieFrame({
         : screenWidth >= 1024
           ? 1.6
           : screenWidth >= 768
-            ? 1.85 // تابلت: تكبير محسوب ليملأ الشاشة المتوسطة
-            : 1.15; // موبايل: تكبير هادئ لأن العرض الأساسي كبير بالفعل
+            ? 1.85
+            : 1.15;
 
   // Dynamic scaling based on scroll progression
   const scale = useTransform(
@@ -69,7 +68,6 @@ export default function HoodieFrame({
     >
       <motion.div
         style={{ opacity: cardOpacity, scale: frameScale }}
-        // الإطار الوهمي: تم استخدام vw للحفاظ على التناسب مع حجم الشاشة
         className="absolute w-[85vw] sm:w-[70vw] md:w-[48vw] lg:w-[320px] aspect-3/4 z-30
                 before:content-[''] before:absolute before:top-0 before:left-0 
                 before:border-l before:border-t before:border-black/60 before:w-6 before:h-6 transition-all
@@ -82,7 +80,6 @@ export default function HoodieFrame({
 
       <motion.div
         style={{ scale, y: yOffset }}
-        // الهودي: عرض ديناميكي ضخم للموبايل والتابلت
         className="absolute w-[90vw] sm:w-[75vw] md:w-[52vw] lg:w-[320px] aspect-3/4 z-40 flex items-center justify-center"
       >
         <Image
