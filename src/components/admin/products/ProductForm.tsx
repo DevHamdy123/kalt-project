@@ -11,6 +11,8 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { ChevronDown } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
 
 import { productSchema, ProductFormValues } from "@/lib/validations/product";
 import { createProduct, updateProduct } from "@/actions/products";
@@ -122,6 +124,9 @@ export default function ProductForm({
 }: ProductFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const { data: session } = useSession();
+
+  const isDemo = session?.user?.email === "demo@kalt.com";
 
   // Form state labels
   const title = initialData ? "Edit Product" : "Add New Product";
@@ -152,6 +157,13 @@ export default function ProductForm({
 
   // Handle form submission
   const onSubmit: SubmitHandler<ProductFormValues> = async (data) => {
+    if (isDemo) {
+      toast.error(
+        "Sorry, modifications or additions are not allowed in Demo mode.",
+      );
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -180,8 +192,10 @@ export default function ProductForm({
 
       router.push("/admin/products");
       router.refresh();
+      toast.success("Product saved!");
     } catch (error) {
       console.error(error);
+      toast.error("Failed to save product.");
     } finally {
       setLoading(false);
     }
@@ -373,7 +387,11 @@ export default function ProductForm({
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-zinc-900 dark:bg-[#ff5c00] text-white p-3.5 rounded-md hover:bg-zinc-800 dark:hover:bg-[#e05200] transition-colors disabled:opacity-50 font-bold mt-8"
+          className={`w-full p-3.5 rounded-md transition-colors font-bold mt-8 text-white ${
+            isDemo
+              ? "bg-zinc-500 cursor-not-allowed opacity-70 hover:bg-zinc-500"
+              : "bg-zinc-900 dark:bg-[#ff5c00] hover:bg-zinc-800 dark:hover:bg-[#e05200] disabled:opacity-50"
+          }`}
         >
           {loading ? loadingText : actionText}
         </button>

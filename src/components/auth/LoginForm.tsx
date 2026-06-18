@@ -62,6 +62,7 @@ const itemVariants: Variants = {
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [isDemoLoading, setIsDemoLoading] = useState(false);
   const router = useRouter();
 
   const {
@@ -95,6 +96,34 @@ export default function LoginForm() {
     }
   };
 
+  const handleDemoSignIn = async () => {
+    try {
+      setIsDemoLoading(true);
+      const res = await signIn("credentials", {
+        email: "demo@kalt.com",
+        password: "123456",
+        redirect: false,
+      });
+
+      if (res?.error) {
+        toast.error(
+          "Invalid Demo Credentials. Please verify the demo account exists.",
+        );
+        return;
+      }
+
+      if (res?.ok) {
+        toast.success("Demo Mode Activated. Welcome, Moderator.");
+        router.push("/");
+        router.refresh();
+      }
+    } catch {
+      toast.error("System Malfunction. Try again later.");
+    } finally {
+      setIsDemoLoading(false);
+    }
+  };
+
   const handleOAuthSignIn = async (provider: "google" | "github") => {
     try {
       await signIn(provider, { callbackUrl: "/" });
@@ -110,7 +139,6 @@ export default function LoginForm() {
 
   return (
     <main className="min-h-screen bg-white flex flex-col md:flex-row font-sans overflow-hidden">
-      {/* 1. الجانب الأيسر (الهوية السوداء) */}
       <motion.div
         initial={{ x: "100%" }}
         animate={{ x: 0 }}
@@ -138,7 +166,6 @@ export default function LoginForm() {
         </motion.div>
       </motion.div>
 
-      {/* 2. الجانب الأيمن (الفورم + الزراير) */}
       <motion.div
         initial={{ x: "-100%" }}
         animate={{ x: 0 }}
@@ -239,16 +266,32 @@ export default function LoginForm() {
               )}
             </motion.div>
 
-            <motion.button
-              variants={itemVariants}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-black text-white py-4 mt-2 text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 shadow-[0_10px_40px_rgba(0,0,0,0.1)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.2)] disabled:opacity-50"
-            >
-              {isSubmitting ? "Authenticating..." : "Authenticate"}
-            </motion.button>
+            <div className="flex flex-col gap-3 mt-2">
+              <motion.button
+                variants={itemVariants}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                type="submit"
+                disabled={isSubmitting || isDemoLoading}
+                className="w-full bg-black text-white py-4 text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 shadow-[0_10px_40px_rgba(0,0,0,0.1)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.2)] disabled:opacity-50"
+              >
+                {isSubmitting ? "Authenticating..." : "Authenticate"}
+              </motion.button>
+
+              <motion.button
+                variants={itemVariants}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                type="button"
+                onClick={handleDemoSignIn}
+                disabled={isSubmitting || isDemoLoading}
+                className="w-full bg-white text-black border border-black/20 py-4 text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 hover:bg-black/5 disabled:opacity-50"
+              >
+                {isDemoLoading
+                  ? "Activating Demo..."
+                  : "Login as Moderator (Demo)"}
+              </motion.button>
+            </div>
           </form>
 
           <motion.div variants={itemVariants} className="relative mb-8">

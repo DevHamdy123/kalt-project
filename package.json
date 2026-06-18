@@ -11,7 +11,8 @@
     "db:generate": "dotenv -e .env -- npx prisma generate",
     "db:seed": "dotenv -e .env -- npx prisma db seed",
     "db:migrate": "dotenv -e .env -- npx prisma migrate dev",
-    "db:studio": "dotenv -e .env -- npx prisma studio"
+    "db:studio": "dotenv -e .env -- npx prisma studio",
+    "db:reset": "dotenv -e .env -- prisma migrate reset"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",

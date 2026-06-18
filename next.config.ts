@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    qualities: [75, 100],
+    qualities: [75, 80, 85, 100],
     remotePatterns: [
       {
         protocol: "https",
@@ -12,12 +12,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "*.githubusercontent.com",
       },
-      // التصريح القديم بتاع صور الداشبورد
       {
         protocol: "https",
         hostname: "api.dicebear.com",
       },
-      // التصريح الجديد الخاص بصور المنتجات المرفوعة
       {
         protocol: "https",
         hostname: "res.cloudinary.com",

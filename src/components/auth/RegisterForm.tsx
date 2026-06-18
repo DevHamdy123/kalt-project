@@ -7,13 +7,11 @@ import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { toast } from "sonner";
 import axios from "axios";
 
-// 1. أيقونات جوجل وجيت هاب المخصصة
 const GoogleIcon = ({ size = 18 }: { size?: number }) => (
   <svg
     width={size}
@@ -83,7 +81,6 @@ export default function RegisterForm() {
     resolver: zodResolver(registerSchema),
   });
 
-  // دالة التسجيل اليدوي (حفظ في قاعدة البيانات)
   const onSubmit = async (data: RegisterValues) => {
     try {
       const response = await axios.post("/api/register", {
@@ -107,7 +104,6 @@ export default function RegisterForm() {
     }
   };
 
-  // دالة التسجيل/الدخول بحسابات السوشيال
   const handleOAuthSignIn = async (provider: "google" | "github") => {
     try {
       await signIn(provider, { callbackUrl: "/" });
@@ -118,7 +114,6 @@ export default function RegisterForm() {
 
   return (
     <main className="min-h-screen bg-white flex flex-col md:flex-row font-sans overflow-hidden">
-      {/* 1. الجانب الأيسر (نموذج التسجيل + الزراير) */}
       <motion.div
         initial={{ x: "100%" }}
         animate={{ x: 0 }}
@@ -271,7 +266,6 @@ export default function RegisterForm() {
             </motion.button>
           </form>
 
-          {/* الفاصل الزخرفي */}
           <motion.div variants={itemVariants} className="relative mb-8">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t border-black/10" />
@@ -283,7 +277,6 @@ export default function RegisterForm() {
             </div>
           </motion.div>
 
-          {/* زراير الدخول السريع (التعديل الجديد بدون ضيف) */}
           <div className="flex flex-row items-center justify-center gap-6">
             <motion.button
               variants={itemVariants}
@@ -325,7 +318,6 @@ export default function RegisterForm() {
         </motion.div>
       </motion.div>
 
-      {/* 2. الجانب الأيمن (الهوية السوداء) */}
       <motion.div
         initial={{ x: "-100%" }}
         animate={{ x: 0 }}

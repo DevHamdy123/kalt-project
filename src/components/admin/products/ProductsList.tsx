@@ -5,6 +5,8 @@ import Image from "next/image";
 import { Plus, Edit, Trash2, AlertTriangle, X } from "lucide-react";
 import { useState, useTransition } from "react";
 import { deleteProduct } from "@/actions/products";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
 
 type ProductType = {
   id: string;
@@ -22,11 +24,18 @@ export default function ProductsList({
 }) {
   const [isPending, startTransition] = useTransition();
 
+  const { data: session } = useSession();
+  const isDemo = session?.user?.email === "demo@kalt.com";
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<string | null>(null);
 
   // Open delete confirmation modal
   const openDeleteModal = (id: string) => {
+    if (isDemo) {
+      toast.error("Deleting is disabled in demo mode.");
+      return;
+    }
     setProductToDelete(id);
     setIsModalOpen(true);
   };
@@ -46,10 +55,11 @@ export default function ProductsList({
         await deleteProduct(productToDelete);
         // Close modal upon successful deletion
         closeDeleteModal();
+        toast.success("Product deleted successfully");
       } catch (error) {
         console.error(error);
         // Fallback error alert if server deletion fails
-        alert("Failed to delete the product");
+        toast.error("Failed to delete the product");
       }
     });
   };
@@ -201,7 +211,11 @@ export default function ProductsList({
                     </Link>
                     <button
                       onClick={() => openDeleteModal(product.id)}
-                      className="p-2.5 rounded-lg text-[#7d8da1] hover:text-[#ff7782] bg-white dark:bg-[#202528] hover:bg-[#ff7782]/10 transition-colors border border-zinc-100 dark:border-[#313338]"
+                      className={`p-2.5 rounded-lg bg-white dark:bg-[#202528] transition-colors border border-zinc-100 dark:border-[#313338] ${
+                        isDemo
+                          ? "text-zinc-400 cursor-not-allowed opacity-50"
+                          : "text-[#7d8da1] hover:text-[#ff7782] hover:bg-[#ff7782]/10"
+                      }`}
                     >
                       <Trash2 className="w-5 h-5" />
                     </button>
@@ -282,7 +296,11 @@ export default function ProductsList({
                           </Link>
                           <button
                             onClick={() => openDeleteModal(product.id)}
-                            className="p-2 rounded-lg text-[#7d8da1] hover:text-[#ff7782] hover:bg-[#ff7782]/10 transition-colors"
+                            className={`p-2 rounded-lg transition-colors ${
+                              isDemo
+                                ? "text-zinc-400 cursor-not-allowed opacity-50"
+                                : "text-[#7d8da1] hover:text-[#ff7782] hover:bg-[#ff7782]/10"
+                            }`}
                           >
                             <Trash2 className="w-5 h-5" />
                           </button>

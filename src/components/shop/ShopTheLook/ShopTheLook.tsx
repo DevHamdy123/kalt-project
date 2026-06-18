@@ -11,7 +11,7 @@ import { useProduct } from "@/hooks/queries/useProducts";
 import { useAddToCartMutation } from "@/hooks/queries/useCartQuery";
 
 // Constants
-const PRODUCT_ID = "cmpm4qr9y000k1oujdr5hs7x3";
+const PRODUCT_ID = "cmqirctwx000gi4ujbvygm1iq";
 
 export default function ShopTheLook() {
   // Local State
