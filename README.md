@@ -12,9 +12,9 @@ kalt-project/
 ├── public/                 # Static assets (Images, Fonts, Textures)
 ├── src/
 │   ├── app/                # Next.js 15 App Router (Route Groups)
-│   │   ├── (admin)/        # Admin Management Dashboard
+│   │   ├── admin/        # Admin Management Dashboard
 │   │   ├── (landing)/      # Creative Landing Page Experience
-│   │   └── (shop)/         # E-commerce Store Engine
+│   │   └── shop/         # E-commerce Store Engine
 │   ├── components/         # Atomic component structure
 │   ├── providers/          # Context Providers (Lenis, SmoothScroll)
 │   └── globals.css         # Tailwind CSS v4 & Base Styles
@@ -24,11 +24,42 @@ kalt-project/
 
 ## 🛠 Tech Stack
 
-- **Framework:** [Next.js 15+](https://nextjs.org/) (App Router)
+### Framework & Language
+
+- **Framework:** [Next.js](https://nextjs.org/) (v16)
+- **Library:** [React](https://react.dev/) (v19)
+- **Language:** TypeScript
+
+### UI & Styling
+
 - **Styling:** [Tailwind CSS v4](https://tailwindcss.com/)
-- **Animations:** [Framer Motion](https://www.framer.com/motion/)
-- **Smooth Scroll:** [Lenis](https://lenis.darkroom.engineering/)
-- **Database:** [Prisma](https://www.prisma.io/) (PostgreSQL/Supabase)
+- **Components:** [shadcn/ui](https://ui.shadcn.com/) & [Radix UI](https://www.radix-ui.com/)
+- **Animation:** [Framer Motion](https://www.framer.com/motion/)
+- **Smooth Scroll:** [Lenis](https://github.com/darkroomengineering/lenis)
+- **Icons:** [Lucide React](https://lucide.dev/)
+- **Notifications:** [Sonner](https://sonner.emilkowal.site/)
+- **Charts:** [Recharts](https://recharts.org/)
+
+### Backend & Database
+
+- **ORM:** [Prisma](https://www.prisma.io/)
+- **Database:** [PostgreSQL](https://www.postgresql.org/)
+- **Auth:** [NextAuth.js](https://next-auth.js.org/) & [bcrypt](https://www.npmjs.com/package/bcrypt)
+
+### State Management & Data
+
+- **Data Fetching:** [TanStack Query](https://tanstack.com/query/latest)
+- **Global State:** [Zustand](https://zustand.docs.pmnd.rs/)
+
+### Forms & Validation
+
+- **Forms:** [React Hook Form](https://react-hook-form.com/)
+- **Validation:** [Zod](https://zod.dev/)
+
+### Utilities & Infrastructure
+
+- **Images:** [Next Cloudinary](https://next-cloudinary.dev/)
+- **HTTP Client:** [Axios](https://axios-http.com/)
 
 ---
 
@@ -89,7 +120,7 @@ document.body.style.overflow = "auto";
 ```tsx
 // 1. Precise clip-path generated via Clippy
 <div className="[clip-path:polygon(10%_0,100%_0,100%_90%,90%_100%,0_100%,0_10%)]">
-  <Image src="/category.jpg" fill alt="Category" />
+  <Image alt="Category" fill src="/category.jpg"/>
 </div>
 
 // 2. Isolating nested scroll from Lenis globally
@@ -211,40 +242,32 @@ export default function CatalogSection() {
 ### 9. Multi-Collection Filtering & Cross-Platform Prisma Database Sync
 
 - **The Issue:** 1. **Cross-Component Filter Coupling:** Linking the immersive horizontal `BridgeSection` to the e-commerce `CatalogSection` required a seamless dynamic state. Passing standard React state up to a shared parent would trigger massive re-renders across the whole landing layout. 2. **TypeScript Layout Constraints:** Restructuring the `CatalogHeader` dynamically based on URL params caused standard string manipulation functions like `.replace()` to crash on initial render due to `undefined` states before client hydration. 3. **Windows Database Desync:** Running direct Prisma commands (`npx prisma db push` / `migrate`) locally on Windows environment terminals consistently failed to map the PostgreSQL connection strings stored within `.env` configurations, throwing critical `datasource.url property is required` exceptions.
-
 - **The Solution:** 1. **URL Search Params Sync:** Architected a single source of truth via URL params (`?category=slug`). Modified the `BridgeCard` navigation triggers to inject specific category slugs directly into the address bar, prompting an isolated, smooth Lenis-assisted scroll down to the automatically-refetched `CatalogGrid`. 2. **Defensive Structural Guarding:** Refactored the typography formatting logic inside the headers using conditional optional chaining and nullish fallbacks to guarantee robust Type Safety and prevent runtime crashes on early mount cycles. 3. **Cross-Platform Environment Injection:** Decoupled environmental variable management from raw terminal interpreters by integrating `dotenv-cli`. Engineered custom scripts inside `package.json` to load configuration flags cross-platform before initiating the database synchronization layer.
 
-- **The Logic:**
+### 10. Admin Demo Security & Client-Side Interception
 
-````typescript
-// 1. Dynamic Safe Formatting Guard inside CatalogHeader
-const formattedActive = !activeCategory || activeCategory === "ALL ARCHIVE"
-  ? "ALL ARCHIVE"
-  : activeCategory.replace(/-/g, ' ').toUpperCase();
+- **The Issue:** Exposing a live admin dashboard for portfolio showcases risks unauthorized database mutations. Relying solely on server-side rejections creates a poor UX, as the user waits for a failed network request.
+- **The Solution:** Utilized NextAuth's `useSession` to identify the demo account gracefully. Intercepted `onSubmit` and `onClick` events directly on the frontend UI, blocking the mutation completely and triggering an immediate `toast.error` notification to provide clear feedback without unnecessary server roundtrips.
 
-// 2. URL-Driven Dynamic Category Sync inside CatalogSection
-useEffect(() => {
-  if (urlCategory !== category) {
-    setCategory(urlCategory || undefined);
-    setCurrentPage(1); // Reset pagination index upon category shift
-  }
-}, [urlCategory]);
+### 11. Transparent Product Image Styling & Backgrounds
 
-// 3. Cross-Platform Safe Scripting inside package.json
-"scripts": {
-  "db:push": "dotenv -e .env -- npx prisma db push",
-  "db:generate": "dotenv -e .env -- npx prisma generate",
-  "db:seed": "dotenv -e .env -- npx prisma db seed"
-}
+- **The Issue:** Applying background CSS gradients to product cards obscured the intricate details and distinct aesthetic of transparent, cut-out product images.
+- **The Solution:** Stripped away underlying gradient layers that interfered with the alpha channels of the `.png` product assets. Adjusted the container logic to ensure transparent cut-outs maintained their clean, distinct visual presence without color bleeding.
+
+### 12. Prisma Database Connection Resolution
+
+- **The Issue:** Database connection strings failing to map correctly upon deployment due to older, redundant explicit schema assignments.
+- **The Solution:** Adapted the configuration to reflect modern Prisma updates. Allowed the engine to read the connection URL directly from the database rather than explicitly defining or forcing the link within the schema layout, preventing redundant configuration errors.
 
 ---
 
 ## 🚀 Getting Started
 
 1. **Clone the repository:**
+
    ```bash
    git clone [https://github.com/DevHamdy123/kalt-project.git](https://github.com/DevHamdy123/kalt-project.git)
-````
+   ```
 
 2. **Install dependencies:**
    ```bash
