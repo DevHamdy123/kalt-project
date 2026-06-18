@@ -2,7 +2,10 @@ import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
 
-process.loadEnvFile();
+// بدلاً من السطر اللي موجود عندك، استخدم ده:
+if (process.env.NODE_ENV !== "production") {
+  process.loadEnvFile();
+}
 
 const connectionString = process.env.DATABASE_URL;
 const pool = new Pool({ connectionString });
