@@ -7,7 +7,7 @@ const CUSTOM_EASE = [0.22, 1, 0.36, 1] as const;
 
 const RenderMobileLayout = () => {
   return (
-    <div className="flex md:hidden flex-col w-full h-full pt-24 pb-16 px-6 z-20 justify-start items-center relative">
+    <div className="flex md:hidden flex-col w-full h-[calc(100vh-10rem)] pt-24 pb-16 px-6 z-20 justify-start items-center relative">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -28,7 +28,7 @@ const RenderMobileLayout = () => {
         className="relative flex-1 w-full flex items-center justify-center mt-4"
         style={{ contain: "layout paint" }}
       >
-        <div className="relative w-full aspect-[4/5] max-w-md">
+        <div className="relative w-full aspect-4/5 max-w-md">
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
