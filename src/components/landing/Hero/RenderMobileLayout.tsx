@@ -12,7 +12,7 @@ const RenderMobileLayout = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="w-full text-center flex flex-col items-center z-30 mb-8"
+        className="w-full text-center flex flex-col items-center z-30 "
       >
         <h2 className="text-[clamp(1.8rem,8vw,2.5rem)] font-black tracking-[0.15em] uppercase leading-tight text-black/90">
           WHERE STYLE <br /> LIVES NOW
