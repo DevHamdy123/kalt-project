@@ -26,7 +26,7 @@ export default function CategoryMenu({
           transition: { staggerChildren: 0.1, delayChildren: 0.4 },
         },
       }}
-      className="w-fit self-end lg:w-75 lg:self-auto shrink-0 flex flex-col items-end gap-2 h-45 mb-14 lg:mb-0 lg:h-87.5 overflow-y-auto overscroll-contain no-scrollbar pr-2 lg:pr-5 z-20 mt-0 lg:mt-0"
+      className="w-fit self-end lg:w-75 lg:self-auto shrink-0 flex flex-col items-end gap-2 h-45 mb-14 lg:mb-0 lg:h-73 overflow-y-auto overscroll-contain no-scrollbar pr-2 lg:pr-5 z-20 mt-0 lg:mt-0"
       style={{
         maskImage:
           "linear-gradient(to bottom, transparent, black 15%, black 85%, transparent)",

@@ -15,21 +15,21 @@ export default function SliderControls({
         KALT Philosophy Journey // The Precise Pulse
       </span>
 
-      <div className="flex flex-row items-center gap-3 self-end md:self-auto">
+      <div className="flex flex-row items-center gap-5 self-end md:self-auto">
         <button
           onClick={handlePrev}
-          className="flex shrink-0 items-center justify-center w-[2.25rem] h-[2.25rem] lg:w-[3rem] lg:h-[3rem] rounded-full border border-black hover:bg-black hover:text-white transition-all duration-500 cursor-pointer group"
+          className="flex shrink-0 items-center justify-center w-[3.5rem] h-[3.5rem] lg:w-[4rem] lg:h-[4rem] rounded-full border border-black hover:bg-black hover:text-white transition-all duration-500 cursor-pointer group"
         >
-          <span className="text-lg lg:text-2xl font-light leading-none text-black group-hover:text-white transition-all duration-500 ">
+          <span className="text-xl lg:text-2xl font-light leading-none text-black group-hover:text-white transition-all duration-500 ">
             ←
           </span>
         </button>
 
         <button
           onClick={handleNext}
-          className="flex shrink-0 items-center justify-center w-[2.25rem] h-[2.25rem] lg:w-[3rem] lg:h-[3rem] rounded-full border border-black hover:bg-black hover:text-white transition-all duration-500 cursor-pointer group"
+          className="flex shrink-0 items-center justify-center w-[3.5rem] h-[3.5rem] lg:w-[4rem] lg:h-[4rem] rounded-full border border-black hover:bg-black hover:text-white transition-all duration-500 cursor-pointer group"
         >
-          <span className="text-lg lg:text-2xl font-light leading-none text-black group-hover:text-white transition-all duration-500 ">
+          <span className="text-xl lg:text-2xl font-light leading-none text-black group-hover:text-white transition-all duration-500 ">
             →
           </span>
         </button>

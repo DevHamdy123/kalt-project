@@ -43,7 +43,7 @@ export default function HoodieFrame({
           ? 1.6
           : screenWidth >= 768
             ? 1.85
-            : 1.15;
+            : 1.5;
 
   // Dynamic scaling based on scroll progression
   const scale = useTransform(
@@ -68,7 +68,7 @@ export default function HoodieFrame({
     >
       <motion.div
         style={{ opacity: cardOpacity, scale: frameScale }}
-        className="absolute w-[85vw] sm:w-[70vw] md:w-[48vw] lg:w-[320px] aspect-3/4 z-30
+        className="absolute w-[55vw] sm:w-[55vw] md:w-[48vw] lg:w-[320px] aspect-3/4 z-30
                 before:content-[''] before:absolute before:top-0 before:left-0 
                 before:border-l before:border-t before:border-black/60 before:w-6 before:h-6 transition-all
                 after:content-[''] after:absolute after:bottom-0 after:right-0 
@@ -80,13 +80,13 @@ export default function HoodieFrame({
 
       <motion.div
         style={{ scale, y: yOffset }}
-        className="absolute w-[90vw] sm:w-[75vw] md:w-[52vw] lg:w-[320px] aspect-3/4 z-40 flex items-center justify-center"
+        className="absolute w-[65vw] sm:w-[65vw] md:w-[52vw] lg:w-[320px] aspect-3/4 z-40 flex items-center justify-center"
       >
         <Image
           src="/images/img18.webp"
           alt="Anatomy"
           fill
-          sizes="(max-width: 640px) 90vw, (max-width: 768px) 75vw, (max-width: 1024px) 52vw, 320px"
+          sizes="(max-width: 640px) 65vw, (max-width: 768px) 65vw, (max-width: 1024px) 52vw, 320px"
           className="object-contain drop-shadow-2xl"
           priority
         />

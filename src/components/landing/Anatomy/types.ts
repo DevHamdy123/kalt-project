@@ -9,6 +9,7 @@ export interface AnatomyStep {
   description: string;
   position: {
     top: string;
+    mobileTop?: string;
     side: Side;
   };
 }

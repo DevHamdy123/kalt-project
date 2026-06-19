@@ -103,9 +103,9 @@ export default function Annotation({ step, progress }: AnnotationProps) {
       {/* 2. Mobile & Tablet View (up to lg): Hotspot Only (Pulsing Dot) */}
       {/* ========================================= */}
       <motion.div
-        style={{ opacity, top: step.position.top }}
+        style={{ opacity, top: step.position.mobileTop || step.position.top }}
         className={`lg:hidden absolute z-50 flex items-center justify-center -translate-y-1/2 ${
-          isRight ? "right-[20%]" : "left-[20%]"
+          isRight ? "right-[32%]" : "left-[32%]"
         }`}
       >
         <div className="relative w-4 h-4 bg-[#FF5A00] rounded-full flex items-center justify-center shadow-lg">
