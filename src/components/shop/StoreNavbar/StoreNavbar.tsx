@@ -15,7 +15,6 @@ export default function StoreNavbar() {
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() ?? 0;
-    // 80px = 5rem، المنطق ده بيعتمد على البيكسل في الـ Scroll فلازم يفضل رقم ثابت
     if (latest > previous && latest > 80) setIsHidden(true);
     else if (latest < previous) setIsHidden(false);
   });

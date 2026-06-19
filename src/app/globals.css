@@ -36,6 +36,7 @@
   html {
     scroll-behavior: initial;
     font-size: 80%;
+    overscroll-behavior-y: none;
   }
 
   body {
@@ -45,7 +46,9 @@
     width: 100%;
     overflow-x: hidden;
     position: relative;
+    overscroll-behavior-y: none;
   }
+
   ::-webkit-scrollbar {
     width: 6px;
   }

@@ -16,7 +16,8 @@ export default function SmoothScrollProvider({
       duration: 1.5,
       smoothWheel: true,
       wheelMultiplier: 0.8,
-      syncTouch: true,
+      syncTouch: false,
+      smoothTouch: false,
     }),
     [],
   );

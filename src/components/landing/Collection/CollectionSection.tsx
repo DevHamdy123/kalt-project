@@ -62,14 +62,11 @@ const CollectionSection = () => {
   const customEase = [0.22, 1, 0.36, 1] as const;
 
   return (
-    <>
+    <div ref={containerRef} className="relative w-full">
       {/* ========================================= */}
       {/* DESKTOP LAYOUT (Framer Motion Logic)        */}
       {/* ========================================= */}
-      <section
-        ref={containerRef}
-        className="hidden lg:block w-full h-[350vh] relative"
-      >
+      <section className="hidden lg:block w-full h-[350vh] relative">
         <div className="sticky top-0 w-full h-dvh bg-[#FDFDFD] flex flex-col overflow-hidden">
           <div className=" flex-1 flex flex-col w-full px-5 md:px-[clamp(1.25rem,5vw,5rem)] py-4 justify-between min-h-0">
             {/* Section title header */}
@@ -153,9 +150,8 @@ const CollectionSection = () => {
         >
           {/* Section title header */}
           <div className="px-5 shrink-0">
-            <h2 className="text-[clamp(2.5rem,8vw,3.5rem)] uppercase tracking-tighter leading-none text-black font-light">
+            <h2 className="text-[clamp(2rem,7.5vw,3.5rem)] uppercase tracking-tighter leading-none text-black flex items-center gap-2">
               <span className="font-light opacity-90">New</span>
-
               <span className="font-bold">_Collection</span>
             </h2>
           </div>
@@ -166,13 +162,12 @@ const CollectionSection = () => {
               ref={mobileScrollRef}
               onScroll={handleMobileScroll}
               data-lenis-prevent="true"
-              className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-5 py-4 touch-pan-x items-center
+              className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-5 py-4 items-center
                         [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
             >
               {MOCK_COLLECTION.map((item) => (
                 <div
                   key={item.id}
-                  // تم تقليل العرض لـ 75vw لإظهار الكارت التالي، مع إضافة تأثير النقر
                   className="snap-center shrink-0 w-[75vw] sm:w-[55vw] md:w-[45vw] aspect-3/4 relative active:scale-[0.98] transition-transform duration-300"
                 >
                   <CollectionCard item={item} isHero={true} />
@@ -210,7 +205,7 @@ const CollectionSection = () => {
           <Slider theme="light" />
         </div>
       </section>
-    </>
+    </div>
   );
 };
 
