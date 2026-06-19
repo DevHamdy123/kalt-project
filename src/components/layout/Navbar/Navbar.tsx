@@ -23,6 +23,7 @@ interface ActionIcon {
   href: string;
   delay: number;
   hasBadge: boolean;
+  hideOnMobile?: boolean;
 }
 
 interface CartItem {
@@ -78,6 +79,7 @@ export default function Navbar() {
     href: "/shop",
     delay: 0.4,
     hasBadge: false,
+    hideOnMobile: true, // 2. شغلنا الخاصية هنا للمتجر بس
   });
 
   return (
@@ -121,6 +123,8 @@ export default function Navbar() {
                 delay: item.delay,
                 ease: customEase,
               }}
+              // 3. هنا الديناميكية: لو hideOnMobile بـ true بيختفي في الشاشات الصغيرة
+              className={item.hideOnMobile ? "hidden md:block" : "block"}
             >
               <Link
                 href={item.href}

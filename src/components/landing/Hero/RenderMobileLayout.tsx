@@ -42,7 +42,7 @@ const RenderMobileLayout = () => {
               priority
               fetchPriority="high"
               sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-contain object-bottom scale-[1.15] origin-bottom"
+              className="object-contain object-bottom "
             />
           </motion.div>
 
