@@ -3,11 +3,8 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import SmoothScrollProvider from "@/providers/SmoothScroll/SmoothScrollProvider";
 import QueryProvider from "@/providers/QueryProvider";
-// 1. استيراد مزود المصادقة
 import AuthProvider from "@/providers/AuthProvider";
-// 2. استيراد التوستر
 import { Toaster } from "sonner";
-// استيراد الثيم
 import { ThemeProvider } from "@/providers/ThemeProvider";
 
 const geistSans = Geist({
@@ -28,13 +25,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={geistSans.variable}>
       <body className="antialiased font-sans relative text-foreground selection:bg-black selection:text-white">
-        {/* تغليف المشروع بمزود الثيم لحل مشكلة السكريبت */}
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
           enableSystem={false}
         >
-          {/* تغليف الموقع بالكامل بمزود المصادقة */}
           <AuthProvider>
             <QueryProvider>
               <SmoothScrollProvider>
@@ -44,7 +39,6 @@ export default function RootLayout({
             </QueryProvider>
           </AuthProvider>
 
-          {/* 3. إضافة التوستر هنا عشان يشتغل على مستوى المشروع كله */}
           <Toaster position="bottom-right" richColors />
         </ThemeProvider>
       </body>

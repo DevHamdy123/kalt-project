@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { useAddToCartMutation } from "@/hooks/queries/useCartQuery";
+import { toast } from "sonner";
 
 // Component Types
 interface ProductCardProps {
@@ -70,15 +71,27 @@ export default function ProductCard({
   };
 
   // Handlers
-  const handleAddToCart = () => {
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     if (isOutOfStock || isPending) return;
 
-    addToCart({
-      productId: id,
-      quantity: validQty,
-    });
-
-    setQty(1);
+    addToCart(
+      {
+        productId: id,
+        quantity: validQty,
+      },
+      {
+        onSuccess: () => {
+          toast.success(`${name} added to cart!`);
+          setQty(1);
+        },
+        onError: () => {
+          toast.error(`Failed to add ${name} to cart.`);
+        },
+      },
+    );
   };
 
   // Card Wrapper
@@ -147,7 +160,11 @@ export default function ProductCard({
                 }`}
               >
                 <button
-                  onClick={() => setQty(Math.max(1, validQty - 1))}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setQty(Math.max(1, validQty - 1));
+                  }}
                   disabled={isOutOfStock || isPending}
                   className="px-3 py-1 font-bold hover:bg-black/10 disabled:opacity-50"
                 >
@@ -159,6 +176,10 @@ export default function ProductCard({
                   max={stock}
                   value={qty}
                   disabled={isOutOfStock || isPending}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
                   onChange={(e) => {
                     const val = e.target.value;
                     if (val === "") setQty("");
@@ -170,7 +191,11 @@ export default function ProductCard({
                   className="w-10 text-center font-black text-sm bg-transparent outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none disabled:opacity-50"
                 />
                 <button
-                  onClick={() => setQty(Math.min(validQty + 1, stock))}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setQty(Math.min(validQty + 1, stock));
+                  }}
                   disabled={isOutOfStock || validQty >= stock || isPending}
                   className="px-3 py-1 font-bold hover:bg-black/10 disabled:opacity-50"
                 >

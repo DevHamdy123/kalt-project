@@ -12,9 +12,9 @@ kalt-project/
 ├── public/                 # Static assets (Images, Fonts, Textures)
 ├── src/
 │   ├── app/                # Next.js 15 App Router (Route Groups)
-│   │   ├── admin/        # Admin Management Dashboard
+│   │   ├── admin/          # Admin Management Dashboard
 │   │   ├── (landing)/      # Creative Landing Page Experience
-│   │   └── shop/         # E-commerce Store Engine
+│   │   └── shop/           # E-commerce Store Engine
 │   ├── components/         # Atomic component structure
 │   ├── providers/          # Context Providers (Lenis, SmoothScroll)
 │   └── globals.css         # Tailwind CSS v4 & Base Styles
@@ -37,7 +37,7 @@ kalt-project/
 - **Animation:** [Framer Motion](https://www.framer.com/motion/)
 - **Smooth Scroll:** [Lenis](https://github.com/darkroomengineering/lenis)
 - **Icons:** [Lucide React](https://lucide.dev/)
-- **Notifications:** [Sonner](https://sonner.emilkowal.site/)
+- **Notifications:** [Sonner](https://sonner.emilkowal.site/) & [React Hot Toast](https://react-hot-toast.com/)
 - **Charts:** [Recharts](https://recharts.org/)
 
 ### Backend & Database
@@ -259,6 +259,15 @@ export default function CatalogSection() {
 - **The Issue:** Database connection strings failing to map correctly upon deployment due to older, redundant explicit schema assignments.
 - **The Solution:** Adapted the configuration to reflect modern Prisma updates. Allowed the engine to read the connection URL directly from the database rather than explicitly defining or forcing the link within the schema layout, preventing redundant configuration errors.
 
+### 13. Global Scale & Responsiveness Post-Mortem
+
+- **The Issue:** The entire interface (layouts, typography bounding boxes, and complex vector-clipped components) was unconsciously designed and fine-tuned at an **80% browser zoom level**. Upon resetting to the standard **100% viewport scale**, the UI suffered from severe layout contraction, compressed containers, and broken visual proportions due to rigid `max-w` constraints and fixed padding limits.
+- **The Solution:** Applied a reverse-engineering mathematical approach to seamlessly transition the design blueprint to standard scale without altering the structural grid or rewriting micro-components.
+- **The Logic:**
+  1. **Inverse Scaling Factor (×1.25 Rule):** Multiplied all restricted dimensions, absolute `clamp()` parameters, and static `rem` layout offsets by `1.25` (since 1 / 0.8 = 1.25) to perfectly restore the exact original optical weights and proportions.
+  2. **Component-Level Fluid Boundaries:** Expanded rigid `max-w` constraints on text wrappers and promotional grids to reintroduce necessary negative space (the "Airy Feel") that was lost during the contraction.
+  3. **Aspect Ratio Anchoring (Mobile Hero):** Swapped height-dependent viewport bounds (`vh`) for aspect-ratio locks (`aspect-[4/5]`) on mobile elements. This ensured that overlapping elements (like absolute positioning buttons) scaled proportionally with the viewport width rather than drifting out of alignment on devices with taller aspect ratios.
+
 ---
 
 ## 🚀 Getting Started
@@ -270,9 +279,11 @@ export default function CatalogSection() {
    ```
 
 2. **Install dependencies:**
+
    ```bash
    npm install
    ```
+
 3. **Run the development server:**
    ```bash
    npm run dev

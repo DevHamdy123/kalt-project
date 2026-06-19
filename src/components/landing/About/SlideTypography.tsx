@@ -25,7 +25,7 @@ export default function SlideTypography({
 
         <div className="flex items-center gap-2 lg:gap-3 opacity-60">
           <span className="w-6 lg:w-8 h-px bg-black"></span>
-          <span className="font-mono text-[9px] lg:text-[10px] uppercase tracking-[0.3em]">
+          <span className="font-mono text-[0.5625rem] lg:text-[0.625rem] uppercase tracking-[0.3em]">
             {`[ ${currentSlide.label} ]`}
           </span>
         </div>
@@ -68,7 +68,7 @@ export default function SlideTypography({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3, delay: 0.4 }}
-          className="mt-8 hidden lg:flex gap-8 font-mono text-[9px] uppercase tracking-widest opacity-40"
+          className="mt-8 hidden lg:flex gap-8 font-mono text-[0.5625rem] uppercase tracking-widest opacity-40"
         >
           {currentSlide.details.map((detail, i) => (
             <span key={`desk-${i}`}>{detail}</span>

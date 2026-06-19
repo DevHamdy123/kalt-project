@@ -2,7 +2,8 @@ import StoreHeroContent from "./StoreHeroContent";
 
 export default function StoreHero() {
   return (
-    <section className="relative w-full h-[calc(100dvh-110px)] pb-4 px-4 md:px-6 flex flex-col overflow-hidden mt-2">
+    // رفعنا المسافات بنسبة بسيطة (نقطة وسط) عشان نرجع الإطار الأبيض الأنيق حوالين الكونتينر
+    <section className="relative w-full h-[calc(100dvh-7rem)] pb-4 px-4 md:px-[1.25rem] flex flex-col overflow-hidden mt-[0.5rem]">
       {/* Main Container */}
       <div
         className="relative w-full flex-1 rounded-4xl overflow-hidden flex items-stretch"

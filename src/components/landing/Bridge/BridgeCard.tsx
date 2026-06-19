@@ -66,7 +66,7 @@ export default function BridgeCard({ collection, isOpen, onClick }: Props) {
 
                 <Link
                   href={`/shop?category=${categorySlug}#shop-catalog`}
-                  className="mt-3 lg:mt-5 border border-black bg-black text-white px-4 lg:px-5 py-1.5 lg:py-2 rounded-full text-[10px] lg:text-xs tracking-wider uppercase font-bold flex items-center gap-2 hover:bg-neutral-800 transition-all w-fit group/btn select-none"
+                  className="mt-3 lg:mt-5 border border-black bg-black text-white px-4 lg:px-5 py-1.5 lg:py-2 rounded-full text-[0.625rem] lg:text-xs tracking-wider uppercase font-bold flex items-center gap-2 hover:bg-neutral-800 transition-all w-fit group/btn select-none"
                 >
                   GET STARTED{" "}
                   <span className="group-hover/btn:translate-x-1 transition-transform">
@@ -85,7 +85,7 @@ export default function BridgeCard({ collection, isOpen, onClick }: Props) {
               : "border-black/20 text-black opacity-100 group-hover:border-black"
           }`}
         >
-          <span className="text-[10px] lg:text-xs">→</span>
+          <span className="text-[0.625rem] lg:text-xs">→</span>
         </div>
       </div>
     </motion.div>

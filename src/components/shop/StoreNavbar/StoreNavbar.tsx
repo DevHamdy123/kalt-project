@@ -15,6 +15,7 @@ export default function StoreNavbar() {
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() ?? 0;
+    // 80px = 5rem، المنطق ده بيعتمد على البيكسل في الـ Scroll فلازم يفضل رقم ثابت
     if (latest > previous && latest > 80) setIsHidden(true);
     else if (latest < previous) setIsHidden(false);
   });
@@ -32,15 +33,14 @@ export default function StoreNavbar() {
         className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-black/5"
         style={{ paddingRight: "var(--scrollbar-width, 0px)" }}
       >
-        {/* Added this wrapper to maintain original Tailwind spacing without interference */}
-        <div className="w-full px-4 md:px-8 py-4 flex items-center justify-between">
+        <div className="w-full px-[1rem] md:px-[2rem] py-[1rem] flex items-center justify-between">
           {/* Left section: Navigation menu toggle */}
           <div className="flex flex-1 justify-start">
             <motion.button
               onClick={() => setIsMenuOpen(true)}
-              className="w-10 h-10 bg-white rounded-full cursor-pointer flex items-center justify-center border border-black/10 hover:bg-black hover:text-white transition-all"
+              className="w-[2.5rem] h-[2.5rem] bg-white rounded-full cursor-pointer flex items-center justify-center border border-black/10 hover:bg-black hover:text-white transition-all"
             >
-              <Menu size={18} strokeWidth={1.5} />
+              <Menu size={14} strokeWidth={1.5} />
             </motion.button>
           </div>
 

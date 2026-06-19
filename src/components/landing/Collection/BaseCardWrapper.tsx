@@ -15,7 +15,7 @@ export const BaseCardWrapper = ({
       )}
       style={{
         clipPath:
-          "polygon(30px 0%, 100% 0%, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0% 100%, 0% 30px)",
+          "polygon(1.875rem 0%, 100% 0%, 100% calc(100% - 1.875rem), calc(100% - 1.875rem) 100%, 0% 100%, 0% 1.875rem)",
       }}
     >
       <div className="w-full h-full relative">{children}</div>

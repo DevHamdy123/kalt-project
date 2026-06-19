@@ -14,12 +14,12 @@ interface BrandItem {
 
 export default function Slider({ theme = "dark" }: SliderProps) {
   const brandItems: BrandItem[] = [
-    { label: "ESTABLISHED 2026", icon: <History size={14} /> },
-    { label: "URBAN ARCHIVE", icon: <Archive size={14} /> },
-    { label: "RAW AESTHETICS", icon: <Anchor size={14} /> },
-    { label: "PREMIUM CUTS", icon: <Crown size={14} /> },
-    { label: "STREET LEGACY", icon: <Flame size={14} /> },
-    { label: "LIMITED DROP", icon: <Box size={14} /> },
+    { label: "ESTABLISHED 2026", icon: <History size={11} /> },
+    { label: "URBAN ARCHIVE", icon: <Archive size={11} /> },
+    { label: "RAW AESTHETICS", icon: <Anchor size={11} /> },
+    { label: "PREMIUM CUTS", icon: <Crown size={11} /> },
+    { label: "STREET LEGACY", icon: <Flame size={11} /> },
+    { label: "LIMITED DROP", icon: <Box size={11} /> },
   ];
 
   const isLight = theme === "light";
@@ -45,7 +45,7 @@ export default function Slider({ theme = "dark" }: SliderProps) {
           repeat: Infinity,
         }}
       >
-        <ul className="flex items-center gap-8 md:gap-16 font-black text-[9px] md:text-[11px] uppercase tracking-[0.3em] whitespace-nowrap px-4 md:px-8 italic opacity-90">
+        <ul className="flex items-center gap-8 md:gap-16 font-black text-[0.5625rem] md:text-[0.6875rem] uppercase tracking-[0.3em] whitespace-nowrap px-4 md:px-8 italic opacity-90">
           {duplicatedItems.map((item, index) => (
             <li key={index} className="flex items-center gap-2">
               <span className={isLight ? "text-black/40" : "text-white/60"}>

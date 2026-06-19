@@ -22,7 +22,8 @@ const RenderDesktopLayout = () => {
             where <br /> - style
           </h2>
 
-          <p className="mt-10 mr-5 text-right text-[10px] xl:text-[11px] font-medium text-black/50 max-w-70 xl:max-w-90 leading-relaxed uppercase tracking-widest">
+          <p className="mt-10 mr-5 text-right text-[0.625rem] xl:text-[0.6875rem] font-medium text-black/50 max-w-70 xl:max-w-90 leading-relaxed uppercase tracking-widest">
+            {" "}
             Crafting the future of urban essentials. We blend raw street culture
             with high-end aesthetics, delivering uncompromising quality for
             those who dictate tomorrow's trends.
@@ -70,8 +71,8 @@ const RenderDesktopLayout = () => {
             href="/shop"
             className="mt-8 group relative flex items-center justify-center"
           >
-            <div className="w-[clamp(100px,10vw,140px)] h-[clamp(100px,10vw,140px)] border border-black/70 rounded-full flex items-center justify-center transition-all duration-500 group-hover:border-black group-hover:bg-black cursor-pointer">
-              <span className="text-[10px] xl:text-[11px] font-bold text-black group-hover:text-white transition-colors duration-500 uppercase tracking-widest leading-tight text-center">
+            <div className="w-[clamp(6.25rem,10vw,8.75rem)] h-[clamp(6.25rem,10vw,8.75rem)] border border-black/70 rounded-full flex items-center justify-center transition-all duration-500 group-hover:border-black group-hover:bg-black cursor-pointer">
+              <span className="text-[0.625rem] xl:text-[0.6875rem] font-bold text-black group-hover:text-white transition-colors duration-500 uppercase tracking-widest leading-tight text-center">
                 Shop '26 <br /> Collection
               </span>
             </div>

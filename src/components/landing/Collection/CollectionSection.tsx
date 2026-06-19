@@ -48,7 +48,7 @@ const CollectionSection = () => {
   return (
     <section ref={containerRef} className="w-full h-[350vh] relative">
       <div className="sticky top-0 w-full h-dvh bg-[#FDFDFD] flex flex-col overflow-hidden">
-        <div className=" flex-1 flex flex-col w-full px-5 md:px-[clamp(20px,5vw,80px)] py-4 justify-between min-h-0">
+        <div className=" flex-1 flex flex-col w-full px-5 md:px-[clamp(1.25rem,5vw,5rem)] py-4 justify-between min-h-0">
           {/* Section title header */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -65,7 +65,7 @@ const CollectionSection = () => {
 
           {/* Cards grid section */}
           <div className="flex-1 min-h-0 w-full flex items-center justify-center my-2 lg:my-0">
-            <div className="w-full max-w-125 lg:max-w-full grid grid-cols-2 lg:flex lg:flex-row justify-items-center lg:justify-between items-center gap-4 lg:gap-0 h-full max-h-full">
+            <div className="w-full max-w-[39rem] lg:max-w-full grid grid-cols-2 lg:flex lg:flex-row justify-items-center lg:justify-between items-center gap-4 lg:gap-0 h-full max-h-full">
               <AnimatePresence mode="popLayout">
                 {visibleItems.map((item, localIndex) => {
                   const isHero = localIndex === 2;
@@ -103,7 +103,7 @@ const CollectionSection = () => {
             {/* Button to handle programmatic navigation to shop */}
             <button
               onClick={() => router.push("/shop")}
-              className="flex shrink-0 items-center justify-center w-[clamp(32px,4vw,48px)] h-[clamp(32px,4vw,48px)] rounded-full border border-black hover:bg-black hover:text-white transition-all duration-500 cursor-pointer group"
+              className="flex shrink-0 items-center justify-center w-[clamp(2rem,4vw,3rem)] h-[clamp(2rem,4vw,3rem)] rounded-full border border-black hover:bg-black hover:text-white transition-all duration-500 cursor-pointer group"
             >
               <span className="text-xl md:text-2xl font-light leading-none transition-transform duration-500 group-hover:rotate-90">
                 +

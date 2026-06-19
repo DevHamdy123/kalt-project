@@ -40,7 +40,7 @@ export default function AboutSection() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.5, ease: customEase }}
-            className="flex shrink-0 lg:hidden w-full justify-start gap-6 font-mono text-[8px] uppercase tracking-widest opacity-40 z-20 mt-2"
+            className="flex shrink-0 lg:hidden w-full justify-start gap-6 font-mono text-[0.5rem] uppercase tracking-widest opacity-40 z-20 mt-2"
           >
             {currentSlide.details.map((detail, i) => (
               <span key={`mob-${i}`}>{detail}</span>
@@ -85,7 +85,7 @@ export default function AboutSection() {
           <span className="text-[#FF5A00] text-sm lg:text-xl leading-none">
             ✦
           </span>
-          <span className="font-mono text-[9px] lg:text-[10px] uppercase tracking-widest opacity-80 font-medium text-black/90">
+          <span className="font-mono text-[0.5625rem] lg:text-[0.625rem] uppercase tracking-widest opacity-80 font-medium text-black/90">
             [ SS // 2026 ]
           </span>
         </div>

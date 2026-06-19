@@ -1,17 +1,17 @@
 const luxLabelStyle =
-  "text-[10px] md:text-[11px] uppercase tracking-[0.4em] font-mono text-black/50 select-none";
+  "text-[0.625rem] md:text-[0.6875rem] uppercase tracking-[0.4em] font-mono text-black/50 select-none";
 
 export default function HeroLabels() {
   return (
     <>
       {/* Top left studio label */}
-      <span className={`${luxLabelStyle} absolute top-3 left-0 pt-2`}>
+      <span className={`${luxLabelStyle} absolute top-3 left-0 pt-1.5`}>
         © KALT STUDIO / ©26
       </span>
 
       {/* Top right collection label with escaped apostrophe */}
       <span
-        className={`${luxLabelStyle} absolute top-3 right-0 pt-2 text-right`}
+        className={`${luxLabelStyle} absolute top-3 right-0 pt-1.5 text-right`}
       >
         URBAN / <br /> ESSENTIALS &apos;26
       </span>

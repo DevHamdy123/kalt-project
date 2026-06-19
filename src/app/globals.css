@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-/* السطر السحري اللي هيربط التيلويند بالزرار بتاعنا */
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
@@ -34,46 +33,43 @@
 }
 
 @layer base {
-  /* تعديل لضمان إن الصفحة دايماً ليها طول وقابلة للاسكرول */
   html {
     scroll-behavior: initial;
+    font-size: 80%;
   }
 
   body {
-    @apply bg-white text-foreground antialiased; /* وحد اللون هنا */
+    @apply bg-white text-foreground antialiased;
     font-family: var(--font-sans), system-ui, sans-serif;
     min-height: 100vh;
     width: 100%;
+    overflow-x: hidden;
     position: relative;
   }
-
-  /* --- التعديل الجديد لبار الاسكرول النحيف --- */
   ::-webkit-scrollbar {
-    width: 6px; /* عرض نحيف جداً */
+    width: 6px;
   }
 
   ::-webkit-scrollbar-track {
-    background: transparent; /* خلفية شفافة */
+    background: transparent;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.1); /* رمادي خفيف جداً */
+    background: rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     transition: background 0.3s ease;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.3); /* يغمق لما تقرب منه */
+    background: rgba(0, 0, 0, 0.3);
   }
 
-  /* دعم Firefox */
   * {
     scrollbar-width: thin;
     scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
   }
 }
 
-/* Lenis CSS - المربط الأساسي للفخامة والأداء */
 html.lenis {
   height: auto;
 }
@@ -90,7 +86,6 @@ html.lenis {
   overflow: hidden;
 }
 
-/* منع تداخل الـ Iframe مع الاسكرول الناعم */
 .lenis.lenis-scrolling iframe {
   pointer-events: none;
 }
@@ -100,20 +95,16 @@ html.lenis {
 /* ========================================= */
 
 .dark .admin-wrapper {
-  /* السطر السحري اللي بيظبط ألوان المتصفح الافتراضية */
   color-scheme: dark;
 
-  /* متغيرات الألوان للوضع المظلم */
   --admin-bg-dark: #181a1e;
   --admin-surface-dark: #202528;
   --admin-text-dark: #edeffd;
   --admin-border-dark: #313338;
 
-  /* الحفاظ على لون البراند الأساسي */
   --admin-accent-orange: #ff5c00;
 }
 
-/* تعديل بار الاسكرول في الدارك مود للداش بورد بس */
 .dark .admin-wrapper::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.1);
 }
@@ -122,11 +113,6 @@ html.lenis {
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* ========================================= */
-/* تحسينات إضافية للفورم في الداش بورد       */
-/* ========================================= */
-
-/* إخفاء أسهم العداد في حقل الأرقام لشكل أنظف */
 .admin-wrapper input[type="number"]::-webkit-inner-spin-button,
 .admin-wrapper input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
@@ -134,5 +120,5 @@ html.lenis {
 }
 
 .admin-wrapper input[type="number"] {
-  -moz-appearance: textfield; /* لدعم فايرفوكس */
+  -moz-appearance: textfield;
 }

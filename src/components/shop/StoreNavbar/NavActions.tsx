@@ -110,11 +110,11 @@ export default function NavActions() {
             href={item.href}
             className="relative w-10 h-10 md:w-11 md:h-11 bg-white rounded-full flex items-center justify-center cursor-pointer hover:border-black hover:bg-black hover:text-white transition-all duration-300 border border-black/10 text-black group hover:scale-105"
           >
-            <item.Icon size={18} strokeWidth={1.5} />
+            <item.Icon size={14} strokeWidth={1.5} />
 
             {/* Show badge if item count is greater than 0 */}
             {isMounted && item.hasBadge && totalItems > 0 && (
-              <span className="absolute -top-1 -right-1 min-w-[16px] h-4 bg-[#b91c1c] text-white text-[10px] font-bold rounded-full border border-white flex items-center justify-center px-1 shadow-sm">
+              <span className="absolute -top-1 -right-1 min-w-4 h-4 bg-[#b91c1c] text-white text-[0.625rem] font-bold rounded-full border border-white flex items-center justify-center px-1 shadow-sm">
                 {totalItems}
               </span>
             )}
@@ -142,7 +142,7 @@ export default function NavActions() {
                   className="w-full h-full object-cover cursor-pointer"
                 />
               ) : (
-                <div className="w-full h-full bg-black text-white flex items-center justify-center text-xs font-bold">
+                <div className="w-full h-full bg-black text-white flex items-center justify-center text-[0.75rem] font-bold">
                   {session?.user?.name?.[0] || "U"}
                 </div>
               )}
@@ -150,9 +150,9 @@ export default function NavActions() {
           ) : (
             <Link
               href="/login"
-              className="w-10 h-10 md:w-11 md:h-11 bg-white rounded-full flex items-center justify-center cursor-pointer hover:border-black hover:bg-black hover:text-white transition-all duration-300 border border-black/10 text-black"
+              className="w-[2.5rem] h-[2.5rem] md:w-[2.75rem] md:h-[2.75rem] bg-white rounded-full flex items-center justify-center cursor-pointer hover:border-black hover:bg-black hover:text-white transition-all duration-300 border border-black/10 text-black"
             >
-              <User size={18} strokeWidth={1.5} />
+              <User size={14} strokeWidth={1.5} />
             </Link>
           )}
 

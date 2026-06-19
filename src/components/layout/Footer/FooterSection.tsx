@@ -54,7 +54,7 @@ const Newsletter = ({ active }: { active: boolean }) => (
       </h3>
     </Reveal>
     <Reveal active={active} delay={0.2}>
-      <p className="max-w-sm text-[10px] md:text-xs font-mono text-neutral-500 uppercase leading-relaxed">
+      <p className="max-w-sm text-[0.625rem] md:text-[0.75rem] font-mono text-neutral-500 uppercase leading-relaxed">
         Gain early access to exclusive drops, limited collaborations, and
         insider intelligence.
       </p>
@@ -64,9 +64,9 @@ const Newsletter = ({ active }: { active: boolean }) => (
         <input
           type="email"
           placeholder="ENTER YOUR EMAIL..."
-          className="bg-transparent border-b border-white/20 text-white placeholder-neutral-700 font-mono text-[10px] uppercase py-3 outline-none focus:border-white transition-all duration-500 w-full"
+          className="bg-transparent border-b border-white/20 text-white placeholder-neutral-700 font-mono text-[0.625rem] uppercase py-3 outline-none focus:border-white transition-all duration-500 w-full"
         />
-        <button className="sm:ml-4 border border-white px-8 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all duration-300">
+        <button className="sm:ml-4 border border-white px-8 py-3 text-[0.625rem] font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all duration-300">
           Subscribe
         </button>
       </form>
@@ -77,7 +77,7 @@ const Newsletter = ({ active }: { active: boolean }) => (
 const NavGroup = ({ title, links, active, delay = 0.1 }: IFooterSection) => (
   <div className="flex flex-col gap-6">
     <Reveal active={active} delay={delay}>
-      <h4 className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-600">
+      <h4 className="font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-neutral-600">
         [{title}]
       </h4>
     </Reveal>
@@ -87,9 +87,9 @@ const NavGroup = ({ title, links, active, delay = 0.1 }: IFooterSection) => (
           <Reveal active={active} delay={delay + idx * 0.05}>
             <Link
               href={link.href}
-              className="text-[13px] font-medium text-neutral-400 hover:text-white transition-all relative group flex items-center w-fit"
+              className="text-[0.8125rem] font-medium text-neutral-400 hover:text-white transition-all relative group flex items-center w-fit"
             >
-              <span className="absolute -left-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-[10px]">
+              <span className="absolute -left-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-[0.625rem]">
                 ›
               </span>
               {link.name}
@@ -102,7 +102,7 @@ const NavGroup = ({ title, links, active, delay = 0.1 }: IFooterSection) => (
 );
 
 const LegalLinks = ({ active }: { active: boolean }) => (
-  <div className="w-full px-5 md:px-16 lg:px-24 flex flex-col md:flex-row justify-between items-center gap-6 font-mono text-[9px] uppercase text-neutral-600 tracking-widest border-t border-white/5 pt-10">
+  <div className="w-full px-5 md:px-16 lg:px-24 flex flex-col md:flex-row justify-between items-center gap-6 font-mono text-[0.5625rem] uppercase text-neutral-600 tracking-widest border-t border-white/5 pt-10">
     <Reveal active={active} delay={0.6}>
       <span>
         © {new Date().getFullYear()} KALT Studios. All Rights Reserved.
@@ -161,7 +161,8 @@ export default function FooterSection() {
       ref={footerRef}
       className="relative lg:sticky bottom-0 left-0 w-full bg-[#080808] text-white overflow-hidden z-10 flex flex-col"
     >
-      <div className="flex-1 flex flex-col justify-between pt-24 pb-6 min-h-[85vh] lg:min-h-[650px]">
+      <div className="flex-1 flex flex-col justify-between pt-24 pb-6 min-h-[85vh] lg:min-h-162.5">
+        {" "}
         <div className="px-5 md:px-16 lg:px-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-16 lg:gap-10">
           <Newsletter active={holdVisible} />
 
@@ -175,7 +176,6 @@ export default function FooterSection() {
             />
           ))}
         </div>
-
         <div className="flex flex-col items-center mt-16 lg:mt-0">
           <LegalLinks active={holdVisible} />
           <BrandSignature />

@@ -84,7 +84,7 @@ export default function Navbar() {
     <>
       <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
-      <header className="w-full flex items-center justify-between relative z-20 pt-4">
+      <header className="w-full flex items-center justify-between relative z-20 pt-3">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -95,7 +95,7 @@ export default function Navbar() {
             onClick={() => setIsMenuOpen(true)}
             className="w-10 h-10 md:w-11 md:h-11 bg-border-white rounded-full flex items-center justify-center cursor-pointer hover:border-black hover:bg-black hover:text-border-white hover:scale-105 transition-all duration-300 border border-white text-black"
           >
-            <Menu size={18} strokeWidth={1.5} />
+            <Menu size={14} strokeWidth={1.5} />
           </button>
         </motion.div>
 
@@ -126,11 +126,11 @@ export default function Navbar() {
                 href={item.href}
                 className="relative w-10 h-10 md:w-11 md:h-11 bg-border-white rounded-full flex items-center justify-center cursor-pointer hover:border-black hover:bg-black hover:text-border-white hover:scale-105 transition-all duration-300 border border-white text-black group"
               >
-                <item.Icon size={18} strokeWidth={1.5} />
+                <item.Icon size={14} strokeWidth={1.5} />
 
                 {/* Conditional badge based on server-side cart items count */}
                 {isMounted && item.hasBadge && totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 min-w-[16px] h-4 bg-[#b91c1c] text-white text-[10px] font-bold rounded-full border border-white flex items-center justify-center px-1 shadow-sm">
+                  <span className="absolute -top-1 -right-1 min-w-4 h-4 bg-[#b91c1c] text-white text-[10px] font-bold rounded-full border border-white flex items-center justify-center px-1 shadow-sm">
                     {totalItems}
                   </span>
                 )}
@@ -168,7 +168,7 @@ export default function Navbar() {
                 href="/login"
                 className="w-10 h-10 md:w-11 md:h-11 bg-border-white rounded-full flex items-center justify-center cursor-pointer hover:border-black hover:bg-black hover:text-border-white hover:scale-105 transition-all duration-300 border border-white text-black"
               >
-                <User size={18} strokeWidth={1.5} />
+                <User size={14} strokeWidth={1.5} />
               </Link>
             )}
 

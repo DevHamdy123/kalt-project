@@ -31,16 +31,17 @@ export default function StoreDesktopLayout() {
   };
 
   return (
-    <div className="hidden xl:grid xl:grid-cols-[1fr_1.4fr_1fr] 2xl:grid-cols-[1fr_1.2fr_1fr] w-full h-full justify-between gap-4 px-[clamp(2rem,4vw,4rem)] pt-4 2xl:pt-12 pb-0 min-h-0 relative">
+    <div className="hidden xl:grid xl:grid-cols-[1fr_1.4fr_1fr] w-full h-full justify-between gap-1 px-[clamp(2.5rem,5vw,5rem)] pt-[1.25rem] 2xl:pt-[3rem] pb-0 min-h-0 relative">
       {/* Left Column: Typography */}
-      <div className="flex flex-col justify-center z-10 pb-4 2xl:pb-12 min-h-0">
+      <div className="flex flex-col justify-center z-10 pb-[1.25rem] 2xl:pb-[3rem] min-h-0">
         <motion.div
           custom={0.2}
           initial="hidden"
           animate="visible"
           variants={fadeUpVariants}
         >
-          <h1 className="font-black uppercase tracking-tighter leading-[0.85] text-black text-[clamp(2.5rem,3.5vw,4.5rem)] 2xl:text-[5.5rem]">
+          {/* تصغير العنوان لنسبة أنيقة ومتوازنة */}
+          <h1 className="font-black uppercase tracking-tighter leading-[0.85] text-black text-[clamp(3.25rem,4.5vw,5.75rem)] 2xl:text-[7rem]">
             <TypewriterEffect /> <br />
             The Syndicate <br />
             Urban Precision <br />
@@ -54,9 +55,10 @@ export default function StoreDesktopLayout() {
           initial="hidden"
           animate="visible"
           variants={fadeUpVariants}
-          className="mt-4 2xl:mt-8 max-w-sm"
+          className="mt-[1.5rem] 2xl:mt-[2rem] max-w-[26rem]"
         >
-          <p className="text-black/70 font-medium leading-relaxed text-[clamp(0.75rem,0.9vw,1rem)] 2xl:text-[1.1rem]">
+          {/* تصغير البراجراف ليكون دقيق وشيك */}
+          <p className="text-black/70 font-medium leading-relaxed text-[clamp(0.85rem,1vw,1rem)] 2xl:text-[1.125rem]">
             KALT is a silent statement of urban precision. <br />
             We strip away the noise...
           </p>
@@ -69,9 +71,9 @@ export default function StoreDesktopLayout() {
         initial="hidden"
         animate="visible"
         variants={fadeUpVariants}
-        className="relative flex justify-center items-end h-full z-0 min-w-75 min-h-0"
+        className="relative flex justify-center items-end h-full z-0 min-w-[20rem] min-h-0"
       >
-        <div className="relative w-full h-[95%] 2xl:h-full max-w-125 2xl:max-w-162.5">
+        <div className="relative w-full h-[95%] 2xl:h-full max-w-[36rem] 2xl:max-w-[45rem]">
           <Image
             src="/images/img10.webp"
             alt="KALT New Drop Model"
@@ -84,36 +86,39 @@ export default function StoreDesktopLayout() {
       </motion.div>
 
       {/* Right Column: Promo Card */}
-      <div className="flex flex-col justify-center items-end z-10 w-full pb-4 2xl:pb-12 min-h-0">
+      <div className="flex flex-col justify-center items-end z-10 w-full pb-[1.25rem] 2xl:pb-[3rem] min-h-0">
         <motion.div
           custom={0.5}
           initial="hidden"
           animate="visible"
           variants={fadeUpVariants}
-          className="w-full max-w-75 2xl:max-w-90"
+          // عرض الكارت متناسق مش ضخم بزيادة
+          className="w-full max-w-[22rem] 2xl:max-w-[25rem]"
         >
           <motion.div
             animate={{ y: [0, -20, 0] }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            className="bg-white/40 backdrop-blur-xl border border-white/50 p-5 2xl:p-8 rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.08)] w-full will-change-transform"
+            // رجعنا البادينج الكبير عشان المحتوى ميبقاش مالي الكارت (Airy Feel)
+            className="bg-white/40 backdrop-blur-xl border border-white/50 p-[1.25rem] 2xl:p-[2rem] rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.08)] w-full will-change-transform"
           >
-            <h3 className="text-black/60 text-xs 2xl:text-sm font-bold uppercase tracking-widest mb-2 2xl:mb-3">
+            <h3 className="text-black/60 text-[0.75rem] 2xl:text-[0.875rem] font-bold uppercase tracking-widest mb-[0.75rem] 2xl:mb-[1rem]">
               Exclusive Offer
             </h3>
-            <p className="text-black font-black uppercase tracking-tight leading-none mb-4 2xl:mb-6 text-[clamp(1.2rem,1.5vw,1.5rem)] 2xl:text-2xl">
+            <p className="text-black font-black uppercase tracking-tight leading-none mb-[1.5rem] text-[clamp(1.25rem,1.6vw,1.75rem)] 2xl:text-[2rem]">
               20% Off Your <br /> First Order
             </p>
-            <div className="flex items-center gap-2 2xl:gap-3 mb-5 2xl:mb-8">
-              <span className="text-black/70 text-xs 2xl:text-base font-medium">
+            <div className="flex items-center gap-[0.75rem] mb-[1.75rem] 2xl:mb-[2.25rem]">
+              <span className="text-black/70 text-[0.85rem] 2xl:text-[1rem] font-medium">
                 Code:
               </span>
-              <span className="bg-black/10 px-2 2xl:px-4 py-1.5 2xl:py-2 rounded-md text-black font-bold tracking-wider text-xs 2xl:text-base">
+              <span className="bg-black/10 px-[1rem] py-[0.5rem] rounded-md text-black font-bold tracking-wider text-[0.85rem] 2xl:text-[1rem]">
                 KALT20
               </span>
             </div>
+            {/* الزرار حجمه متناسق مش عملاق */}
             <button
               onClick={scrollToCatalog}
-              className="bg-black text-white px-8 py-4 font-bold uppercase tracking-widest rounded-xl cursor-pointer hover:bg-neutral-800 transition-all"
+              className="bg-black text-white px-[1rem] py-[1.25rem] text-[0.85rem] 2xl:text-[1rem] font-bold uppercase tracking-widest rounded-xl cursor-pointer hover:bg-neutral-800 transition-all w-full"
             >
               SHOP NOW →
             </button>
@@ -126,10 +131,11 @@ export default function StoreDesktopLayout() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5, duration: 1 }}
-        className="absolute bottom-4 2xl:bottom-8 right-[clamp(2rem,4vw,4rem)] flex flex-col items-center gap-2 2xl:gap-3 z-20 pointer-events-none"
+        className="absolute bottom-[1.25rem] 2xl:bottom-[2.5rem] right-[clamp(2.5rem,5vw,5rem)] flex flex-col items-center gap-[0.75rem] z-20 pointer-events-none"
       >
+        {/* تصغير كلمة السكرول لدرجة ناعمة جداً */}
         <span
-          className="text-black/50 text-[9px] uppercase tracking-[0.3em] font-bold rotate-180"
+          className="text-black/50 text-[0.55rem] 2xl:text-[0.65rem] uppercase tracking-[0.3em] font-bold rotate-180"
           style={{ writingMode: "vertical-rl" }}
         >
           Scroll

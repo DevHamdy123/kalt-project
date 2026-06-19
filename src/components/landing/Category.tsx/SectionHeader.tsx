@@ -43,7 +43,7 @@ export default function SectionHeader() {
       </h2>
       <motion.p
         variants={itemVariants}
-        className="text-[11px] lg:text-[13px] leading-relaxed tracking-widest font-medium opacity-50 uppercase max-w-62.5 mx-auto lg:mx-0"
+        className="text-[0.6875rem] lg:text-[0.8125rem] leading-relaxed tracking-widest font-medium opacity-50 uppercase max-w-62.5 mx-auto lg:mx-0"
       >
         Every piece carries rhythm beyond clothing it's motion and meaning where
         street energy meets

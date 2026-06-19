@@ -14,7 +14,7 @@ export default function BridgeSection() {
 
   return (
     <>
-      <section className="w-full min-h-[calc(100vh-60px)] bg-bg-inner px-5 md:px-12 lg:px-16 xl:px-24 flex flex-col lg:flex-row items-center justify-center overflow-hidden gap-0 lg:gap-10 xl:gap-20">
+      <section className="w-full min-h-[calc(100vh-3.75rem)] bg-bg-inner px-5 md:px-12 lg:px-16 xl:px-24 flex flex-col lg:flex-row items-center justify-center overflow-hidden gap-0 lg:gap-10 xl:gap-20">
         <div className="w-full flex-1 flex flex-col items-center lg:items-start justify-center pt-10 lg:pt-0 gap-3 lg:gap-8 relative shrink-0">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -26,7 +26,7 @@ export default function BridgeSection() {
             <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-black">
               The Bridge
             </h2>
-            <p className="font-medium text-[10px] md:text-[11px] leading-relaxed text-black/60 uppercase tracking-widest max-w-[280px]">
+            <p className="font-medium text-[0.625rem] md:text-[0.6875rem] leading-relaxed text-black/60 uppercase tracking-widest max-w-[17.5rem]">
               From enduring classics to daring statement pieces, our collections
               are crafted with intention.
             </p>
@@ -39,15 +39,15 @@ export default function BridgeSection() {
             transition={{ duration: 0.8, ease: customEase }}
             className="relative w-fit mx-auto lg:mx-0 flex items-center justify-center drop-shadow-[0_0_1px_rgba(0,0,0,0.3)]"
           >
-            <div className="absolute -top-3 -left-3 text-neutral-400 font-mono text-[10px]">
+            <div className="absolute -top-3 -left-3 text-neutral-400 font-mono text-[0.625rem]">
               +
             </div>
-            <div className="absolute -bottom-3 -right-3 text-neutral-400 font-mono text-[10px]">
+            <div className="absolute -bottom-3 -right-3 text-neutral-400 font-mono text-[0.625rem]">
               +
             </div>
 
             <div
-              className="relative w-[45vw] sm:w-[40vw] max-w-[300px] md:max-w-[400px] aspect-4/5 bg-[#F5F5F5] overflow-hidden"
+              className="relative w-[45vw] sm:w-[40vw] max-w-[18.75rem] md:max-w-[25rem] aspect-4/5 bg-[#F5F5F5] overflow-hidden"
               style={{
                 clipPath:
                   "polygon(20% 0%, 100% 0%, 100% 80%, 80% 100%, 0% 100%, 0% 20%)",
@@ -100,8 +100,8 @@ export default function BridgeSection() {
         </motion.div>
       </section>
 
-      <div className="w-full h-[80px] bg-gray-700 flex items-center justify-center shrink-0">
-        <span className="text-[10px] font-bold text-white/40 uppercase tracking-[0.5em]">
+      <div className="w-full h-20 bg-gray-700 flex items-center justify-center shrink-0">
+        <span className="text-[0.625rem] font-bold text-white/40 uppercase tracking-[0.5em]">
           End of BRIGE // Archive Status: Active
         </span>
       </div>

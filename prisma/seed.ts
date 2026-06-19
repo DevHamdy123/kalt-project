@@ -2,7 +2,6 @@ import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
 
-// بدلاً من السطر اللي موجود عندك، استخدم ده:
 if (process.env.NODE_ENV !== "production") {
   process.loadEnvFile();
 }
