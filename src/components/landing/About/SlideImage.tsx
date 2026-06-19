@@ -15,11 +15,11 @@ export default function SlideImage({ currentSlide }: SlideImageProps) {
       <AnimatePresence mode="wait">
         <motion.div
           key={currentSlide.id}
-          initial={{ opacity: 1, scale: 0.95, x: 40, filter: "blur(8px)" }}
-          animate={{ opacity: 1, scale: 1, x: 0, filter: "blur(0px)" }}
-          exit={{ opacity: 0, scale: 1.02, x: -40, filter: "blur(8px)" }}
-          transition={{ duration: 0.7, ease: customEase }}
-          className="relative h-[95%] lg:h-auto w-auto lg:w-[80%] xl:w-[70%] max-w-md aspect-4/5 flex justify-center items-end"
+          initial={{ opacity: 0, scale: 0.96, x: 20 }}
+          animate={{ opacity: 1, scale: 1, x: 0 }}
+          exit={{ opacity: 0, scale: 0.96, x: -20 }}
+          transition={{ duration: 0.8, ease: customEase }}
+          className="relative h-[85%] lg:h-auto w-auto lg:w-[80%] xl:w-[70%] max-w-md aspect-4/5 flex justify-center items-end"
         >
           <div
             className="absolute inset-0 scale-[1.03] origin-bottom bg-black/10 z-0 bg-linear-to-t from-black/40 via-transparent to-transparent drop-shadow-2xl"

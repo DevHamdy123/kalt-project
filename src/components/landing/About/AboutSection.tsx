@@ -32,14 +32,13 @@ export default function AboutSection() {
 
         <SlideImage currentSlide={currentSlide} />
 
-        {/* Sub Title Details (Mobile & Tablet ONLY) */}
         <AnimatePresence mode="wait">
           <motion.div
             key={`mobile-${currentSlide.id}`}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.5, ease: customEase }}
+            transition={{ duration: 0.4, delay: 0.1, ease: customEase }}
             className="flex shrink-0 lg:hidden w-full justify-start gap-6 font-mono text-[0.5rem] uppercase tracking-widest opacity-40 z-20 mt-2"
           >
             {currentSlide.details.map((detail, i) => (
@@ -55,7 +54,7 @@ export default function AboutSection() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8, delay: 0.3, ease: customEase }}
-        className="mb-20 lg:mb-24"
+        className="mb-28 lg:mb-24"
       >
         <SliderControls handlePrev={handlePrev} handleNext={handleNext} />
       </motion.div>

@@ -11,14 +11,16 @@ export default function SlideTypography({
   currentSlide,
   totalSlides,
 }: SlideTypographyProps) {
+  // الـ Curve البريميوم الخفيف جداً والناعم
+  const customEase = [0.22, 1, 0.36, 1] as const;
+
   return (
     <div className="shrink-0 lg:flex-1 flex flex-col justify-center gap-3 lg:gap-8 relative z-20">
-      {/* Important Elements */}
+      {/* Important Elements - ثابتين علشان الـ Layout Shift */}
       <div className="flex flex-col gap-1 lg:gap-3">
         <div className="text-[clamp(3rem,8vw,7rem)] uppercase tracking-tighter leading-none font-bold opacity-100 flex items-baseline gap-1">
           <span>{currentSlide.id}</span>
           <span className="text-[clamp(1.5rem,4vw,3.5rem)] font-light opacity-50">
-            {" "}
             / {`0${totalSlides}`.slice(-2)}
           </span>
         </div>
@@ -35,10 +37,10 @@ export default function SlideTypography({
       <AnimatePresence mode="wait">
         <motion.h2
           key={currentSlide.id}
-          initial={{ x: 50, opacity: 1 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: -50, opacity: 0 }}
-          transition={{ duration: 0.6, ease: "easeInOut" }}
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: -20, opacity: 0 }}
+          transition={{ duration: 0.6, ease: customEase }}
           className="text-[clamp(2rem,6vw,5rem)] uppercase tracking-tighter leading-none lg:leading-[0.9] font-light whitespace-nowrap max-w-lg mt-1 lg:mt-0"
         >
           {currentSlide.titleLine1} <br className="hidden lg:block" />
@@ -50,10 +52,10 @@ export default function SlideTypography({
       <AnimatePresence mode="wait">
         <motion.p
           key={currentSlide.id}
-          initial={{ y: 30, opacity: 1 }}
+          initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 30, opacity: 0 }}
-          transition={{ duration: 0.6, delay: 0.2, ease: "easeInOut" }}
+          exit={{ y: -20, opacity: 0 }}
+          transition={{ duration: 0.6, delay: 0.1, ease: customEase }}
           className="text-xs md:text-base lg:text-lg text-black/70 font-light leading-snug lg:leading-relaxed max-w-md"
         >
           {currentSlide.paragraph}
@@ -64,10 +66,10 @@ export default function SlideTypography({
       <AnimatePresence mode="wait">
         <motion.div
           key={`desktop-${currentSlide.id}`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3, delay: 0.4 }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.4, delay: 0.2, ease: customEase }}
           className="mt-8 hidden lg:flex gap-8 font-mono text-[0.5625rem] uppercase tracking-widest opacity-40"
         >
           {currentSlide.details.map((detail, i) => (
