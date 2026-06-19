@@ -39,7 +39,9 @@ export function RecentOrders({ orders }: RecentOrdersProps) {
       </h2>
 
       <div className="bg-white dark:bg-[#202528] rounded-[1.5rem] shadow-[0_2rem_3rem_rgba(132,139,200,0.18)] dark:shadow-[0_2rem_3rem_rgba(0,0,0,0.4)] hover:shadow-none transition-all duration-300 overflow-hidden">
-        <div className="overflow-x-auto p-6">
+        {/* Desktop Layout: Table
+         */}
+        <div className="hidden md:block overflow-x-auto p-6">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-[#f6f6f9] dark:border-[#313338] text-[#363949] dark:text-[#edeffd] font-bold transition-colors">
@@ -81,7 +83,9 @@ export function RecentOrders({ orders }: RecentOrdersProps) {
                         ${Number(order.totalPrice).toFixed(2)}
                       </td>
                       <td
-                        className={`py-4 px-4 font-bold ${getStatusColor(order.status)}`}
+                        className={`py-4 px-4 font-bold ${getStatusColor(
+                          order.status,
+                        )}`}
                       >
                         {order.status}
                       </td>
@@ -95,10 +99,72 @@ export function RecentOrders({ orders }: RecentOrdersProps) {
             </tbody>
           </table>
         </div>
+
+        {/* Mobile Layout: Cards
+         */}
+        <div className="block md:hidden">
+          {orders.length === 0 ? (
+            <div className="py-8 text-center text-[#7d8da1]">
+              No recent orders found.
+            </div>
+          ) : (
+            <div className="flex flex-col">
+              {orders.map((order) => {
+                const productName =
+                  order.orderItems?.[0]?.product?.name || "Unknown Product";
+                const extraItems =
+                  order.orderItems.length > 1
+                    ? ` (+${order.orderItems.length - 1})`
+                    : "";
+
+                return (
+                  <div
+                    key={order.id}
+                    className="flex flex-col p-5 gap-3 border-b border-[#f6f6f9] dark:border-[#313338] last:border-none hover:bg-[#f6f6f9] dark:hover:bg-[#181a1e] transition-colors"
+                  >
+                    {/* Header: ID & Status */}
+                    <div className="flex justify-between items-center">
+                      <span className="font-bold text-[#363949] dark:text-[#edeffd] text-sm uppercase">
+                        #{order.id.slice(-6)}
+                      </span>
+                      <span
+                        className={`font-bold text-sm ${getStatusColor(
+                          order.status,
+                        )}`}
+                      >
+                        {order.status}
+                      </span>
+                    </div>
+
+                    {/* Body: Product Name */}
+                    <div className="text-[#7d8da1] dark:text-zinc-400 text-sm font-medium line-clamp-1">
+                      {productName} {extraItems}
+                    </div>
+
+                    {/* Footer: Price & Action */}
+                    <div className="flex justify-between items-center mt-2">
+                      <span className="font-bold text-lg text-[#363949] dark:text-[#edeffd]">
+                        ${Number(order.totalPrice).toFixed(2)}
+                      </span>
+                      <Link
+                        href={`/admin/orders/${order.id}`}
+                        className="text-[#ff5c00] text-sm font-bold hover:underline transition-colors bg-[#ff5c00]/10 px-3 py-1.5 rounded-lg"
+                      >
+                        Details
+                      </Link>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Bottom Action */}
         <div className="p-4 text-center border-t border-[#f6f6f9] dark:border-[#313338] transition-colors">
           <Link
             href="/admin/orders"
-            className="text-[#ff5c00] font-medium hover:underline text-sm transition-colors"
+            className="text-[#ff5c00] font-bold hover:underline text-sm transition-colors"
           >
             Show All
           </Link>
