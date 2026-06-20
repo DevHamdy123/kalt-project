@@ -11,12 +11,10 @@ export default function SlideTypography({
   currentSlide,
   totalSlides,
 }: SlideTypographyProps) {
-  // الـ Curve البريميوم الخفيف جداً والناعم
   const customEase = [0.22, 1, 0.36, 1] as const;
 
   return (
     <div className="shrink-0 lg:flex-1 flex flex-col justify-center gap-3 lg:gap-8 relative z-20">
-      {/* Important Elements - ثابتين علشان الـ Layout Shift */}
       <div className="flex flex-col gap-1 lg:gap-3">
         <div className="text-[clamp(3rem,8vw,7rem)] uppercase tracking-tighter leading-none font-bold opacity-100 flex items-baseline gap-1">
           <span>{currentSlide.id}</span>
@@ -34,7 +32,7 @@ export default function SlideTypography({
       </div>
 
       {/* Main Headline */}
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="popLayout">
         <motion.h2
           key={currentSlide.id}
           initial={{ y: 20, opacity: 0 }}
@@ -49,7 +47,7 @@ export default function SlideTypography({
       </AnimatePresence>
 
       {/* Paragraph */}
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="popLayout">
         <motion.p
           key={currentSlide.id}
           initial={{ y: 20, opacity: 0 }}
@@ -69,7 +67,7 @@ export default function SlideTypography({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.4, delay: 0.2, ease: customEase }}
+          transition={{ duration: 0.4, delay: 0.1, ease: customEase }}
           className="mt-8 hidden lg:flex gap-8 font-mono text-[0.5625rem] uppercase tracking-widest opacity-40"
         >
           {currentSlide.details.map((detail, i) => (

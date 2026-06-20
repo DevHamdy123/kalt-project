@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   User,
   Home,
@@ -41,17 +41,17 @@ export default function NavActions() {
   const { data: session, status } = useSession();
   const isLoggedIn = status === "authenticated";
 
-  // Fetch cart data with proper typing
   const { data: cart } = useCartQuery();
 
-  // Safely calculate total quantity of items
-  const totalItems =
-    (cart as Cart | undefined)?.items.reduce(
-      (total: number, item: CartItem) => total + item.quantity,
-      0,
-    ) || 0;
+  const totalItems = useMemo(() => {
+    return (
+      (cart as Cart | undefined)?.items.reduce(
+        (total: number, item: CartItem) => total + item.quantity,
+        0,
+      ) || 0
+    );
+  }, [cart]);
 
-  // Check if current user is an admin
   const isAdmin =
     (session?.user as { role?: string } | undefined)?.role === "ADMIN";
 
@@ -59,34 +59,35 @@ export default function NavActions() {
   const isCartPage = pathname === "/shop/cart";
   const customEase = [0.22, 1, 0.36, 1] as const;
 
-  // Build dynamic navigation links
-  const navLinks: NavLink[] = [
-    ...(isAdmin
-      ? [
-          {
-            name: "dashboard",
-            Icon: LayoutDashboard,
-            href: "/admin",
-            hasBadge: false,
-            hideOnMobile: false,
-          },
-        ]
-      : []),
-    {
-      name: "shop",
-      Icon: isCartPage ? Store : ShoppingCart,
-      href: isCartPage ? "/shop" : "/shop/cart",
-      hasBadge: !isCartPage,
-      hideOnMobile: false,
-    },
-    {
-      name: "home",
-      Icon: Home,
-      href: "/",
-      hasBadge: false,
-      hideOnMobile: true,
-    },
-  ];
+  const navLinks: NavLink[] = useMemo(() => {
+    return [
+      ...(isAdmin
+        ? [
+            {
+              name: "dashboard",
+              Icon: LayoutDashboard,
+              href: "/admin",
+              hasBadge: false,
+              hideOnMobile: false,
+            },
+          ]
+        : []),
+      {
+        name: "shop",
+        Icon: isCartPage ? Store : ShoppingCart,
+        href: isCartPage ? "/shop" : "/shop/cart",
+        hasBadge: !isCartPage,
+        hideOnMobile: false,
+      },
+      {
+        name: "home",
+        Icon: Home,
+        href: "/",
+        hasBadge: false,
+        hideOnMobile: true,
+      },
+    ];
+  }, [isAdmin, isCartPage]);
 
   useEffect(() => {
     setIsMounted(true);
@@ -108,16 +109,23 @@ export default function NavActions() {
         >
           <Link
             href={item.href}
-            className="relative w-10 h-10 md:w-11 md:h-11 bg-white rounded-full flex items-center justify-center cursor-pointer hover:border-black hover:bg-black hover:text-white transition-all duration-300 border border-black/10 text-black group hover:scale-105"
+            className="relative w-11 h-11 bg-white rounded-full flex items-center justify-center cursor-pointer hover:border-black hover:bg-black hover:text-white transition-all duration-300 border border-black/10 text-black group hover:scale-105"
           >
-            <item.Icon size={14} strokeWidth={1.5} />
+            <item.Icon size={16} strokeWidth={1.5} />
 
-            {/* Show badge if item count is greater than 0 */}
-            {isMounted && item.hasBadge && totalItems > 0 && (
-              <span className="absolute -top-1 -right-1 min-w-4 h-4 bg-[#b91c1c] text-white text-[0.625rem] font-bold rounded-full border border-white flex items-center justify-center px-1 shadow-sm">
-                {totalItems}
-              </span>
-            )}
+            <AnimatePresence>
+              {isMounted && item.hasBadge && totalItems > 0 && (
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                  className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-[#b91c1c] text-white text-[0.625rem] font-bold rounded-full border border-white flex items-center justify-center px-1 shadow-sm"
+                >
+                  {totalItems}
+                </motion.span>
+              )}
+            </AnimatePresence>
           </Link>
         </motion.div>
       ))}
@@ -131,14 +139,15 @@ export default function NavActions() {
           {isLoggedIn ? (
             <button
               onClick={() => setIsProfileOpen(!isProfileOpen)}
-              className="w-10 h-10 md:w-11 md:h-11 rounded-full overflow-hidden border border-black/10 hover:scale-105 transition-all duration-300"
+              className="w-11 h-11 rounded-full overflow-hidden border border-black/10 hover:scale-105 transition-all duration-300"
             >
               {session?.user?.image ? (
                 <Image
                   src={session.user.image}
                   alt="Profile"
-                  width={40}
-                  height={40}
+                  width={44}
+                  height={44}
+                  priority
                   className="w-full h-full object-cover cursor-pointer"
                 />
               ) : (
@@ -150,9 +159,9 @@ export default function NavActions() {
           ) : (
             <Link
               href="/login"
-              className="w-[2.5rem] h-[2.5rem] md:w-[2.75rem] md:h-[2.75rem] bg-white rounded-full flex items-center justify-center cursor-pointer hover:border-black hover:bg-black hover:text-white transition-all duration-300 border border-black/10 text-black"
+              className="w-11 h-11 bg-white rounded-full flex items-center justify-center cursor-pointer hover:border-black hover:bg-black hover:text-white transition-all duration-300 border border-black/10 text-black"
             >
-              <User size={14} strokeWidth={1.5} />
+              <User size={16} strokeWidth={1.5} />
             </Link>
           )}
 

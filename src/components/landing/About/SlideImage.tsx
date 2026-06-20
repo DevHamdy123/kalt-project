@@ -8,17 +8,22 @@ interface SlideImageProps {
 }
 
 export default function SlideImage({ currentSlide }: SlideImageProps) {
-  const customEase = [0.22, 1, 0.36, 1] as const;
+  // الكيرف السينمائي: طلقة في الأول عشان الـ LCP، وانزلاق بطيء في الآخر عشان الفخامة
+  const premiumEase = [0.16, 1, 0.3, 1] as const;
 
   return (
     <div className="flex-1 min-h-0 relative w-full flex items-center justify-center mt-2 lg:mt-0 z-10">
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="popLayout" initial={false}>
         <motion.div
           key={currentSlide.id}
-          initial={{ opacity: 0, scale: 0.96, x: 20 }}
-          animate={{ opacity: 1, scale: 1, x: 0 }}
-          exit={{ opacity: 0, scale: 0.96, x: -20 }}
-          transition={{ duration: 0.8, ease: customEase }}
+          // الدخول: بيبدأ بـ Scale كبير سنة وبلور خفيف، وبينزل بـ "تقل"
+          initial={{ opacity: 0, scale: 1.04, x: 25, filter: "blur(4px)" }}
+          animate={{ opacity: 1, scale: 1, x: 0, filter: "blur(0px)" }}
+          exit={{ opacity: 0, scale: 0.96, x: -25, filter: "blur(4px)" }}
+          transition={{
+            duration: 0.7, // رجعنا للتقل المحترم
+            ease: premiumEase,
+          }}
           className="relative h-[85%] lg:h-auto w-auto lg:w-[80%] xl:w-[70%] max-w-md aspect-4/5 flex justify-center items-end"
         >
           <div
@@ -36,7 +41,7 @@ export default function SlideImage({ currentSlide }: SlideImageProps) {
               priority
               fetchPriority="high"
               quality={80}
-              sizes="(max-width: 768px) 100vw, 50vw"
+              sizes="(max-width: 1024px) 80vw, 450px"
               className="object-contain object-bottom scale-[0.98] origin-bottom drop-shadow-2xl"
             />
           </div>

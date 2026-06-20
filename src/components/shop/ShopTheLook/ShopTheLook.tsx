@@ -80,7 +80,7 @@ export default function ShopTheLook() {
         {/* Visuals Column */}
         <div className="lg:col-span-6 flex justify-center w-full">
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0.01, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
             className="relative w-full max-w-lg aspect-3/4 bg-neutral-200 rounded-lg overflow-hidden shadow-2xl border border-black/5"
