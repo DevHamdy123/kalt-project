@@ -33,17 +33,16 @@ export default function StoreDesktopLayout() {
   return (
     <div className="hidden xl:grid xl:grid-cols-[1fr_1.4fr_1fr] w-full h-full justify-between gap-1 px-[clamp(2.5rem,5vw,5rem)] pt-[1.25rem] 2xl:pt-[3rem] pb-0 min-h-0 relative">
       {/* Left Column: Typography */}
-      <div className="flex flex-col justify-center z-10 pb-[1.25rem] 2xl:pb-[3rem] min-h-0">
+      <div className="flex flex-col justify-center z-10 pb-[1.25rem] 2xl:pb-[3rem] shrink-0 min-w-[25rem]">
         <motion.div
           custom={0.2}
           initial="hidden"
           animate="visible"
           variants={fadeUpVariants}
         >
-          {/* تصغير العنوان لنسبة أنيقة ومتوازنة */}
-          <h1 className="font-black uppercase tracking-tighter leading-[0.85] text-black text-[clamp(3.25rem,4.5vw,5.75rem)] 2xl:text-[7rem]">
+          <h1 className="font-black uppercase tracking-tighter leading-[0.85] text-black text-[clamp(3.25rem,9.5vmin,6rem)]">
             <TypewriterEffect /> <br />
-            The Syndicate <br />
+            The <br /> Syndicate <br />
             Urban Precision <br />
             Est. 2026 <br />
             Raw Aesthetics.
@@ -55,16 +54,14 @@ export default function StoreDesktopLayout() {
           initial="hidden"
           animate="visible"
           variants={fadeUpVariants}
-          className="mt-[1.5rem] 2xl:mt-[2rem] max-w-[26rem]"
+          className="mt-[1.25rem] 2xl:mt-[1.75rem] max-w-[24rem]"
         >
-          {/* تصغير البراجراف ليكون دقيق وشيك */}
           <p className="text-black/70 font-medium leading-relaxed text-[clamp(0.85rem,1vw,1rem)] 2xl:text-[1.125rem]">
             KALT is a silent statement of urban precision. <br />
             We strip away the noise...
           </p>
         </motion.div>
       </div>
-
       {/* Center Column: Hero Image */}
       <motion.div
         custom={0.1}
@@ -92,13 +89,11 @@ export default function StoreDesktopLayout() {
           initial="hidden"
           animate="visible"
           variants={fadeUpVariants}
-          // عرض الكارت متناسق مش ضخم بزيادة
           className="w-full max-w-[22rem] 2xl:max-w-[25rem]"
         >
           <motion.div
             animate={{ y: [0, -20, 0] }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            // رجعنا البادينج الكبير عشان المحتوى ميبقاش مالي الكارت (Airy Feel)
             className="bg-white/40 backdrop-blur-xl border border-white/50 p-[1.25rem] 2xl:p-[2rem] rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.08)] w-full will-change-transform"
           >
             <h3 className="text-black/60 text-[0.75rem] 2xl:text-[0.875rem] font-bold uppercase tracking-widest mb-[0.75rem] 2xl:mb-[1rem]">
@@ -115,7 +110,6 @@ export default function StoreDesktopLayout() {
                 KALT20
               </span>
             </div>
-            {/* الزرار حجمه متناسق مش عملاق */}
             <button
               onClick={scrollToCatalog}
               className="bg-black text-white px-[1rem] py-[1.25rem] text-[0.85rem] 2xl:text-[1rem] font-bold uppercase tracking-widest rounded-xl cursor-pointer hover:bg-neutral-800 transition-all w-full"
@@ -133,7 +127,6 @@ export default function StoreDesktopLayout() {
         transition={{ delay: 1.5, duration: 1 }}
         className="absolute bottom-[1.25rem] 2xl:bottom-[2.5rem] right-[clamp(2.5rem,5vw,5rem)] flex flex-col items-center gap-[0.75rem] z-20 pointer-events-none"
       >
-        {/* تصغير كلمة السكرول لدرجة ناعمة جداً */}
         <span
           className="text-black/50 text-[0.55rem] 2xl:text-[0.65rem] uppercase tracking-[0.3em] font-bold rotate-180"
           style={{ writingMode: "vertical-rl" }}
