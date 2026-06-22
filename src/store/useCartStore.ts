@@ -7,14 +7,13 @@ export interface CartItem {
   price: number;
   image: string;
   quantity: number;
-  // Include item size
   size?: string;
+  // Include item color
 }
 
 interface CartState {
   items: CartItem[];
   addItem: (item: CartItem) => void;
-  // Update remove and update functions to accept size
   removeItem: (id: string, size?: string) => void;
   updateQuantity: (id: string, quantity: number, size?: string) => void;
   clearCart: () => void;

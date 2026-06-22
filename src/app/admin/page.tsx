@@ -1,3 +1,6 @@
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 import { prisma } from "@/lib/prisma";
 import { StatCards } from "@/components/admin/dashboard/StatCards";
 import { RecentOrders } from "@/components/admin/dashboard/RecentOrders";

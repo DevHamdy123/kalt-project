@@ -9,7 +9,6 @@ export const useCartQuery = () => {
     queryFn: async () => {
       const res = await fetch("/api/cart");
       if (!res.ok) {
-        // Return null if user is unauthorized
         if (res.status === 401) return null;
         throw new Error("Failed to fetch cart");
       }
