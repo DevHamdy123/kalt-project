@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
-import { ProductFormValues } from "@/lib/validations/product";
+import { productSchema, ProductFormValues } from "@/lib/validations/product";
 import { randomBytes } from "crypto";
 
 const DEMO_EMAIL = "demo@kalt.com";
@@ -18,6 +18,13 @@ export async function createProduct(data: ProductFormValues) {
   if (session.user?.email === DEMO_EMAIL) {
     throw new Error("Modifications are not allowed during the demo stage.");
   }
+
+  // Validate on the server too, the client-side check can be bypassed
+  const parsed = productSchema.safeParse(data);
+  if (!parsed.success) {
+    throw new Error("Invalid product data.");
+  }
+  data = parsed.data;
 
   const baseSlug = data.name.trim().toLowerCase().replace(/\s+/g, "-");
   const uniqueSuffix = randomBytes(4).toString("hex");
@@ -84,6 +91,13 @@ export async function updateProduct(id: string, data: ProductFormValues) {
   if (session.user?.email === DEMO_EMAIL) {
     throw new Error("Modifications are not allowed during the demo stage.");
   }
+
+  // Validate on the server too, the client-side check can be bypassed
+  const parsed = productSchema.safeParse(data);
+  if (!parsed.success) {
+    throw new Error("Invalid product data.");
+  }
+  data = parsed.data;
 
   try {
     await prisma.product.update({

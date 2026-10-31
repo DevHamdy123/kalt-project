@@ -1,19 +1,28 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
+import * as z from "zod";
+
+// Same rules as the register form, enforced on the server as well
+const registerSchema = z.object({
+  name: z.string().min(2),
+  email: z.string().email(),
+  password: z.string().min(6),
+});
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { email, password, name } = body;
 
-    // 1. التأكد من وصول البيانات الأساسية
-    if (!email || !password) {
+    // 1. التأكد من صحة البيانات القادمة
+    const parsed = registerSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { message: "Missing required fields" },
+        { message: "Missing or invalid fields" },
         { status: 400 },
       );
     }
+    const { email, password, name } = parsed.data;
 
     // 2. فحص إذا كان البريد الإلكتروني مسجل مسبقاً
     const existingUser = await prisma.user.findUnique({

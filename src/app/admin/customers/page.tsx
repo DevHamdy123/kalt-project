@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { prisma } from "@/lib/prisma";
 import { Users, Mail, Phone, ShoppingBag, Calendar } from "lucide-react";
 
@@ -51,7 +53,10 @@ export default async function CustomersPage() {
 
     const customer = customersMap.get(customerKey)!;
     customer.totalOrders += 1;
-    customer.totalSpent += Number(order.totalPrice);
+    // Cancelled orders do not count towards the amount spent
+    if (order.status !== "CANCELLED") {
+      customer.totalSpent += Number(order.totalPrice);
+    }
   });
 
   const customers = Array.from(customersMap.values());

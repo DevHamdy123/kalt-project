@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { prisma } from "@/lib/prisma";
 import { TrendingUp, Activity } from "lucide-react";
 import SalesChart from "@/components/admin/Analytics/SalesChart";
@@ -10,7 +12,9 @@ interface ChartDataPoint {
 
 export default async function AnalyticsPage() {
   // Fetching data
+  // Cancelled orders are not real revenue, so they are excluded
   const orders = await prisma.order.findMany({
+    where: { status: { not: "CANCELLED" } },
     orderBy: { createdAt: "asc" },
   });
 

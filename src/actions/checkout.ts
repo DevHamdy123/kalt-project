@@ -3,6 +3,25 @@
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { Prisma } from "@prisma/client";
+import * as z from "zod";
+
+// Runtime validation of what the browser sends. The client-side price and
+// total are accepted by the type but never trusted: the total is recalculated
+// on the server from the product prices stored in the database.
+const checkoutSchema = z.object({
+  items: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        quantity: z.number().int().positive(),
+        size: z.string().optional(),
+      }),
+    )
+    .min(1),
+  phone: z.string().max(100),
+  address: z.string().max(1000),
+});
 
 type CheckoutData = {
   items: {
@@ -26,6 +45,12 @@ export async function createCheckoutOrder(
 
     if (!userId) return { success: false, message: "Unauthorized" };
 
+    const parsed = checkoutSchema.safeParse(data);
+    if (!parsed.success) {
+      return { success: false, message: "Invalid checkout data" };
+    }
+    const { items, phone, address } = parsed.data;
+
     const cart = await prisma.cart.findUnique({
       where: { userId },
     });
@@ -33,15 +58,20 @@ export async function createCheckoutOrder(
     // الـ transaction هيفضل يرمي خطأ لو المخزون ناقص (عشان يعمل Rollback)
     // بس الكود اللي تحت (الـ catch) هيلقطه ويحوله لرد نظيف
     const result = await prisma.$transaction(async (tx) => {
-      for (const item of data.items) {
+      // The real total, calculated from the database prices
+      let serverTotal = new Prisma.Decimal(0);
+
+      for (const item of items) {
         const product = await tx.product.findUnique({
           where: { id: item.id },
-          select: { stock: true },
+          select: { stock: true, price: true },
         });
 
         if (!product || product.stock < item.quantity) {
           throw new Error(`Insufficient stock for product ID: ${item.id}`);
         }
+
+        serverTotal = serverTotal.add(product.price.mul(item.quantity));
 
         await tx.product.update({
           where: { id: item.id },
@@ -53,12 +83,12 @@ export async function createCheckoutOrder(
 
       const order = await tx.order.create({
         data: {
-          totalPrice: data.totalPrice,
-          phone: data.phone,
-          address: data.address,
+          totalPrice: serverTotal,
+          phone,
+          address,
           userId: userId,
           orderItems: {
-            create: data.items.map((item) => ({
+            create: items.map((item) => ({
               productId: item.id,
               quantity: item.quantity,
               size: item.size,

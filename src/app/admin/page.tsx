@@ -61,10 +61,10 @@ export default async function AdminDashboardPage() {
   }));
 
   // Calculate dashboard statistics
-  const totalRevenue = allOrders.reduce(
-    (sum, order) => sum + order.totalPrice,
-    0,
-  );
+  // Cancelled orders are not real revenue, so they are excluded
+  const totalRevenue = allOrders
+    .filter((order) => order.status !== "CANCELLED")
+    .reduce((sum, order) => sum + order.totalPrice, 0);
 
   const totalOrdersCount = allOrders.length;
 

@@ -6,6 +6,8 @@ import { authOptions } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { OrderStatus } from "@prisma/client";
 
+const DEMO_EMAIL = "demo@kalt.com";
+
 export async function getAdminOrders() {
   const session = await getServerSession(authOptions);
   if (!session || session.user?.role !== "ADMIN") {
@@ -55,6 +57,10 @@ export async function updateOrderStatus(
     throw new Error("Unauthorized");
   }
 
+  if (session.user?.email === DEMO_EMAIL) {
+    throw new Error("Modifications are not allowed during the demo stage.");
+  }
+
   try {
     await prisma.order.update({
       where: { id: orderId },
@@ -78,6 +84,10 @@ export async function deleteOrder(orderId: string) {
   const session = await getServerSession(authOptions);
   if (!session || session.user?.role !== "ADMIN") {
     throw new Error("Unauthorized");
+  }
+
+  if (session.user?.email === DEMO_EMAIL) {
+    throw new Error("Deletion is not allowed during the demo stage.");
   }
 
   try {
